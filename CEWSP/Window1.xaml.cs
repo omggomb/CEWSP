@@ -574,6 +574,8 @@ namespace CEWSP
 				{
 					Process proc = new Process();
 					proc.StartInfo = new ProcessStartInfo(CSourceTracker.IngoredFilesPath);
+					proc.Exited += delegate { CSourceTracker.Instance.LoadIgnoredFilesList(); };
+					proc.EnableRaisingEvents = true;
 					proc.Start();
 				};
 				rootItem.Items.Add(item);

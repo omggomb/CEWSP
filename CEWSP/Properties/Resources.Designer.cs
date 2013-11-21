@@ -438,6 +438,17 @@ namespace CEWSP.Properties
 		}
 		
 		/// <summary>
+		///   Looks up a localized string similar to An error occured while parsing the source tracker&apos;s ignore file list..
+		/// </summary>
+		public static string IgnoredRegesWrong
+		{
+			get
+			{
+				return ResourceManager.GetString("IgnoredRegesWrong", resourceCulture);
+			}
+		}
+		
+		/// <summary>
 		///   Looks up a localized string similar to Do you want
 		/// to import the last exported filelist(s)?.
 		/// </summary>

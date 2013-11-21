@@ -253,4 +253,7 @@
   <data name="FEConfirmChangeExtension" xml:space="preserve">
     <value>Really change file extension?</value>
   </data>
+  <data name="IgnoredRegesWrong" xml:space="preserve">
+    <value>An error occured while parsing the source tracker's ignore file list.</value>
+  </data>
 </root>

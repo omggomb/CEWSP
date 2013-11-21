@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 using CEWSP.Utils;
 using CEWSP.ApplicationSettings;
@@ -49,6 +50,8 @@ namespace CEWSP.SourceFileTracking
 		private FileSystemWatcher m_gameFilesWatcher;
 		private FileSystemWatcher m_ignoredFilesWacher;
 		private Object m_lockingObject;
+		private List<Regex> m_ignoredRegexList;
+		private List<Regex> m_ignoredNegatedRegexList;
 		
 		/// <summary>
 		/// Extension of tracker files includig the leading dot
@@ -80,10 +83,13 @@ namespace CEWSP.SourceFileTracking
 			m_trackedGameFolderFiles = new List<string>();
 			m_ignoredFiles = new List<string>();
 			m_ignoredFilesWacher = new FileSystemWatcher();
+			m_ignoredRegexList = new List<Regex>();
+			m_ignoredNegatedRegexList = new List<Regex>();
 		
 			m_ignoredFilesWacher.Path = CPathUtils.GetFilePath(m_sIgnoredFilesListPath);
 			m_ignoredFilesWacher.Filter = "Ignorefiles.txt";
 			m_ignoredFilesWacher.NotifyFilter = NotifyFilters.LastWrite;
+			//m_ignoredFilesWacher.Changed += delegate { LoadIgnoredFilesList(); };
 			
 			m_lockingObject  = new object();
 			
@@ -729,20 +735,30 @@ namespace CEWSP.SourceFileTracking
 			}
 		}
 		
-		private void LoadIgnoredFilesList()
+		public void LoadIgnoredFilesList()
 		{
 			m_ignoredFilesWacher.EnableRaisingEvents = false;
 			try
 			{
+				m_ignoredFiles.Clear();
+				m_ignoredNegatedRegexList.Clear();
+				m_ignoredRegexList.Clear();
 				FileStream stream = File.Open(m_sIgnoredFilesListPath, FileMode.Open);
 				StreamReader reader = new StreamReader(stream);
 				
 				while (!reader.EndOfStream)
 				{
 					string line = reader.ReadLine();
+					line = line.Trim();
 					
 					if (line.StartsWith("#") || String.IsNullOrWhiteSpace(line))
 						continue;
+					
+					if (line.IndexOf('#') != -1)
+					{
+						line = line.Substring(0, line.IndexOf('#'));
+						line = line.Trim();
+					}
 					
 					m_ignoredFiles.Add(line);
 				}
@@ -764,6 +780,28 @@ namespace CEWSP.SourceFileTracking
 			}
 
             m_ignoredFiles.Add(Window1.m_sGameTempDirName);
+            
+            foreach (string ignoredPath in m_ignoredFiles)
+            {
+            	try
+            	{
+            		if (!ignoredPath.StartsWith("!"))
+	            	{
+	            		m_ignoredRegexList.Add(new Regex(ignoredPath));
+	            	}
+	            	else
+	            	{
+	            		m_ignoredNegatedRegexList.Add(new Regex(ignoredPath.TrimStart('!')));
+	            	}
+            	} 
+            	catch (ArgumentException e)
+            	{
+            		CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.IgnoredRegesWrong + '\n'
+            		                                          + e.Message);
+            		continue;
+            		
+            	}
+            }
 			
 			m_ignoredFilesWacher.EnableRaisingEvents = true;
 		}
@@ -772,7 +810,25 @@ namespace CEWSP.SourceFileTracking
 		
 		private bool ShouldIgnorePath(string sPathToTest)
 		{
-			// first deal with explicitly ignored files
+			bool bShouldIgnore = false;
+			
+			foreach (Regex  allButThem in m_ignoredNegatedRegexList)
+			{
+				if (allButThem.IsMatch(sPathToTest))
+					bShouldIgnore = false;
+			}
+			
+			foreach (Regex ignoredRegex in m_ignoredRegexList)
+			{
+				if (ignoredRegex.IsMatch(sPathToTest))
+					bShouldIgnore = true;
+			}
+			
+			
+			
+			return bShouldIgnore;
+			
+			/*// first deal with explicitly ignored files
 			//if (m_ignoredFiles.Contains(sPathToTest))
 			//	return true;
 			foreach (string ignored in m_ignoredFiles)
@@ -815,7 +871,7 @@ namespace CEWSP.SourceFileTracking
 				return true;
 			}
 			
-			return false;
+			return false;*/
 			
 			/*// Now look for the truly ignored paths
 			foreach (string ignoreThis in m_ignoredFiles)
