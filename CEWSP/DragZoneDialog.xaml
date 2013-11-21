@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+	x:Class="CEWSP.DragZoneDialog" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Choose options"
+	Height="150"
+	Width="300"
+	WindowStartupLocation="CenterScreen">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="33*" />
+			<RowDefinition
+				Height="33*" />
+			<RowDefinition
+				Height="33*" />
+		</Grid.RowDefinitions>
+		<Grid
+			Grid.Row="2"
+			Grid.Column="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition
+					Width="70*" />
+				<ColumnDefinition
+					Width="30*" />
+			</Grid.ColumnDefinitions>
+		
+			<Button Content="OK"
+					Grid.Row="3"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Right"
+					Width="75"
+					Margin="8,0,8,0"
+					Click="OnOkClicked"/>
+		
+			<Button Content="Cancel"
+					Grid.Row="0"
+					Grid.Column="1"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Stretch"
+					Width="Auto"
+					Margin="8,0,8,0"
+					Click="OnCancelClicked"/>
+		
+		</Grid>
+	
+		
+	
+		<Grid Grid.Row="1"
+				Grid.Column="0">
+
+		<Grid.ColumnDefinitions>
+				<ColumnDefinition
+					Width="70*" />
+				<ColumnDefinition
+					Width="30*" />
+			</Grid.ColumnDefinitions>
+		
+			<TextBox Name="saveFileTextBox"
+			    	Grid.Row="0"
+			         Grid.Column="0"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Stretch"
+					Width="Auto"
+					Margin="8,0,0,0"/>
+		
+			<Button Content="Browse"
+					Grid.Row="0"
+					Grid.Column="1"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Stretch"
+					Width="Auto"
+					Margin="8,0,8,0"
+					Name="browseButton"
+					Click="BrowseButton_Click"/>
+		
+			
+		</Grid>
+	
+		<Grid Grid.Row="0"
+				Grid.Column="0">
+		
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="50*" />
+				<ColumnDefinition Width="50*" />
+			</Grid.ColumnDefinitions>
+		
+			<CheckBox Name="copyCheckbox"
+				Grid.Row="0"
+					Grid.Column="0"
+					Content="Copy file"
+					VerticalAlignment="Center"
+					Margin="8,0,0,0"
+					IsChecked="True"/>
+		
+			<CheckBox Name="rcCheckbox"
+				Grid.Row="0"
+					Grid.Column="1"
+					Content="Run rc"
+					VerticalAlignment="Center"
+					Margin="8,0,0,0"
+					IsChecked="True"/>
+		
+		
+		</Grid>
+	
+	</Grid>
+</Window>

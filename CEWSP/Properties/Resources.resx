@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DCCDefWindowTitle" xml:space="preserve">
+    <value>Edit program definitions</value>
+  </data>
+  <data name="DCCDefDefinitionLabel" xml:space="preserve">
+    <value>Program defnition:</value>
+  </data>
+  <data name="DCCDefCopyFileLabel" xml:space="preserve">
+    <value>Copy file</value>
+  </data>
+  <data name="DCCDefLaunchProgLabel" xml:space="preserve">
+    <value>Launch with program</value>
+  </data>
+  <data name="CommonAdd" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="CommonRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="CommonOK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="CommonCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CommonApply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="CommonBrowse" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="DCCDefEnterDefName" xml:space="preserve">
+    <value>Please enter a defition name!</value>
+  </data>
+  <data name="DCCDefDuplicateEntry" xml:space="preserve">
+    <value>Please choose an another name as there is already an entry named:
+ 
+</value>
+  </data>
+  <data name="DCCDefEnterProgName" xml:space="preserve">
+    <value>Please enter a name for the program!
+</value>
+  </data>
+  <data name="DCCDefEnterFileName" xml:space="preserve">
+    <value>Please enter a name for the file</value>
+  </data>
+  <data name="CommonPathDoesntExist" xml:space="preserve">
+    <value>The specified path doesn't exist! Choose an existing one!</value>
+  </data>
+  <data name="DCCDefProgramsLabel" xml:space="preserve">
+    <value>Programs:</value>
+  </data>
+  <data name="DCCDefProgramFiles" xml:space="preserve">
+    <value>Program's files
+</value>
+  </data>
+  <data name="DCCDefCurrentFileLabel" xml:space="preserve">
+    <value>Current file:</value>
+  </data>
+  <data name="DCCDefProgramExeLabel" xml:space="preserve">
+    <value>Current program's exe:</value>
+  </data>
+  <data name="CommonAskApplyChanges" xml:space="preserve">
+    <value>Save eventual changes?</value>
+  </data>
+  <data name="CommonError" xml:space="preserve">
+    <value>Error!</value>
+  </data>
+  <data name="DCCDefChangesNotSaved" xml:space="preserve">
+    <value>There are non existent paths inside the definitions! Changes cannot be saved!</value>
+  </data>
+  <data name="DCCDefEmptyDef" xml:space="preserve">
+    <value>There is an empty program definition! Proceed (will delete empty def)?</value>
+  </data>
+  <data name="ToolsExportTrackedFiles" xml:space="preserve">
+    <value>Export tracked files</value>
+  </data>
+  <data name="ToolsImportTrackingList" xml:space="preserve">
+    <value>Import tracking list</value>
+  </data>
+  <data name="ToolsSourceTrackingSubmenu" xml:space="preserve">
+    <value>Source tracking</value>
+  </data>
+  <data name="ToolsClearProcedFromSources" xml:space="preserve">
+    <value>Clean project from source files
+</value>
+  </data>
+  <data name="ToolsMoveSources" xml:space="preserve">
+    <value>Move source files</value>
+  </data>
+  <data name="ToolsViewTrackerIgnoreFiles" xml:space="preserve">
+    <value>Edit ignored files</value>
+  </data>
+  <data name="ToolsViewTrackedGameFolder" xml:space="preserve">
+    <value>View tracked files (game folder)</value>
+  </data>
+  <data name="ToolsViewTrackedRoot" xml:space="preserve">
+    <value>View tracked files (root folder)</value>
+  </data>
+  <data name="CommonNoFileNameSpecified" xml:space="preserve">
+    <value>You didn't specify a filename! Pleas add one!</value>
+  </data>
+  <data name="GameLauchCopyToRoot" xml:space="preserve">
+    <value>The game launcher does not support game folders outside of the CE root. Would you like to temporarily copy the game folder into the CE root?</value>
+  </data>
+  <data name="CommonNotice" xml:space="preserve">
+    <value>Notice!</value>
+  </data>
+  <data name="CommonCopying" xml:space="preserve">
+    <value>Copying
+</value>
+  </data>
+  <data name="ExportOnClose" xml:space="preserve">
+    <value>Do you want to export the tracked source files to the last exported location? Decision can be made permanent inside the application settings.</value>
+  </data>
+  <data name="ImportOnStartup" xml:space="preserve">
+    <value>Do you want
+ to import the last exported filelist(s)?</value>
+  </data>
+  <data name="CommonTrue" xml:space="preserve">
+    <value>True</value>
+  </data>
+  <data name="CommonFalse" xml:space="preserve">
+    <value>False</value>
+  </data>
+  <data name="CommonDefault" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="AskGameFolderUpdateCFG" xml:space="preserve">
+    <value>The game folder has been set to a new path! Would you like to update the system.cfg file to point to the new directory?</value>
+  </data>
+  <data name="RootNotValidNoSaveChanges" xml:space="preserve">
+    <value>Sorry, the current root directory is not a valid CE directory! Changes cannot be applied!</value>
+  </data>
+  <data name="FEConfirmChangeExtension" xml:space="preserve">
+    <value>Really change file extension?</value>
+  </data>
+</root>

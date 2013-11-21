@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window
+	x:Class="CEWSP.ThreeDSceneDialog.ThreeDSceneDialog" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Ceate new DCC project"
+	Height="300"
+	Width="300"
+	SizeToContent="WidthAndHeight"
+	ResizeMode="CanMinimize"
+	Loaded="OnLoaded">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="0.25*" />
+			<RowDefinition
+				Height="0.25*" />
+			<RowDefinition
+				Height="0.25*" />
+			<RowDefinition
+				Height="0.25*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="0.7*" />
+			<ColumnDefinition
+				Width="0.3*" />
+		</Grid.ColumnDefinitions>
+		<ComboBox
+			Name="dccProgramDropdown"
+			Grid.Column="0"
+			Grid.Row="0"
+			Margin="17,19,31,28"
+			Width="Auto"
+			Height="20"
+			VerticalAlignment="Stretch"
+			HorizontalAlignment="Stretch" />
+		<Button
+			Grid.Column="0"
+			Grid.Row="3"
+			Name="okButton"
+			Content="OK"
+			Width="50"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Center"
+			Click="OnOKClicked"></Button>
+		<Button
+			Grid.Column="1"
+			Grid.Row="3"
+			Name="cancelButton"
+			Content="Cancel"
+			Width="50"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Center"
+			Click="OnCancelClicked"></Button>
+		<Button
+			Grid.Column="1"
+			Grid.Row="2"
+			Name="browseDirButton"
+			Content="..."
+			Width="50"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Center"
+			Click="OnBrowseDirClicked"></Button>
+		<TextBox
+			Name="saveFileTextBox"
+			Grid.Column="0"
+			Grid.Row="2"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Center"
+			Width="Auto"
+			TextChanged="OnTextBoxTextEntered"></TextBox>
+	</Grid>
+</Window>

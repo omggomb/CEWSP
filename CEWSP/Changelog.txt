@@ -1,0 +1,52 @@
+﻿==============
+Alpha build 2:
+==============
+
+Add:
+- "Set CE Rootdir" and "Set Gamefolder" now have colored backgrounds that indicate their validness
+- Submenu "Run with..." inside treeview context menu
+- Run with gfxexporter in tree view context menu "Run with..."
+- Treeview hotkey "DELETE" will delete selectet item
+- Support for new macro "$CEWSP_CURRENT_FILE_NAME", which represents the file name of the file
+- Support for new macro "$CEWSP_CURRENT_FILE", which represents the absolute path to the current file
+- Support for new macro "$CEWSP_CURRENT_FOLDER", which represents the absolute path to the current folder
+- "Run..." submenu inside "Tools" context menu, runs any predefined program
+- "Open in explorer" to tree view context menu
+- Tree view now listens for directory and file changes and updates automatically
+- Quick access buttons will only be enabled if their specified files actually exist
+- Treeview now keeps last selected item open if possible
+- Using "Track file" on a directory will track all files inside it
+- Setting: Verbose import, export 
+- Setting: Import on startup
+- Setting: Export on exit
+- Logfile logging
+- Added settings dialog
+- Warning when trying to change file extension while renaming files
+++++ Internal
+- New utility class CProcessUtils, CUserInteractionUtils
+- CPathUitls.GetFilename
+- CUserInteractionUtils.AskUserToEnterString
+- SStartupFile name property
+- SDCCProgram name property
+- CSetting UserEditable property
+
+Change:
+- Manage program definitions dialog redesign to reflect new complexity
+- If "launch with program" is not checked no program will be launched (prevously program without arguments)
+- "Track file" in file explorer context menu now ignores Ignorefiles.txt, forcing the selected file to be tracked
+- Import / export will only inform the user if verbose is set to true, but will always write messages to log
+++++ Internal
+- Moved RunRC, RunRCTif inside own class (CProcessUtils)
+- Renamed CDCCDefinition.m_sRootPathMakro to m_sRootPathMacro
+- Renamed CDCCDefinition.m_sGameFolderMakro to m_sGameFolderMakcro
+- Renamed CDCCDefinition.ExpandMakros to ExpandMacros
+
+Fix:
+- only startup files that contain macros are modified, as
+  modifying all files caused issues with binary files.
+- various try catch statements to catch file errors
+- Missing application settings will no longer cause an application shutdown
+- Dragzone dialog will no longer close down if an invalid path is specified
+- Settings won't be lost on crash anymore
+- Copying directories with drag zone dialog now works
+

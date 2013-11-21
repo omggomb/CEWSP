@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+	x:Class="CEWSP.Window1" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:f="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+	Title="CEWSP"
+	Height="500"
+	Width="600"
+	MinHeight="500"
+	MinWidth="600"
+	WindowStartupLocation="CenterScreen">
+	<Grid Name="mainGrid">
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="0.8*" />
+			<RowDefinition
+				Height="0.01*" />
+			<RowDefinition
+				Height="0.2*" />
+		</Grid.RowDefinitions>
+		<Grid Name="treeViewGrid">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition
+					Width="0.5*" />
+				<ColumnDefinition
+					Width="0.5*" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition
+					Height="0.2*" />
+				<RowDefinition
+					Height="0.2*" />
+				<RowDefinition
+					Height="0.2*" />
+				<RowDefinition
+					Height="0.2*" />
+				<RowDefinition
+					Height="0.2*" />
+				<RowDefinition
+					Height="0.2*" />
+			</Grid.RowDefinitions>
+			<Button
+				Name="setRootDirButton"
+				Content="Set CE Root Dir"
+				Grid.Column="0"
+				Grid.Row="1"
+				Margin="8,8,0,0"
+				Height="Auto"
+				HorizontalAlignment="Stretch"
+				Width="Auto"
+				VerticalAlignment="Stretch"
+				Click="OnSetRootDirClicked" />
+			<Button
+				Content="New asset"
+				Grid.Column="0"
+				Grid.Row="3"
+				Margin="8,8,0,0"
+				Height="Auto"
+				HorizontalAlignment="Stretch"
+				Width="Auto"
+				VerticalAlignment="Stretch"
+				Click="OnNew3dSceneClicked" />
+			<Button
+				Content="Manage programs"
+				Grid.Column="0"
+				Grid.Row="4"
+				Margin="8,8,0,0"
+				Height="Auto"
+				HorizontalAlignment="Stretch"
+				Width="Auto"
+				VerticalAlignment="Stretch"
+				Click="ManageProgramDefinitionsClicked" />
+			<Button
+				Content="Set current gamefolder"
+				Grid.Column="0"
+				Grid.Row="2"
+				Margin="8,8,0,0"
+				Height="Auto"
+				HorizontalAlignment="Stretch"
+				Width="Auto"
+				VerticalAlignment="Stretch"
+				Name="setGamefolderButton"
+				Click="OnSetGameFolderClicked" />
+			
+			<Button
+				Content="Tools"
+				Grid.Column="0"
+				Grid.Row="5"
+				Margin="8,8,0,0"
+				Height="Auto"
+				HorizontalAlignment="Stretch"
+				Width="Auto"
+				VerticalAlignment="Stretch"
+				Click="OnToolsClicked"/>
+			
+			
+			<TreeView
+				Grid.Column="1"
+				Grid.Row="0"
+				Grid.RowSpan="6"
+				VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch"
+				Margin="8,25,8,8"
+				Width="Auto"
+				Height="Auto"
+				Name="folderTreeView"
+				/>
+			
+			
+			<!-- Tree view buttons -->
+		
+			<Grid Grid.Column="1"
+					Grid.Row="0">
+			
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="0.5*" />
+				<ColumnDefinition Width="0.5*" />				
+			</Grid.ColumnDefinitions>
+			
+			<Button
+				Content="Show Root"
+				Grid.Column="0"
+				Grid.Row="0"
+				Margin="8,1,1,1"
+				Height="23"
+				HorizontalAlignment="Stretch"
+				Width="Auto"
+				VerticalAlignment="Top"
+				ToolTip="Show the set CE root directory in tree view"
+				Click="OnShowRootFolderClicked"/>
+				
+				
+				
+			<Button
+				Content="Show Game Folder"
+				Grid.Column="1"
+				Grid.Row="0"
+				Margin="1,1,8,1"
+				Height="23"
+				HorizontalAlignment="Stretch"
+				Width="Auto"
+				VerticalAlignment="Top"
+				ToolTip="Show the current game folder's directory in tree view"
+				Click="OnShowGameFolderClicked"
+				 />
+			
+			</Grid>
+		
+			<!-- Tree view buttons end -->
+		
+			
+			<Grid Grid.Row="0"
+					Grid.Column="0">
+			
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="33*" />
+				<ColumnDefinition Width="33*" />
+				<ColumnDefinition Width="33*" />
+				
+			</Grid.ColumnDefinitions>
+			
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50*" />	
+				<RowDefinition Height="50*" />
+				
+				
+			
+			</Grid.RowDefinitions>
+			
+				<Button Content="Sandbox 64bit"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="0"
+						Grid.Column="0"
+						Width="Auto" Height="Auto"
+						Margin="8,8,0,0"
+						Name="sandbox64bitbutton"
+						Click="OnLaunchSB64bitClicked"/>
+			
+				<Button Content="Sandbox 32bit"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="1"
+						Grid.Column="0"
+						Width="Auto" Height="Auto"
+						Margin="8,8,0,0"
+				        Name="sandbox32bitbutton"
+						Click="OnLaunchSB32bitClicked"/>
+			
+			<Button Content="Game 32bit"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="1"
+						Grid.Column="1"
+						Width="Auto" Height="Auto"
+						Margin="8,8,0,0"
+			        Name="game32bitbutton"
+						Click="OnLaunchGame32bitClicked"/>
+			<Button Content="Game 64bit"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="0"
+						Grid.Column="1"
+						Width="Auto" Height="Auto"
+						Margin="8,8,0,0"
+						Name="game64bitbutton"
+						Click="OnLaunchGame64bitClicked"/>
+			
+			<Button Content="Open Code"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="0"
+						Grid.Column="2"
+						Width="Auto" Height="Auto"
+						Margin="8,8,0,0"
+						Name="codeSLNButton"
+						Click="OnOpenCodeClicked"/>
+				
+			<Button 	Content="Open Scritps"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="1"
+						Grid.Column="2"
+						Width="Auto" Height="Auto"
+						Margin="8,8,0,0"
+						Name="openScriptButton"
+						Click="OnOpenScriptsClicked"/>
+			
+			
+			</Grid>
+		</Grid>
+		<Rectangle
+			Grid.Row="2"
+			Width="Auto"
+			Height="Auto"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Fill="Aquamarine"
+			AllowDrop="True"
+			Drop="DragZoneDrop"></Rectangle>
+	</Grid>
+</Window>
