@@ -1,4 +1,0 @@
-- Copying two directories into game folder crashed app
-- Only add programs once to the run and run with menu!
-- ignore files still doesn't work
-- access restriction of currently tracked file list
