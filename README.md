@@ -7,6 +7,7 @@ It features tools to reorganise and create any kind of assetfile while easily na
 ##Compiling
 
 Should compile out of the box (.NET Framework 4.5 required). Created with SharpDevelop, tested with VS 2012 Express
+**ATTENTION** CEWSP expects a folder called "SourceTracker" to reside next to the executable!
 
 ##Want to help?
 
