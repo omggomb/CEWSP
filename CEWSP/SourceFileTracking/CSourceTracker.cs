@@ -17,6 +17,13 @@ using CEWSP.Logging;
 
 namespace CEWSP.SourceFileTracking
 {
+	public class ETrackedDirs
+	{
+		public const string eTD_None = "none";
+		public const string eTD_Game = "game";
+		public const string eTD_Root = "root";
+		public const string eTD_Both = "both";
+	}
 	public enum EFileRoot
 	{
 		/// <summary>
@@ -636,6 +643,9 @@ namespace CEWSP.SourceFileTracking
 			m_rootFilesWatcher.Deleted += OnRootFileChanged;
 			m_rootFilesWatcher.EnableRaisingEvents = bWatchCERoot;
 			
+			CLogfile.Instance.LogInfo(String.Format("[Source tracker] Watching root directory: {0}", bWatchCERoot.ToString()));
+			
+			
 			m_gameFilesWatcher.Path = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
 			m_gameFilesWatcher.Filter = "*.*";
 			m_gameFilesWatcher.IncludeSubdirectories = true;
@@ -644,6 +654,8 @@ namespace CEWSP.SourceFileTracking
 			m_gameFilesWatcher.Renamed += OnGameFileChanged;
 			m_gameFilesWatcher.Deleted += OnGameFileChanged;
 			m_gameFilesWatcher.EnableRaisingEvents = bWatchGameFolder;
+			
+			CLogfile.Instance.LogInfo(String.Format("[Source tracker] Watching game directory: {0}", bWatchGameFolder.ToString()));
 			
 		}
 		

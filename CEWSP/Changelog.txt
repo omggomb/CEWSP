@@ -1,4 +1,21 @@
 ﻿==============
+Alpha build 3:
+==============
+
+Add:
+- F2 in file explorer triggers rename
+- Ctrl c, v, x in file explorer 
+- Setting: Choose which directories the source tracker will watch (game, root, both, none);
+- Copying directories in fileexplorer now works
+
+Change:
+- Ignored files are defined through regexps now
+- pasting inside the file explorer now runs through all files in clipboard
+
+Fix:
+- Errors while copying files in file explorer won't crash CEWSP anymore.
+
+==============
 Alpha build 2:
 ==============
 

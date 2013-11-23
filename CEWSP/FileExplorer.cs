@@ -167,6 +167,28 @@ namespace CEWSP
 				{
 					OnContextDeleteClicked(null, null);
 				}
+				else if (e.Key == System.Windows.Input.Key.F2)
+				{
+					OnContextRenameClicked(null, null);
+				}
+				else if ((e.Key == System.Windows.Input.Key.C) && 
+				         ((System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftCtrl)) ||
+				          (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightCtrl))))
+				{
+					OnContextCopyClicked(null, null);
+				}
+				else if ((e.Key == System.Windows.Input.Key.X) && 
+				         ((System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftCtrl)) ||
+				          (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightCtrl))))
+				{
+					OnContextCutClicked(null, null);
+				}
+				else if ((e.Key == System.Windows.Input.Key.V) && 
+				         ((System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftCtrl)) ||
+				          (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightCtrl))))
+				{
+					OnContextPasteClicked(null, null);
+				}
 			};
 			
 		
@@ -814,11 +836,17 @@ namespace CEWSP
 				coll.Add(selectedItem.FullPath);
 				Clipboard.SetFileDropList(coll);
 			}
+			else
+			{
+				StringCollection coll = new StringCollection();
+				coll.Add(selectedItem.FullPath);
+				Clipboard.SetFileDropList(coll);
+			}
 		}
 		
 		static void OnContextPasteClicked(object sender, EventArgs args)
 		{
-			// TODO: Implement directory copying
+			// DONE_TODO: Implement directory copying
 			if (!Clipboard.ContainsFileDropList())
 				return;
 			
@@ -829,25 +857,64 @@ namespace CEWSP
 				targetItem = targetItem.GetParentSave() as DirectoryTreeItem;
 			}
 			
-			string fileSource = Clipboard.GetFileDropList()[0];
+			//string fileSource = Clipboard.GetFileDropList()[0];
 			
-			FileInfo fileInfo = new FileInfo(fileSource);
-			
-			string fileTarget = targetItem.FullPath + "\\" + fileInfo.Name;
-			
-			File.Copy(fileSource, fileTarget, true);
-			
-			if (m_bIsFileCut)
+			foreach (string fileSource in Clipboard.GetFileDropList())
 			{
-				try
+				FileInfo fileInfo = new FileInfo(fileSource);
+				
+				if (fileInfo.Exists)
 				{
-					File.Delete(fileSource);
+				
+					string fileTarget = targetItem.FullPath + "\\" + fileInfo.Name;
+					
+					try
+					{
+						File.Copy(fileSource, fileTarget, true);
+						
+						if (m_bIsFileCut)
+						{
+							try
+							{
+								File.Delete(fileSource);
+							}
+							catch (IOException e)
+							{
+								CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+							}
+							m_bIsFileCut = false;
+						}
+					} 
+					catch (Exception e)
+					{
+						
+						CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+						m_bIsFileCut = false;
+					}
 				}
-				catch (IOException e)
+				else
 				{
-					CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+					// It's a direcory?
+					DirectoryInfo dirInf = new DirectoryInfo(fileSource);
+					if (dirInf.Exists)
+					{
+						string targetDir = targetItem.FullPath + "\\" + dirInf.Name;
+						CProcessUtils.CopyDirectory(dirInf.FullName, targetDir);
+						
+						if (m_bIsFileCut)
+						{
+							try
+							{
+								Directory.Delete(dirInf.FullName, true);
+							} 
+							catch (Exception e)
+							{
+								
+								CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+							}
+						}
+					}
 				}
-				m_bIsFileCut = false;
 			}
 			
 			TraverseDirectory(new DirectoryInfo(targetItem.FullPath), ref targetItem);

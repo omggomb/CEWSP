@@ -16,6 +16,7 @@ using System.Collections.Generic;
 
 namespace CEWSP.ApplicationSettings
 {
+
 	
 	
 	/// <summary>
@@ -80,6 +81,9 @@ namespace CEWSP.ApplicationSettings
 		
 		public const string DESC_AskExportOnExit = "Ask if CEWSP should export source tracking file on application exit";
 		public const string AskExportOnExit = "bAskExportOnExit";
+		
+		public const string DESC_SourceTrackerWatchDirs = "Denotes which directories the sourcetracker should watch (GAME, ROOT, BOTH, NONE)";
+		public const string SourceTrackerWatchDirs = "strFileExplorerWatchDirs";
 	}
 	
 	/// <summary>

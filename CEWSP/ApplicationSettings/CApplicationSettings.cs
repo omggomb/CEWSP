@@ -141,6 +141,7 @@ namespace CEWSP.ApplicationSettings
 		private static readonly CSetting ExportOnExitSetting = new CSetting(ESettingsStrings.ExportOnExit, false, ESettingsStrings.DESC_ExportOnExit, true);
 		private static readonly CSetting AskExportOnExitSetting = new CSetting(ESettingsStrings.AskExportOnExit, true, ESettingsStrings.DESC_AskExportOnExit, true);
 		private static readonly CSetting AskImportOnStartupSetting = new CSetting(ESettingsStrings.AskImportOnStartup, true, ESettingsStrings.DESC_AskImportOnStartup, true);
+		private static readonly CSetting SourceTrackerWatchDirsSetting = new CSetting(ESettingsStrings.SourceTrackerWatchDirs, "BOTH", ESettingsStrings.DESC_SourceTrackerWatchDirs, true);
 		
 		private static CApplicationSettings _instance;
 		public static CApplicationSettings Instance
@@ -203,6 +204,7 @@ namespace CEWSP.ApplicationSettings
 			SetValue(ImportOnStartupSetting);
 			SetValue(AskExportOnExitSetting);
 			SetValue(AskImportOnStartupSetting);
+			SetValue(SourceTrackerWatchDirsSetting);
 		}
 		
 		public void Shutdown()
@@ -674,6 +676,28 @@ namespace CEWSP.ApplicationSettings
 			
 			
 			return true;
+		}
+		
+		/// <summary>
+		/// Checks whether the source tracker should watch the current game directory
+		/// </summary>
+		/// <returns>True if the current game directory should be watched</returns>
+		public bool SourceTrackerShouldWatchGame()
+		{
+			string val = GetValue(ESettingsStrings.SourceTrackerWatchDirs).GetValueString().ToLower();
+			
+			return (val == SourceFileTracking.ETrackedDirs.eTD_Both || val == SourceFileTracking.ETrackedDirs.eTD_Game);
+		}
+		
+		/// <summary>
+		/// Checks whether the source tracker should watch the current root directory
+		/// </summary>
+		/// <returns>True if the current root directory should be watched</returns>
+		public bool SourceTrackerShouldWatchRoot()
+		{
+			string val = GetValue(ESettingsStrings.SourceTrackerWatchDirs).GetValueString().ToLower();
+			
+			return (val == SourceFileTracking.ETrackedDirs.eTD_Both || val == SourceFileTracking.ETrackedDirs.eTD_Root);
 		}
 		#endregion
 		

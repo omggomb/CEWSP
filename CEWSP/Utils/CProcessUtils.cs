@@ -153,7 +153,7 @@ namespace CEWSP.Utils
 				{
 					Directory.CreateDirectory(sTargetDir);
 				}
-				catch (PathTooLongException e)
+				catch (Exception e)
 				{
 					
 					CUserInteractionUtils.ShowErrorMessageBox(e.Message);
@@ -178,7 +178,7 @@ namespace CEWSP.Utils
 				{
 					File.Copy(file.FullName, sFileName, true);
 				}
-				catch (PathTooLongException e)
+				catch (Exception e)
 				{
 					CUserInteractionUtils.ShowErrorMessageBox(e.Message);
 					

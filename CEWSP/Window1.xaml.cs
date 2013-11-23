@@ -83,8 +83,9 @@ namespace CEWSP
 			//string root = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).ToString();
 			//string rc = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.RCRelativePath).ToString();
 			
-		
-			CSourceTracker.Instance.StartWatching(true, true);
+			
+			CSourceTracker.Instance.StartWatching(CApplicationSettings.Instance.SourceTrackerShouldWatchRoot(), 
+			                                      CApplicationSettings.Instance.SourceTrackerShouldWatchGame());
 			//CSourceTracker.Instance.ExportTrackingFile("G:\\Dropbox\\CEWorkspace\\CEWSP\\CEWSP\\bin\\Debug\\SourceTrackerTest\\tracker.txt");
 			
 			//CSourceTracker.Instance.ImportTrackingList("G:\\Dropbox\\CEWorkspace\\CEWSP\\CEWSP\\bin\\Debug\\SourceTrackerTest\\tracker.txt");
@@ -661,6 +662,8 @@ namespace CEWSP
         private void PostApplicationSettingsDialog()
         {
         	ValidateQuickAccessButtons();
+        	CSourceTracker.Instance.StartWatching(CApplicationSettings.Instance.SourceTrackerShouldWatchRoot(),
+        	                                      CApplicationSettings.Instance.SourceTrackerShouldWatchGame());
         	
         }
         
