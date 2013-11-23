@@ -133,12 +133,18 @@ namespace CEWSP
 			item.Header = "Run..."; // LOCALIZE
 			List<string> defNames = CApplicationSettings.Instance.GetAllDCCProgramNames();
 			MenuItem progItem;
+			
+			List<string> addedPrograms = new List<string>();
+			
 			foreach (string defName in defNames)
 			{
 				CDCCDefinition def = CApplicationSettings.Instance.GetDCCProgram(defName);
 				
 				foreach (SDCCProgram program in def.Programs.Values)
 				{
+					if (addedPrograms.Contains(program.Name))
+						continue;
+					
 					progItem = new MenuItem();
 					progItem.Header = program.Name;
 					
@@ -151,6 +157,7 @@ namespace CEWSP
 					};
 					
 					item.Items.Add(progItem);
+					addedPrograms.Add(program.Name);
 				}
 			}
 			

@@ -618,12 +618,16 @@ namespace CEWSP
 				sep = new Separator();
 				runWithItem.Items.Add(sep);
 			}
+			List<string> addedPrograms = new List<string>();
 			foreach (string defName in defs)
 			{
 				CDCCDefinition def = CApplicationSettings.Instance.GetDCCProgram(defName);
 				
 				foreach (SDCCProgram program in def.Programs.Values) 
 				{
+					if (addedPrograms.Contains(program.Name))
+						continue;
+					
 					MenuItem programItem = new MenuItem();
 					
 					programItem.Header = program.Name;
@@ -646,6 +650,7 @@ namespace CEWSP
 					};
 					
 					runWithItem.Items.Add(programItem);
+					addedPrograms.Add(program.Name);
 				}
 			}
 			
