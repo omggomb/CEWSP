@@ -17,7 +17,7 @@ using System.Threading;
 using System.Windows.Threading;
 using System.Diagnostics;
 
-
+using Microsoft.VisualBasic.FileIO;
 
 using CEWSP.Utils;
 using CEWSP.SourceFileTracking;
@@ -875,19 +875,16 @@ namespace CEWSP
 					
 					try
 					{
-						File.Copy(fileSource, fileTarget, true);
+						//File.Copy(fileSource, fileTarget, true);
+						
 						
 						if (m_bIsFileCut)
 						{
-							try
-							{
-								File.Delete(fileSource);
-							}
-							catch (IOException e)
-							{
-								CUserInteractionUtils.ShowErrorMessageBox(e.Message);
-							}
-							m_bIsFileCut = false;
+							FileSystem.MoveFile(fileSource, fileTarget, UIOption.AllDialogs, UICancelOption.DoNothing);
+						}
+						else
+						{
+							CProcessUtils.CopyFile(fileSource, fileTarget, false);
 						}
 					} 
 					catch (Exception e)
@@ -904,19 +901,14 @@ namespace CEWSP
 					if (dirInf.Exists)
 					{
 						string targetDir = targetItem.FullPath + "\\" + dirInf.Name;
-						CProcessUtils.CopyDirectory(dirInf.FullName, targetDir);
 						
 						if (m_bIsFileCut)
 						{
-							try
-							{
-								Directory.Delete(dirInf.FullName, true);
-							} 
-							catch (Exception e)
-							{
-								
-								CUserInteractionUtils.ShowErrorMessageBox(e.Message);
-							}
+							CProcessUtils.MoveDirectory(dirInf.FullName, targetDir, false);
+						}
+						else
+						{
+							CProcessUtils.CopyDirectory(dirInf.FullName, targetDir, false);
 						}
 					}
 				}
@@ -940,8 +932,8 @@ namespace CEWSP
 				if (selectedItem.IsDirectory)
 				{
 							
-					Directory.Delete(selectedItem.FullPath, true);
-					
+					//Directory.Delete(selectedItem.FullPath, true);
+					FileSystem.DeleteDirectory(selectedItem.FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
 					var mainWindow = Application.Current.MainWindow as Window1;
 					if (mainWindow != null)
 					{
@@ -951,7 +943,8 @@ namespace CEWSP
 				}
 				else
 				{					
-					File.Delete(selectedItem.FullPath);				
+					//File.Delete(selectedItem.FullPath);		
+					FileSystem.DeleteFile(selectedItem.FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);					
 				}
 				
 			}

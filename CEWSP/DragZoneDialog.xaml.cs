@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.FileIO;
 
 
 using CEWSP.ApplicationSettings;
@@ -73,7 +74,7 @@ namespace CEWSP
 			{
 				if (CPathUtils.IsStringCEConform(saveFileTextBox.Text))
 				{
-					info.CopyTo(saveFileTextBox.Text, true);
+					CProcessUtils.CopyFile(info.FullName, saveFileTextBox.Text, false);
 				}
 				else
 					return false;
@@ -115,22 +116,7 @@ namespace CEWSP
 		
 		private void CopyDirectory(DirectoryInfo info, string sTargetPath)
 		{
-			string sTargetForFiles = sTargetPath + "\\" + info.Name;
-			if (!Directory.Exists(sTargetForFiles))
-				Directory.CreateDirectory(sTargetForFiles);
-
-
-            foreach (DirectoryInfo subDir in info.GetDirectories())
-            {
-                CopyDirectory(subDir, sTargetForFiles);
-            }
-
-			foreach (FileInfo file in info.GetFiles())
-			{
-				File.Copy(file.FullName, sTargetForFiles + "\\" + file.Name, true);
-			}
-
-         
+			CProcessUtils.CopyDirectory(info.FullName, sTargetPath, false);
 		}
 		
 		void BrowseButton_Click(object sender, RoutedEventArgs e)

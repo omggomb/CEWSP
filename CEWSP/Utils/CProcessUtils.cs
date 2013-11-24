@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
+using Microsoft.VisualBasic.FileIO;
 
 using CEWSP.ApplicationSettings;
 
@@ -21,8 +22,6 @@ namespace CEWSP.Utils
 	/// </summary>
 	public class CProcessUtils
 	{
-        private static DispatcherTimer m_copyNoticeTimer;
-
 		public CProcessUtils()
 		{
 		}
@@ -110,82 +109,84 @@ namespace CEWSP.Utils
 			CUserInteractionUtils.DisplayRichTextBox(output);
 		}
 		
-		public static void CopyDirectory(string sPathToDir, string sTargetDir)
+		/// <summary>
+		/// Copies a directory.
+		/// </summary>
+		/// <param name="sPathToDir">Full path to the directory to be copied</param>
+		/// <param name="sTargetDir">Full path to the target directory</param>
+		/// <param name="bOverwrite">Overwrite existing directory?</param>
+		/// <param name="bSilent">Hide progress bar? Still shows errors</param>
+		public static void CopyDirectory(string sPathToDir, string sTargetDir, bool bOverwrite = true, bool bSilent = false)
 		{
-			 m_copyNoticeTimer = new DispatcherTimer();
-             m_copyNoticeTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-             m_copyNoticeTimer.IsEnabled = true;
-			
-			string sMessageBoxMessage = Properties.Resources.CommonCopying;
-			
-			Window window = new Window();
-			
-			window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-			window.SizeToContent = SizeToContent.WidthAndHeight;
-			
-			window.Content = sMessageBoxMessage;
-
-            m_copyNoticeTimer.Tick += delegate
+			if (bOverwrite)
 			{
-				sMessageBoxMessage += '.';
-				
-				if (sMessageBoxMessage.Length > 15)
-					sMessageBoxMessage = sMessageBoxMessage.TrimEnd('.');
-				
-				window.Content = sMessageBoxMessage;
-			};
+				if (Directory.Exists(sTargetDir))
+					Directory.Delete(sTargetDir, true);
+			}
 			
-			window.Show();
-            m_copyNoticeTimer.Start();
-			CopyDirectoryNoNotification(sPathToDir, sTargetDir);
-            m_copyNoticeTimer.Stop();
-			window.Close();
+			FileSystem.CopyDirectory(sPathToDir, sTargetDir,
+			                         bSilent ? UIOption.OnlyErrorDialogs : UIOption.AllDialogs,
+			                         UICancelOption.DoNothing);
 		}
 		
-		public  static void CopyDirectoryNoNotification(string sPathToDir, string sTargetDir)
+		/// <summary>
+		/// Copies a file
+		/// </summary>
+		/// <param name="sSourceFile">Full path to the file to be copied</param>
+		/// <param name="sTargetFile">Full path to the destination file</param>
+		/// <param name="bOverwrite">Overwrite exsting file?</param>
+		/// <param name="bSilent">Hide progress bar? Still shows errors</param>
+		public static void CopyFile(string sSourceFile, string sTargetFile, bool bOverwrite = true, bool bSilent = false)
 		{
-			if (!Directory.Exists(sPathToDir))
-				return;
-			
-			if (!Directory.Exists(sTargetDir))
+			if (bOverwrite)
 			{
-				try 
-				{
-					Directory.CreateDirectory(sTargetDir);
-				}
-				catch (Exception e)
-				{
-					
-					CUserInteractionUtils.ShowErrorMessageBox(e.Message);
-					return;
-				}
+				if (File.Exists(sTargetFile))
+					File.Delete(sTargetFile);
 			}
 			
-			DirectoryInfo info = new DirectoryInfo(sPathToDir);
-			
-			
-			
-			foreach (DirectoryInfo dir in info.GetDirectories())
+			FileSystem.CopyFile(sSourceFile, sTargetFile,
+			                         bSilent ? UIOption.OnlyErrorDialogs : UIOption.AllDialogs,
+			                         UICancelOption.DoNothing);
+		}
+		
+		/// <summary>
+		/// Moves a directory.
+		/// </summary>
+		/// <param name="sPathToDir">Full path to the directory to be moved</param>
+		/// <param name="sTargetDir">Full path to the target directory</param>
+		/// <param name="bOverwrite">Overwrite existing directory?</param>
+		/// <param name="bSilent">Hide progress bar? Still shows errors</param>
+		public static void MoveDirectory(string sPathToDir, string sTargetDir, bool bOverwrite = true, bool bSilent = false)
+		{
+			if (bOverwrite)
 			{
-				CopyDirectoryNoNotification(dir.FullName, sTargetDir + "\\" + dir.Name);
+				if (Directory.Exists(sTargetDir))
+					Directory.Delete(sTargetDir, true);
 			}
 			
-			foreach (FileInfo file in info.GetFiles())
+			FileSystem.MoveDirectory(sPathToDir, sTargetDir,
+			                         bSilent ? UIOption.OnlyErrorDialogs : UIOption.AllDialogs,
+			                         UICancelOption.DoNothing);
+		}
+		
+		/// <summary>
+		/// Moves a file
+		/// </summary>
+		/// <param name="sSourceFile">Full path to the file to be moved</param>
+		/// <param name="sTargetFile">Full path to the destination file</param>
+		/// <param name="bOverwrite">Overwrite exsting file?</param>
+		/// <param name="bSilent">Hide progress bar? Still shows errors</param>
+		public static void MoveFile(string sSourceFile, string sTargetFile, bool bOverwrite = true, bool bSilent = false)
+		{
+			if (bOverwrite)
 			{
-				string sFileName = sTargetDir + "\\" + file.Name;
-				
-				try 
-				{
-					File.Copy(file.FullName, sFileName, true);
-				}
-				catch (Exception e)
-				{
-					CUserInteractionUtils.ShowErrorMessageBox(e.Message);
-					
-				}
+				if (File.Exists(sTargetFile))
+					File.Delete(sTargetFile);
 			}
 			
-			
+			FileSystem.MoveFile(sSourceFile, sTargetFile,
+			                         bSilent ? UIOption.OnlyErrorDialogs : UIOption.AllDialogs,
+			                         UICancelOption.DoNothing);
 		}
 	}
 }

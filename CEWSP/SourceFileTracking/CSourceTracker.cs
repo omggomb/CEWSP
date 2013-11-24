@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.VisualBasic.FileIO;
 
 using CEWSP.Utils;
 using CEWSP.ApplicationSettings;
@@ -422,7 +423,11 @@ namespace CEWSP.SourceFileTracking
 				{
 					try
 					{
+						
 						File.Copy(sSourcePath, sDestinationPath, true);
+						// Using CopyFile here too in case of large files
+						// TODO: see if this gets troublesome if file already exists
+						//FileSystem.CopyFile(sSourcePath, sDestinationPath, UIOption.AllDialogs, UICancelOption.DoNothing);
 					}
 					catch (Exception)
 					{
