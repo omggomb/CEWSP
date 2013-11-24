@@ -424,10 +424,11 @@ namespace CEWSP.SourceFileTracking
 					try
 					{
 						
-						File.Copy(sSourcePath, sDestinationPath, true);
+						
 						// Using CopyFile here too in case of large files
-						// TODO: see if this gets troublesome if file already exists
-						//FileSystem.CopyFile(sSourcePath, sDestinationPath, UIOption.AllDialogs, UICancelOption.DoNothing);
+						// DONE_TODO: see if this gets troublesome if file already exists
+						// Using custom function instead
+						CProcessUtils.CopyFile(sSourcePath, sDestinationPath, true);
 					}
 					catch (Exception)
 					{
@@ -578,7 +579,7 @@ namespace CEWSP.SourceFileTracking
 					
 					if (!Directory.Exists(info.DirectoryName))
 						Directory.CreateDirectory(info.DirectoryName);
-					File.Copy(sSourceFilePath, sTargetFilePath, true);
+					CProcessUtils.CopyFile(sSourceFilePath, sTargetFilePath);
 				} 
 				catch (Exception e)
 				{

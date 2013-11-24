@@ -165,7 +165,7 @@ namespace CEWSP
 			{
 				if (e.Key == System.Windows.Input.Key.Delete)
 				{
-					OnContextDeleteClicked(null, null);
+					OnContextRecycleClicked(null, null);
 				}
 				else if (e.Key == System.Windows.Input.Key.F2)
 				{
@@ -682,10 +682,15 @@ namespace CEWSP
 		
 			item = new MenuItem();
 			
-			item.Header = "Delete"; // LOCALIZE
-			item.Click +=  OnContextDeleteClicked;
+			item.Header = "Move to Recycle Bin"; // LOCALIZE
+			item.Click +=  OnContextRecycleClicked;
 			
-			m_viewItemContextMenu.Items.Add(item);	
+			m_viewItemContextMenu.Items.Add(item);
+
+			item = new MenuItem();
+			item.Header = "Delete"; // LOCALIZE
+			item.Click += OnContextDeleteClicked;
+			m_viewItemContextMenu.Items.Add(item);
 			
 			item = new MenuItem();
 			
@@ -834,16 +839,10 @@ namespace CEWSP
 		{
 			DirectoryTreeItem selectedItem = m_targetTreeView.SelectedItem as DirectoryTreeItem;
 			
-			if (selectedItem.IsDirectory == false)
+			if (selectedItem != null)
 			{
 				StringCollection coll = new StringCollection();
 				
-				coll.Add(selectedItem.FullPath);
-				Clipboard.SetFileDropList(coll);
-			}
-			else
-			{
-				StringCollection coll = new StringCollection();
 				coll.Add(selectedItem.FullPath);
 				Clipboard.SetFileDropList(coll);
 			}
@@ -921,7 +920,7 @@ namespace CEWSP
 			OnContextCopyClicked(null, null);
 			m_bIsFileCut = true;
 		}
-		static void OnContextDeleteClicked(object sender, EventArgs args)
+		static void OnContextRecycleClicked(object sender, EventArgs args)
 		{
 			DirectoryTreeItem selectedItem = m_targetTreeView.SelectedItem as DirectoryTreeItem;
 			DirectoryTreeItem parent = selectedItem.GetParentSave() as DirectoryTreeItem;
@@ -933,7 +932,7 @@ namespace CEWSP
 				{
 							
 					//Directory.Delete(selectedItem.FullPath, true);
-					FileSystem.DeleteDirectory(selectedItem.FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+					FileSystem.DeleteDirectory(selectedItem.FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.DoNothing);
 					var mainWindow = Application.Current.MainWindow as Window1;
 					if (mainWindow != null)
 					{
@@ -944,7 +943,7 @@ namespace CEWSP
 				else
 				{					
 					//File.Delete(selectedItem.FullPath);		
-					FileSystem.DeleteFile(selectedItem.FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);					
+					FileSystem.DeleteFile(selectedItem.FullPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.DoNothing);					
 				}
 				
 			}
@@ -958,6 +957,38 @@ namespace CEWSP
 				}
 				else
 					throw;
+			}
+		}
+		
+		static void OnContextDeleteClicked(object sender, EventArgs args)
+		{
+			var selectedItem = m_targetTreeView.SelectedItem as DirectoryTreeItem;
+			
+			if (selectedItem != null)
+			{
+				
+				try
+				{
+					if (selectedItem.IsDirectory)
+					{						
+						FileSystem.DeleteDirectory(selectedItem.FullPath, UIOption.AllDialogs, RecycleOption.DeletePermanently, UICancelOption.DoNothing);
+						var mainWindow = Application.Current.MainWindow as Window1;
+						if (mainWindow != null)
+						{
+							mainWindow.ValidateRootPath();
+							mainWindow.ValidateGameFolder();
+						}			
+					}
+					else
+					{
+						FileSystem.DeleteFile(selectedItem.FullPath, UIOption.AllDialogs, RecycleOption.DeletePermanently, UICancelOption.DoNothing);					
+					}
+				} 
+				catch (Exception e)
+				{
+					
+					CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+				}
 			}
 		}
 		
@@ -976,7 +1007,8 @@ namespace CEWSP
 				if (selectedItem.IsDirectory)
 				{
 					string newPath = selectedItem.FullPath.Substring(0, selectedItem.FullPath.LastIndexOf('\\')) + '\\' + box.Text;
-					Directory.Move(selectedItem.FullPath, newPath);
+					//Directory.Move(selectedItem.FullPath, newPath);
+					FileSystem.RenameDirectory(selectedItem.FullPath, newPath);
 				}
 				else
 				{
@@ -1003,8 +1035,7 @@ namespace CEWSP
 							sNewExtension = fileInfo.Extension.TrimStart('.');
 					}
 					string filename = CPathUtils.RemoveExtension(CPathUtils.GetFilename(box.Text));
-					string path = fileInfo.Directory + "\\" + filename + "." + sNewExtension;
-					fileInfo.MoveTo(path);
+					FileSystem.RenameFile(selectedItem.FullPath, filename + "." + sNewExtension);
 				}
 			} 
 			catch (Exception e)

@@ -212,7 +212,7 @@ namespace CEWSP.ApplicationSettings
 							Directory.CreateDirectory(directory);
 						
 						newFile = directory + "\\" + fileName + "." + file.Extension;
-						File.Copy(file.FullName, newFile, true);
+						CProcessUtils.CopyFile(file.FullName, newFile);
 						ExpandMacros(newFile);
 					}
 					
