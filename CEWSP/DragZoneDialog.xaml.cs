@@ -66,14 +66,29 @@ namespace CEWSP
 			Show();;
 		}
 		
+		public void ShowWindow(string[] fileNames)
+		{
+			m_dirInfoList = new List<DirectoryInfo>();
+			m_fileInfoList = new List<FileInfo>();
+			
+			foreach (string entry in fileNames)
+			{
+				if (File.Exists(entry))
+					m_fileInfoList.Add(new FileInfo(entry));
+				else if (Directory.Exists(entry))
+					m_dirInfoList.Add(new DirectoryInfo(entry));
+			}
+			saveFileTextBox.Text = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
+			Show();
+			
+		}
+		
 		private bool ProcessRequest(FileInfo info)
 		{
 			string sNewFile = saveFileTextBox.Text + "\\" + info.Name;
 			
 			if (copyCheckbox.IsChecked == true)
 			{
-				
-				
 				if (CPathUtils.IsStringCEConform(saveFileTextBox.Text))
 				{
 					CProcessUtils.CopyFile(info.FullName, sNewFile, false);
@@ -171,16 +186,15 @@ namespace CEWSP
 			}
 			else
 			{
-				if (m_fileInfoList != null)
-				{
-					if (ProcessRequest(m_fileInfoList))
-						Close();
-				} 
-				else 
-				{
-					if (ProcessRequest(m_dirInfoList, saveFileTextBox.Text))
-						Close();
-				}
+				bool sux = true;
+				if (m_fileInfoList != null && m_fileInfoList.Count > 0)
+					sux = ProcessRequest(m_fileInfoList);
+				
+				if (m_dirInfoList != null && m_dirInfoList.Count > 0)
+					sux = ProcessRequest(m_dirInfoList, saveFileTextBox.Text);
+					
+				if (sux)
+					Close();
 			}
 		}
 		

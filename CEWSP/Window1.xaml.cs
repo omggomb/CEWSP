@@ -226,7 +226,14 @@ namespace CEWSP
 		void DragZoneDrop(object sender, DragEventArgs e)
 		{
 			string[] filenames = (string[])e.Data.GetData(DataFormats.FileDrop);	
-			List<FileInfo> files = new List<FileInfo>();
+			
+			if (filenames.Length > 0)
+			{
+				var dialog = new DragZoneDialog();
+				dialog.ShowWindow(filenames);
+			}
+			
+			/*List<FileInfo> files = new List<FileInfo>();
 			List<DirectoryInfo> dirs = new List<DirectoryInfo>();
 			
 			if (filenames.Length > 0)
@@ -263,7 +270,7 @@ namespace CEWSP
 					var dirsDialog = new DragZoneDialog();
 					dirsDialog.ShowWindow(dirs);
 				}
-			}
+			}*/
 		}
 		
 		void OnSetRootDirClicked(object sender, RoutedEventArgs e)
