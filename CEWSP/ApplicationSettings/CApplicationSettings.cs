@@ -142,7 +142,11 @@ namespace CEWSP.ApplicationSettings
 		private static readonly CSetting AskExportOnExitSetting = new CSetting(ESettingsStrings.AskExportOnExit, true, ESettingsStrings.DESC_AskExportOnExit, true);
 		private static readonly CSetting AskImportOnStartupSetting = new CSetting(ESettingsStrings.AskImportOnStartup, true, ESettingsStrings.DESC_AskImportOnStartup, true);
 		private static readonly CSetting SourceTrackerWatchDirsSetting = new CSetting(ESettingsStrings.SourceTrackerWatchDirs, "BOTH", ESettingsStrings.DESC_SourceTrackerWatchDirs, true);
-		
+		private static readonly CSetting Game64bitArgumentsSetting = new CSetting(ESettingsStrings.Game64bitArguments, "", ESettingsStrings.DESC_Game64bitArguments, true);
+		private static readonly CSetting Game32bitArgumentsSetting = new CSetting(ESettingsStrings.Game32bitArguments, "", ESettingsStrings.DESC_Game32bitArguments, true);
+		private static readonly CSetting Editor64bitArgumentsSetting = new CSetting(ESettingsStrings.Editor64bitArguments, "", ESettingsStrings.DESC_Editor64bitArguments, true);
+		private static readonly CSetting Editor32bitArgumentsSetting = new CSetting(ESettingsStrings.Editor32bitArguments, "", ESettingsStrings.DESC_Editor32bitArguments, true);
+
 		private static CApplicationSettings _instance;
 		public static CApplicationSettings Instance
 		{
@@ -190,10 +194,19 @@ namespace CEWSP.ApplicationSettings
 			}
 			
 			SetValue(TemlateFolderNameSetting);
+			
 			SetValue(SB64bitRelativePathSetting);
+			SetValue(Editor64bitArgumentsSetting);
+			
 			SetValue(SB32bitRelativePathSetting);
+			SetValue(Editor32bitArgumentsSetting);
+			
 			SetValue(Game64bitRelativePathSetting);
+			SetValue(Game64bitArgumentsSetting);
+			
 			SetValue(Game32bitRelativePathSetting);
+			SetValue(Game32bitArgumentsSetting);
+			
 			SetValue(CodeSlnRelativePathSetting);
 			SetValue(ScriptStartupSetting);
 			SetValue(RCRelativePathSetting);

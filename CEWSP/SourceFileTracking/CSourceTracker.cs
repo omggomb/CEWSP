@@ -839,7 +839,7 @@ namespace CEWSP.SourceFileTracking
 			foreach (Regex ignoredRegex in m_ignoredRegexList)
 			{
 				if (ignoredRegex.IsMatch(sPathToTest))
-					bShouldIgnore = true;
+					return bShouldIgnore = true;		// If it's an explicitly ignored path, no need to do further checking
 			}
 			
 			

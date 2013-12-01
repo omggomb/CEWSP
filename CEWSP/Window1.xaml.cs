@@ -405,18 +405,19 @@ namespace CEWSP
 			if (CApplicationSettings.Instance.IsRootValid(root))
 			{
 				string path = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.SB64bitRelativePath).GetValueString();
-				StartProcess(path);
+				string args = CApplicationSettings.Instance.GetValue(ESettingsStrings.Editor64bitArguments).GetValueString();
+				StartProcess(path, args);
 			}
 		}
 		
-		private void StartProcess(string path)
+		private void StartProcess(string path, string args = "")
 		{
 			Process programProcess = new Process();
 			programProcess.Exited += OnProcessTerminated;
 			programProcess.ErrorDataReceived += OnProcessTerminated;
 			programProcess.EnableRaisingEvents = true;
 				
-			ProcessStartInfo startInfo = new ProcessStartInfo(path);
+			ProcessStartInfo startInfo = new ProcessStartInfo(path, args);
 		
 			programProcess.StartInfo = startInfo;
 					
@@ -753,7 +754,8 @@ namespace CEWSP
 			if (CApplicationSettings.Instance.IsRootValid(root))
 			{
 				string path = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.SB32bitRelativePath).GetValueString();
-				StartProcess(path);
+				string args = CApplicationSettings.Instance.GetValue(ESettingsStrings.Editor32bitArguments).GetValueString();
+				StartProcess(path, args);
 			}
 		}
 		
@@ -766,7 +768,8 @@ namespace CEWSP
 				if (PrepareGameLaunch())
 				{
 					string path = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.Game64bitRelativePath).GetValueString();
-					StartProcess(path);
+					string arguments = CApplicationSettings.Instance.GetValue(ESettingsStrings.Game64bitArguments).GetValueString();
+					StartProcess(path, arguments);
 				}
 			}
 		}
@@ -780,7 +783,8 @@ namespace CEWSP
 				if (PrepareGameLaunch())
 				{
 					string path = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.Game32bitRelativePath).GetValueString();
-					StartProcess(path);
+					string args = CApplicationSettings.Instance.GetValue(ESettingsStrings.Game32bitArguments).GetValueString();
+					StartProcess(path, args);
 				}
 			}
 		}

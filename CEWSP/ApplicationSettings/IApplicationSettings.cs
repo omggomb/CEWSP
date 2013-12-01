@@ -84,6 +84,18 @@ namespace CEWSP.ApplicationSettings
 		
 		public const string DESC_SourceTrackerWatchDirs = "Denotes which directories the sourcetracker should watch (GAME, ROOT, BOTH, NONE)";
 		public const string SourceTrackerWatchDirs = "strFileExplorerWatchDirs";
+		
+		public const string DESC_Game64bitArguments = "Commandline arguments for game 64bit quick acces buttons";
+		public const string Game64bitArguments = "strGame64bitArguments";
+		
+		public const string DESC_Game32bitArguments = "Commandline arguments for game 32bit quick acces buttons";
+		public const string Game32bitArguments = "strGame32bitArguments";
+		
+		public const string DESC_Editor64bitArguments = "Commandline arguments for Editor 64bit quick acces buttons";
+		public const string Editor64bitArguments = "strEditor64bitArguments";
+		
+		public const string DESC_Editor32bitArguments = "Commandline arguments for Editor 32bit quick acces buttons";
+		public const string Editor32bitArguments = "strEditor32bitArguments";
 	}
 	
 	/// <summary>
