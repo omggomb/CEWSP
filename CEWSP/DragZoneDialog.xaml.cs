@@ -30,8 +30,8 @@ namespace CEWSP
 	/// </summary>
 	public partial class DragZoneDialog : Window
 	{
-		private static FileInfo m_fileInfo;
-		private static DirectoryInfo m_dirInfo;
+		private  List<FileInfo> m_fileInfoList;
+		private  List<DirectoryInfo> m_dirInfoList;
 		
 		public DragZoneDialog()
 		{
@@ -48,40 +48,42 @@ namespace CEWSP
 			browseButton.IsEnabled = (bool)copyCheckbox.IsChecked;
 		}
 		
-		public static void ShowWindow(FileInfo info)
+		public  void ShowWindow(List<FileInfo> info)
 		{
-			m_fileInfo = info;
-			DragZoneDialog dialog = new DragZoneDialog();
-			dialog.saveFileTextBox.Text = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString()
-									+ "\\" + info.Name;
+			m_fileInfoList = info;
+
+		saveFileTextBox.Text = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
 			
 			
-			dialog.Show();
+			Show();
 		}
 		
-		public static void ShowWindow(DirectoryInfo info)
+		public  void ShowWindow(List<DirectoryInfo> info)
 		{
-			m_dirInfo = info;
-			DragZoneDialog dialog = new DragZoneDialog();
-			dialog.saveFileTextBox.Text = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString()
-									+ "\\" + info.Name;			
-			dialog.Show();
+			m_dirInfoList = info;
+	
+			saveFileTextBox.Text = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();		
+			Show();;
 		}
 		
 		private bool ProcessRequest(FileInfo info)
 		{
+			string sNewFile = saveFileTextBox.Text + "\\" + info.Name;
+			
 			if (copyCheckbox.IsChecked == true)
 			{
+				
+				
 				if (CPathUtils.IsStringCEConform(saveFileTextBox.Text))
 				{
-					CProcessUtils.CopyFile(info.FullName, saveFileTextBox.Text, false);
+					CProcessUtils.CopyFile(info.FullName, sNewFile, false);
 				}
 				else
 					return false;
 				
 				if (rcCheckbox.IsChecked == true)
 				{
-					FileInfo newFile = new FileInfo(saveFileTextBox.Text);
+					FileInfo newFile = new FileInfo(sNewFile);
 					CProcessUtils.RunRC(newFile);
 				}
 			}
@@ -89,7 +91,6 @@ namespace CEWSP
 			{
 				if (rcCheckbox.IsChecked == true)
 				{
-					FileInfo newFile = new FileInfo(saveFileTextBox.Text);
 					CProcessUtils.RunRC(info);
 				}
 			}
@@ -119,53 +120,67 @@ namespace CEWSP
 			CProcessUtils.CopyDirectory(info.FullName, sTargetPath, false);
 		}
 		
-		void BrowseButton_Click(object sender, RoutedEventArgs e)
+		private bool ProcessRequest(List<FileInfo> fileInfoList)
 		{
-			if (m_fileInfo != null)
+			bool sux = true;
+			foreach (FileInfo info in fileInfoList)
 			{
-				var dialog = new SaveFileDialog();
-				
-				dialog.InitialDirectory = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
-				dialog.Filter = m_fileInfo.Extension + " Files | *" + m_fileInfo.Extension;
-				dialog.FileName = m_fileInfo.Name;
-				
-				
-				DialogResult res = dialog.ShowDialog();
-				
-				if (res != System.Windows.Forms.DialogResult.Cancel)
-				{
-					saveFileTextBox.Text = dialog.FileName;
-				}
-				
-			}
-			else 
-			{
-				var dialog = new FolderBrowserDialog();
-				dialog.SelectedPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
-				dialog.Description = Properties.DragZoneResources.DragFolderHint;
-				
-				System.Windows.Forms.DialogResult res = dialog.ShowDialog();
-				
-				if (res == System.Windows.Forms.DialogResult.OK)
-				{
-					saveFileTextBox.Text = dialog.SelectedPath;
-				}
-				
+				if (!ProcessRequest(info))
+					sux = false;
 			}
 			
+			return sux;
+		}
+		
+		private bool ProcessRequest(List<DirectoryInfo> dirList, string sTargetPath)
+		{
+			bool sux = true;
+			
+			foreach (var dir in dirList)
+			{
+				if (!ProcessRequest(dir, sTargetPath))
+					sux = false;
+			}
+			
+			return sux;
+		}
+		
+		
+		void BrowseButton_Click(object sender, RoutedEventArgs e)
+		{
+			// We only need to know a folder now...
+			
+			var dialog = new FolderBrowserDialog();
+			dialog.SelectedPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
+			dialog.Description = Properties.DragZoneResources.DragFolderHint;
+			
+			System.Windows.Forms.DialogResult res = dialog.ShowDialog();
+			
+			if (res == System.Windows.Forms.DialogResult.OK)
+			{
+				saveFileTextBox.Text = dialog.SelectedPath;
+			}
+
 		}
 		
 		void OnOkClicked(object sender, RoutedEventArgs e)
 		{
-			if (m_fileInfo != null)
+			if (saveFileTextBox.Text.Contains("."))
 			{
-				if (ProcessRequest(m_fileInfo))
-					Close();
-			} 
-			else 
+				CUserInteractionUtils.ShowErrorMessageBox(Properties.DragZoneResources.TextIsNoDirectory);
+			}
+			else
 			{
-				if (ProcessRequest(m_dirInfo, saveFileTextBox.Text))
-					Close();
+				if (m_fileInfoList != null)
+				{
+					if (ProcessRequest(m_fileInfoList))
+						Close();
+				} 
+				else 
+				{
+					if (ProcessRequest(m_dirInfoList, saveFileTextBox.Text))
+						Close();
+				}
 			}
 		}
 		

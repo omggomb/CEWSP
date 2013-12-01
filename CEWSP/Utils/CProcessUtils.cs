@@ -124,7 +124,9 @@ namespace CEWSP.Utils
 					Directory.Delete(sTargetDir, true);
 			}
 			
-			FileSystem.CopyDirectory(sPathToDir, sTargetDir,
+			DirectoryInfo info = new DirectoryInfo(sPathToDir);
+			
+			FileSystem.CopyDirectory(sPathToDir, sTargetDir + "\\" + info.Name,
 			                         bSilent ? UIOption.OnlyErrorDialogs : UIOption.AllDialogs,
 			                         UICancelOption.DoNothing);
 		}

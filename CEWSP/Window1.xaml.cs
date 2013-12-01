@@ -226,6 +226,9 @@ namespace CEWSP
 		void DragZoneDrop(object sender, DragEventArgs e)
 		{
 			string[] filenames = (string[])e.Data.GetData(DataFormats.FileDrop);	
+			List<FileInfo> files = new List<FileInfo>();
+			List<DirectoryInfo> dirs = new List<DirectoryInfo>();
+			
 			if (filenames.Length > 0)
 			{
 				
@@ -235,19 +238,30 @@ namespace CEWSP
 					{
 						FileInfo info = new FileInfo(file);
 						
-						DragZoneDialog.ShowWindow(info);
+						files.Add(info);
 					} 
 					else
 					{
 						if (Directory.Exists(file))
 						{
-							DragZoneDialog.ShowWindow(new DirectoryInfo(file));
+							dirs.Add(new DirectoryInfo(file));
 						}
 						else
 						{
 							// Something went wrong....
 						}
 					}
+				}
+				
+				if (files.Count > 0)
+				{
+					var filesDialog = new DragZoneDialog();
+					filesDialog.ShowWindow(files);
+				}
+				if (dirs.Count > 0)
+				{
+					var dirsDialog = new DragZoneDialog();
+					dirsDialog.ShowWindow(dirs);
 				}
 			}
 		}

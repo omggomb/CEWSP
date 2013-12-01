@@ -79,5 +79,16 @@ namespace CEWSP.Properties
 				return ResourceManager.GetString("DragFolderHint", resourceCulture);
 			}
 		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to The path you entered is not a directory! Please specify a directory!.
+		/// </summary>
+		public static string TextIsNoDirectory
+		{
+			get
+			{
+				return ResourceManager.GetString("TextIsNoDirectory", resourceCulture);
+			}
+		}
 	}
 }

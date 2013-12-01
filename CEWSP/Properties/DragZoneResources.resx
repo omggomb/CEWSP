@@ -120,4 +120,7 @@
   <data name="DragFolderHint" xml:space="preserve">
     <value>Please choose the location where the folder(s) should be copied to.</value>
   </data>
+  <data name="TextIsNoDirectory" xml:space="preserve">
+    <value>The path you entered is not a directory! Please specify a directory!</value>
+  </data>
 </root>
