@@ -99,7 +99,7 @@
 					Content="Run rc"
 					VerticalAlignment="Center"
 					Margin="8,0,0,0"
-					IsChecked="True"/>
+					IsChecked="False"/>
 		
 		
 		</Grid>

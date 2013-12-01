@@ -828,7 +828,7 @@ namespace CEWSP.SourceFileTracking
 		
 		private bool ShouldIgnorePath(string sPathToTest)
 		{
-			bool bShouldIgnore = false;
+			bool bShouldIgnore = true;
 			
 			foreach (Regex  allButThem in m_ignoredNegatedRegexList)
 			{
@@ -845,62 +845,6 @@ namespace CEWSP.SourceFileTracking
 			
 			
 			return bShouldIgnore;
-			
-			/*// first deal with explicitly ignored files
-			//if (m_ignoredFiles.Contains(sPathToTest))
-			//	return true;
-			foreach (string ignored in m_ignoredFiles)
-			{
-				if (sPathToTest.Contains(ignored))
-					return true;
-			}
-			
-			
-			List<string> allButThem = new List<string>();
-			
-			// then filter out all negated ignore directories
-			foreach (string ignore in m_ignoredFiles)
-			{
-				if (ignore.StartsWith("!"))
-				{
-					allButThem.Add(ignore.TrimStart('!'));
-				}
-			}
-			
-			// If the path actually contains part of a negated path it should not be ignored
-			foreach (string notIgnored in allButThem)
-			{
-				if (sPathToTest.Contains(notIgnored))
-				{
-					return false;
-				}		
-			}
-			
-			if (allButThem.Count == 0)
-			{
-				foreach (string  ignore in m_ignoredFiles)
-				{
-					if (sPathToTest.Contains(ignore))
-						return true;
-				}
-			}
-			else
-			{
-				return true;
-			}
-			
-			return false;*/
-			
-			/*// Now look for the truly ignored paths
-			foreach (string ignoreThis in m_ignoredFiles)
-			{
-				
-				
-					if (sPathToTest.Contains(ignoreThis))
-						return true;
-				
-			}		
-			return false;*/
 		}
 		
 		private void UpdateTrackedFiles()

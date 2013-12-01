@@ -42,6 +42,7 @@ namespace CEWSP.Utils
 			allowedSpecials.Add('_');
 			allowedSpecials.Add('(');
 			allowedSpecials.Add(')');
+			allowedSpecials.Add('-');
 
 			for (int i = 0; i < sString.Length; ++i)
 			{
