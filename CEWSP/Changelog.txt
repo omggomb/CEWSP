@@ -6,14 +6,18 @@ Add:
 - F2 in file explorer triggers rename
 - Ctrl c, v, x in file explorer 
 - Setting: Choose which directories the source tracker will watch (game, root, both, none);
+- Setting: Command line arguments for game / editor quick access buttons
 - Copying directories in fileexplorer now works
 
 Change:
 - Ignored files are defined through regexps now
 - pasting inside the file explorer now runs through all files in clipboard
+- Dragzone dialog now can handle arbitrary numbers of files and folders
+- Defaulted "Run RC" to false in dragzone dialog.
 
 Fix:
 - Errors while copying files in file explorer won't crash CEWSP anymore.
+- Ignored paths and negated ignored paths are handled in the correct way now.
 
 ==============
 Alpha build 2:
