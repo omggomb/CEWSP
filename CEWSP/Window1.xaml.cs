@@ -412,6 +412,12 @@ namespace CEWSP
 		
 		private void StartProcess(string path, string args = "")
 		{
+			
+			if (!File.Exists(path))
+			{
+				CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.QuickAccesPathNonexistent);
+				return;
+			}
 			Process programProcess = new Process();
 			programProcess.Exited += OnProcessTerminated;
 			programProcess.ErrorDataReceived += OnProcessTerminated;

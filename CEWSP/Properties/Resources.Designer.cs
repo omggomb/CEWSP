@@ -472,6 +472,17 @@ namespace CEWSP.Properties
 		}
 		
 		/// <summary>
+		///   Looks up a localized string similar to Cannot start process because path is not valid! Please specifiy a valif path inside the application settings!.
+		/// </summary>
+		public static string QuickAccesPathNonexistent
+		{
+			get
+			{
+				return ResourceManager.GetString("QuickAccesPathNonexistent", resourceCulture);
+			}
+		}
+		
+		/// <summary>
 		///   Looks up a localized string similar to Sorry, the current root directory is not a valid CE directory! Changes cannot be applied!.
 		/// </summary>
 		public static string RootNotValidNoSaveChanges

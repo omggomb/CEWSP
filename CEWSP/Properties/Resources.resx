@@ -259,4 +259,7 @@
   <data name="IngoredRegexDoesntExist" xml:space="preserve">
     <value>Some regex expressions in the ignored files file, do not match any path inside the root or game directory. Maybe something was deleted or is misspelt. Please check the log for more info.</value>
   </data>
+  <data name="QuickAccesPathNonexistent" xml:space="preserve">
+    <value>Cannot start process because path is not valid! Please specifiy a valif path inside the application settings!</value>
+  </data>
 </root>
