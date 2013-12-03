@@ -440,11 +440,11 @@ namespace CEWSP.Properties
 		/// <summary>
 		///   Looks up a localized string similar to An error occured while parsing the source tracker&apos;s ignore file list..
 		/// </summary>
-		public static string IgnoredRegesWrong
+		public static string IgnoredRegexWrong
 		{
 			get
 			{
-				return ResourceManager.GetString("IgnoredRegesWrong", resourceCulture);
+				return ResourceManager.GetString("IgnoredRegexWrong", resourceCulture);
 			}
 		}
 		
@@ -457,6 +457,17 @@ namespace CEWSP.Properties
 			get
 			{
 				return ResourceManager.GetString("ImportOnStartup", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to Some regex expressions in the ignored files file, do not match any path inside the root or game directory. Maybe something was deleted or is misspelt. Please check the log for more info..
+		/// </summary>
+		public static string IngoredRegexDoesntExist
+		{
+			get
+			{
+				return ResourceManager.GetString("IngoredRegexDoesntExist", resourceCulture);
 			}
 		}
 		

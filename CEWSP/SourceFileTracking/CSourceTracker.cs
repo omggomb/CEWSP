@@ -814,16 +814,117 @@ namespace CEWSP.SourceFileTracking
             	} 
             	catch (ArgumentException e)
             	{
-            		CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.IgnoredRegesWrong + '\n'
+            		CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.IgnoredRegexWrong + '\n'
             		                                          + e.Message);
             		continue;
             		
             	}
             }
+            
+          
+            if (!CheckIgnoredFilesSanity())
+            {
+            	CUserInteractionUtils.ShowInfoMessageBox(Properties.Resources.IngoredRegexDoesntExist); // LOCALIZE
+            }
 			
 			m_ignoredFilesWacher.EnableRaisingEvents = true;
 		}
 
+		private bool CheckIgnoredFilesSanity()
+		{
+			var filesList = new List<string>();
+			
+			
+			string sRoot = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
+			string sGame = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
+			
+			GetFilesInDirectory(sRoot, filesList);
+			
+			// If we can't extract the game folder from the root folder, it is in a different place
+			// and needs to be checked, too.
+			if (CPathUtils.ExtractRelativeToRoot(sGame) == sGame)
+			{
+				GetFilesInDirectory(sGame, filesList);
+			}
+			
+			bool[] oIgnoredBool = new bool[m_ignoredRegexList.Count];
+			bool[] oNotIgnoredBool = new bool[m_ignoredNegatedRegexList.Count];
+			
+			for (int i = 0; i < m_ignoredNegatedRegexList.Count; ++i)
+			{
+				var currentRegex = m_ignoredNegatedRegexList[i];
+				
+				foreach (string file in filesList)
+				{
+					if (currentRegex.IsMatch(file))
+					{
+						oNotIgnoredBool[i] = true;
+						break;
+					}
+				}
+			}
+			
+			for (int i = 0; i < m_ignoredRegexList.Count; ++i)
+			{
+				var currentRegex = m_ignoredRegexList[i];
+				
+				foreach (string file in filesList)
+				{
+					if (currentRegex.IsMatch(file))
+					{
+						oIgnoredBool[i] = true;
+						break;
+					}
+				}
+			}
+			
+			bool bIsSane = true;
+			
+		
+			for (int i = 0; i < oIgnoredBool.Length; ++i)
+			{
+				var ignoredSane = oIgnoredBool[i];
+				if (!ignoredSane)
+				{
+					LogSanityWarning(m_ignoredRegexList[i].ToString());
+					bIsSane = false;
+				}
+			}
+		
+
+			for (int i = 0; i < oNotIgnoredBool.Length; ++i)
+			{
+				var notIgnoredSane = oNotIgnoredBool[i];
+				
+				if (!notIgnoredSane)
+				{
+					LogSanityWarning(m_ignoredNegatedRegexList[i].ToString());
+					bIsSane = false;
+				}
+			}
+			
+			return bIsSane;
+		}
+		
+		private void GetFilesInDirectory(string sDirPath, List<string> fillOut)
+		{
+			foreach (string dir in Directory.GetDirectories(sDirPath))
+			{
+				GetFilesInDirectory(dir, fillOut);
+			}
+			
+			foreach (string file in Directory.GetFiles(sDirPath))
+			{
+				fillOut.Add(file);
+			}
+		}
+		
+		private void LogSanityWarning(string sRegex)
+		{
+			Logging.CLogfile.Instance.LogWarning(String.Format("[Source tracker ignore list] Specified regex pattern [{0}] has" +
+			                                                   " no match! This is a performance issue and might lead to unexpected behaviour!", sRegex));
+			                                                   
+		}
 		
 		
 		private bool ShouldIgnorePath(string sPathToTest)

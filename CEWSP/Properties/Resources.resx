@@ -253,7 +253,10 @@
   <data name="FEConfirmChangeExtension" xml:space="preserve">
     <value>Really change file extension?</value>
   </data>
-  <data name="IgnoredRegesWrong" xml:space="preserve">
+  <data name="IgnoredRegexWrong" xml:space="preserve">
     <value>An error occured while parsing the source tracker's ignore file list.</value>
+  </data>
+  <data name="IngoredRegexDoesntExist" xml:space="preserve">
+    <value>Some regex expressions in the ignored files file, do not match any path inside the root or game directory. Maybe something was deleted or is misspelt. Please check the log for more info.</value>
   </data>
 </root>
