@@ -59,7 +59,7 @@ namespace CEWSP.ApplicationSettings
 		public const string RCRelativePath = "strRCRelativePath";
 		
 		public const string DESC_GFXRelativePath = "Relative path to the gfxexporter.exe";
-		public const string GFXRelativePath = "strGEFXRelativePath";
+		public const string GFXRelativePath = "strGFXRelativePath";
 		
 		public const string DESC_ScriptStartupFileAbsolutePath =  "Absolute path to a startup file for editing scripts (an editor project file, an exe etc.)";
 		public const string ScriptStartupFileAbsolutePath = "strScriptStartupFileAbsolutePath";
@@ -86,7 +86,7 @@ namespace CEWSP.ApplicationSettings
 		public const string AskExportOnExit = "bAskExportOnExit";
 		
 		public const string DESC_SourceTrackerWatchDirs = "Denotes which directories the sourcetracker should watch (GAME, ROOT, BOTH, NONE)";
-		public const string SourceTrackerWatchDirs = "strFileExplorerWatchDirs";
+		public const string SourceTrackerWatchDirs = "strSourceTrackerWatchDirs";
 		
 		public const string DESC_Game64bitArguments = "Commandline arguments for game 64bit quick acces buttons";
 		public const string Game64bitArguments = "strGame64bitArguments";
