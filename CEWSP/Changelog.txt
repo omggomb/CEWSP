@@ -6,8 +6,11 @@ Add:
 - F2 in file explorer triggers rename
 - Ctrl c, v, x in file explorer 
 - Setting: Choose which directories the source tracker will watch (game, root, both, none);
-- Setting: Command line arguments for game / editor quick access buttons
+- Setting: Command line arguments for game / editor quick access buttons and code + script buttons
 - Copying directories in fileexplorer now works
+- Setting: GFXExporter relative path
+- Setting: Check ignored files file for sanity on startup (will still be checked if the file is changed
+	through the Tools menu)
 
 Change:
 - Ignored files are defined through regexps now
@@ -18,6 +21,7 @@ Change:
 Fix:
 - Errors while copying files in file explorer won't crash CEWSP anymore.
 - Ignored paths and negated ignored paths are handled in the correct way now.
+- Access problems when dumping currently tracked files to file, are handled or forwarded to the user.
 
 ==============
 Alpha build 2:
