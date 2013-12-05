@@ -58,6 +58,9 @@ namespace CEWSP.ApplicationSettings
 		public const string DESC_RCRelativePath = "Relative path to the resource compiler";
 		public const string RCRelativePath = "strRCRelativePath";
 		
+		public const string DESC_GFXRelativePath = "Relative path to the gfxexporter.exe";
+		public const string GFXRelativePath = "strGEFXRelativePath";
+		
 		public const string DESC_ScriptStartupFileAbsolutePath =  "Absolute path to a startup file for editing scripts (an editor project file, an exe etc.)";
 		public const string ScriptStartupFileAbsolutePath = "strScriptStartupFileAbsolutePath";
 		
@@ -102,6 +105,9 @@ namespace CEWSP.ApplicationSettings
 		
 		public const string DESC_ScriptArguments = "Command line arguments for the script quick access button";
 		public const string ScriptArguments = "strScriptArguments";
+		
+		public const string DESC_CheckIngoredRegexSanityOnStartup = "Check the regexes in the ignored files file for sanity on program startup (adds to loading time)";
+		public const string CheckIgnoredRegexSanityOnStartup = "bCheckIgnoredRegexSanityOnStartup";
 	}
 	
 	/// <summary>

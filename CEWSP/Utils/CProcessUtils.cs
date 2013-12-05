@@ -73,7 +73,7 @@ namespace CEWSP.Utils
 		public static void RunGFXExporter(FileInfo fileInfo)
 		{
 			string root = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
-			string gfxPath = root + CApplicationSettings.DefaultGFXExporterRelativePath;
+			string gfxPath = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.GFXRelativePath).GetValueString();
 			
 			
 			

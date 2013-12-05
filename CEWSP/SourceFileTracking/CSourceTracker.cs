@@ -103,7 +103,7 @@ namespace CEWSP.SourceFileTracking
 			
 		
 			
-			LoadIgnoredFilesList();
+			LoadIgnoredFilesList(CApplicationSettings.Instance.GetValue(ESettingsStrings.CheckIgnoredRegexSanityOnStartup).GetValueBool());
 			LoadFileTrackingList(m_sCurrentRootTrackingListPath, EFileRoot.eFR_CERoot);
 			LoadFileTrackingList(m_sCurrentGameTrackingListPath, EFileRoot.eFR_GameFolder);
 			
@@ -784,7 +784,7 @@ namespace CEWSP.SourceFileTracking
 			}
 		}
 		
-		public void LoadIgnoredFilesList()
+		public void LoadIgnoredFilesList(bool bCheckForSanity = true)
 		{
 			m_ignoredFilesWacher.EnableRaisingEvents = false;
 			try
@@ -853,9 +853,16 @@ namespace CEWSP.SourceFileTracking
             }
             
           
-            if (!CheckIgnoredFilesSanity())
+            if (bCheckForSanity)
             {
-            	CUserInteractionUtils.ShowInfoMessageBox(Properties.Resources.IngoredRegexDoesntExist); // LOCALIZE
+            	if (!CheckIgnoredFilesSanity())
+	            {
+	            	CUserInteractionUtils.ShowInfoMessageBox(Properties.Resources.IngoredRegexDoesntExist);
+	            }
+            }
+            else
+            {
+            	CLogfile.Instance.LogWarning("[Source tracker] Loading ignored files file without sanity check! Performance and logic issues inbound!");
             }
 			
 			m_ignoredFilesWacher.EnableRaisingEvents = true;

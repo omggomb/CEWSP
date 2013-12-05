@@ -148,7 +148,8 @@ namespace CEWSP.ApplicationSettings
 		private static readonly CSetting Editor32bitArgumentsSetting = new CSetting(ESettingsStrings.Editor32bitArguments, "", ESettingsStrings.DESC_Editor32bitArguments, true);
 		private static readonly CSetting CodeArgumentsSetting = new CSetting(ESettingsStrings.CodeArguments, "", ESettingsStrings.DESC_CodeArguments, true);
 		private static readonly CSetting ScriptArgumentsSetting = new CSetting(ESettingsStrings.ScriptArguments, "", ESettingsStrings.DESC_ScriptArguments, true);
-		
+		private static readonly CSetting CheckRegexOnStartupSetting = new CSetting(ESettingsStrings.CheckIgnoredRegexSanityOnStartup, false, ESettingsStrings.DESC_CheckIngoredRegexSanityOnStartup, true);
+		private static readonly CSetting GFXExporterPathSetting = new CSetting(ESettingsStrings.GFXRelativePath, DefaultGFXExporterRelativePath, ESettingsStrings.DESC_GFXRelativePath, true);
 		
 		private static CApplicationSettings _instance;
 		public static CApplicationSettings Instance
@@ -217,6 +218,7 @@ namespace CEWSP.ApplicationSettings
 			SetValue(ScriptArgumentsSetting);
 			
 			SetValue(RCRelativePathSetting);
+			SetValue(GFXExporterPathSetting);
 			SetValue(VerboseImportExportSetting);
 			SetValue(LastImportFilesSetting);
 			SetValue(LastExportFilesSetting);
@@ -225,6 +227,7 @@ namespace CEWSP.ApplicationSettings
 			SetValue(AskExportOnExitSetting);
 			SetValue(AskImportOnStartupSetting);
 			SetValue(SourceTrackerWatchDirsSetting);
+			SetValue(CheckRegexOnStartupSetting);
 		}
 		
 		public void Shutdown()
