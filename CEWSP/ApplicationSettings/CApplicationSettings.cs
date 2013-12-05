@@ -146,7 +146,10 @@ namespace CEWSP.ApplicationSettings
 		private static readonly CSetting Game32bitArgumentsSetting = new CSetting(ESettingsStrings.Game32bitArguments, "", ESettingsStrings.DESC_Game32bitArguments, true);
 		private static readonly CSetting Editor64bitArgumentsSetting = new CSetting(ESettingsStrings.Editor64bitArguments, "", ESettingsStrings.DESC_Editor64bitArguments, true);
 		private static readonly CSetting Editor32bitArgumentsSetting = new CSetting(ESettingsStrings.Editor32bitArguments, "", ESettingsStrings.DESC_Editor32bitArguments, true);
-
+		private static readonly CSetting CodeArgumentsSetting = new CSetting(ESettingsStrings.CodeArguments, "", ESettingsStrings.DESC_CodeArguments, true);
+		private static readonly CSetting ScriptArgumentsSetting = new CSetting(ESettingsStrings.ScriptArguments, "", ESettingsStrings.DESC_ScriptArguments, true);
+		
+		
 		private static CApplicationSettings _instance;
 		public static CApplicationSettings Instance
 		{
@@ -208,7 +211,11 @@ namespace CEWSP.ApplicationSettings
 			SetValue(Game32bitArgumentsSetting);
 			
 			SetValue(CodeSlnRelativePathSetting);
+			SetValue(CodeArgumentsSetting);
+			
 			SetValue(ScriptStartupSetting);
+			SetValue(ScriptArgumentsSetting);
+			
 			SetValue(RCRelativePathSetting);
 			SetValue(VerboseImportExportSetting);
 			SetValue(LastImportFilesSetting);

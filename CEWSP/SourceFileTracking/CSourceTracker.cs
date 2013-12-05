@@ -131,10 +131,12 @@ namespace CEWSP.SourceFileTracking
             switch (root)
             {
                 case EFileRoot.eFR_CERoot:
-                    m_trackedCERootFiles.Clear();
+            		if (m_trackedCERootFiles != null) 
+            			m_trackedCERootFiles.Clear();
                     break;
                 case EFileRoot.eFR_GameFolder:
-                    m_trackedGameFolderFiles.Clear();
+                    if (m_trackedGameFolderFiles != null)
+                    	m_trackedGameFolderFiles.Clear();
                     break;
                 default:
                     break;
@@ -274,12 +276,41 @@ namespace CEWSP.SourceFileTracking
 				{
 					FileInfo info = new FileInfo(sSaveFilePath);
 					
-					if (!Directory.Exists(info.DirectoryName))
-						Directory.CreateDirectory(info.DirectoryName);
+					try
+					{
+						if (!Directory.Exists(info.DirectoryName))
+							Directory.CreateDirectory(info.DirectoryName);
+					} 
+					catch (Exception e)
+					{
+						CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+						
+					}
 				}
 				else
 				{
-					File.Delete(sSaveFilePath);
+					try
+					{
+						File.Delete(sSaveFilePath);
+					} 
+					catch (Exception e)
+					{
+						
+						if (e is IOException)
+						{
+							// Rescedule... 
+							System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
+							timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+							timer.Tick += delegate { timer.Stop(); DumpFilesToDisk(sSaveFilePath, root); };
+							timer.Start();
+							return;
+						}
+						else
+						{
+							CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+							return;
+						}
+					}
 				}
 					
 				FileStream stream = new FileStream(sSaveFilePath, FileMode.Create);

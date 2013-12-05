@@ -96,6 +96,12 @@ namespace CEWSP.ApplicationSettings
 		
 		public const string DESC_Editor32bitArguments = "Commandline arguments for Editor 32bit quick acces buttons";
 		public const string Editor32bitArguments = "strEditor32bitArguments";
+		
+		public const string DESC_CodeArguments = "Command line arguments for the code quick acces button";
+		public const string CodeArguments = "strCodeArguments";
+		
+		public const string DESC_ScriptArguments = "Command line arguments for the script quick access button";
+		public const string ScriptArguments = "strScriptArguments";
 	}
 	
 	/// <summary>

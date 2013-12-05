@@ -418,6 +418,7 @@ namespace CEWSP
 				CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.QuickAccesPathNonexistent);
 				return;
 			}
+			
 			Process programProcess = new Process();
 			programProcess.Exited += OnProcessTerminated;
 			programProcess.ErrorDataReceived += OnProcessTerminated;
