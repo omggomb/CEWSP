@@ -42,8 +42,8 @@ namespace CEWSP.ApplicationSettings
 		}
 		
 		public CSetting(string sKey, object val, bool bUserEditable = false) : this(sKey, val,
-		                                                                    CApplicationSettings.Instance.GetValue(sKey).Descripition,
-	                                                                    bUserEditable)
+		                                                                            GetDescriptionSlow(sKey),
+	                                                                    			bUserEditable)
 		{
 		}
 		
@@ -80,6 +80,94 @@ namespace CEWSP.ApplicationSettings
 		{
 			return Value.ToString();
 		}
+		
+		public static string GetDescriptionSlow(string sKey)
+		{
+			switch (sKey) 
+			{
+				case ESettingsStrings.AskExportOnExit:
+					return ESettingsStrings.DESC_AskExportOnExit;
+				
+				case ESettingsStrings.AskImportOnStartup:
+					return ESettingsStrings.DESC_AskImportOnStartup;
+					
+				case ESettingsStrings.CheckIgnoredRegexSanityOnStartup:
+					return ESettingsStrings.DESC_CheckIngoredRegexSanityOnStartup;
+					
+				case ESettingsStrings.CodeArguments:
+					return ESettingsStrings.DESC_CodeArguments;
+					
+				case ESettingsStrings.CodeSlnFileRelativePath:
+					return ESettingsStrings.DESC_CodeSlnFileRelativePath;
+					
+				case ESettingsStrings.Editor32bitArguments:
+					return ESettingsStrings.DESC_Editor32bitArguments;
+					
+				case ESettingsStrings.Editor64bitArguments:
+					return ESettingsStrings.DESC_Editor64bitArguments;
+					
+				case ESettingsStrings.ExportOnExit:
+					return ESettingsStrings.DESC_ExportOnExit;
+				
+				case ESettingsStrings.Game32bitArguments:
+					return ESettingsStrings.DESC_Game32bitArguments;
+					
+				case ESettingsStrings.Game32bitRelativePath:
+					return ESettingsStrings.DESC_Game32bitRelativePath;
+					
+				case ESettingsStrings.Game64bitArguments:
+					return ESettingsStrings.DESC_Game64bitArguments;
+					
+				case ESettingsStrings.Game64bitRelativePath:
+					return ESettingsStrings.DESC_Game64bitRelativePath;
+				
+				case ESettingsStrings.GameFolderPath:
+					return ESettingsStrings.DESC_GameFolderPath;
+				
+				case ESettingsStrings.GFXRelativePath:
+					return ESettingsStrings.DESC_GFXRelativePath;
+					
+				case ESettingsStrings.ImportOnStartup:
+					return ESettingsStrings.DESC_ImportOnStartup;
+					
+				case ESettingsStrings.LastExportFiles:
+					return ESettingsStrings.DESC_LastExportFiles;
+					
+				case ESettingsStrings.LastImportFiles:
+					return ESettingsStrings.DESC_LastImportFiles;
+					
+				case ESettingsStrings.RCRelativePath:
+					return ESettingsStrings.DESC_RCRelativePath;
+					
+				case ESettingsStrings.SB32bitRelativePath:
+					return ESettingsStrings.DESC_SB32bitRelativePath;
+					
+				case ESettingsStrings.SB64bitRelativePath:
+					return ESettingsStrings.DESC_SB64bitRelativePath;
+					
+				case ESettingsStrings.ScriptArguments:
+					return ESettingsStrings.DESC_ScriptArguments;
+					
+				case ESettingsStrings.ScriptStartupFileAbsolutePath:
+					return ESettingsStrings.DESC_ScriptStartupFileAbsolutePath;
+					
+				case ESettingsStrings.SourceTrackerWatchDirs:
+					return ESettingsStrings.DESC_SourceTrackerWatchDirs;
+					
+				case ESettingsStrings.TemplateFolderName:
+					return ESettingsStrings.DESC_TemplateFolderName;
+					
+				case ESettingsStrings.VerboseImportExport:
+					return ESettingsStrings.DESC_VerboseImportExport;
+					
+				case ESettingsStrings.RootPath:
+					return ESettingsStrings.DESC_RootPath;
+					
+				default:
+					return "No description available";
+					
+			}
+		}
 
 	}
 	/// <summary>
@@ -103,6 +191,9 @@ namespace CEWSP.ApplicationSettings
 		/// Complete path including filename to ApplicationSettings.xml
 		/// </summary>
 		private string m_sFileSavePath;
+		
+		
+		private string m_sProgramDefSavePath;
 		
 		/// <summary>
 		/// Name of the folder that contains all the template files.
@@ -171,6 +262,7 @@ namespace CEWSP.ApplicationSettings
 			DCCPrograms = new Dictionary<string, CDCCDefinition>();
 			
 			m_sFileSavePath = Application.UserAppDataPath + "\\ApplicationSettings.xml";
+			m_sProgramDefSavePath = Application.UserAppDataPath + "\\ProgramDefs.xml";
 			
 			Reset(false);
 		}
@@ -487,21 +579,11 @@ namespace CEWSP.ApplicationSettings
 						
 						SetValue(new CSetting(name, val, bUserEditable));
 					}
-					else if (reader.LocalName == "ProgramDef" && reader.AttributeCount > 0)
+					/*else if (reader.LocalName == "ProgramDef" && reader.AttributeCount > 0)
 					{
 						reader.MoveToNextAttribute();
 						
-						/*string name = reader.Value;
 						
-						reader.MoveToNextAttribute();
-						
-						string exec = reader.Value;
-						
-						reader.MoveToNextAttribute();
-						
-						string file = reader.Value;
-						
-						SetDCCProgram(new CDCCDefinition(name, exec, file));*/
 						
 						var def = new CDCCDefinition();
 						
@@ -558,7 +640,9 @@ namespace CEWSP.ApplicationSettings
 					else
 					{
 						
-					}	
+					}	*/
+					
+					LoadProgramDefinitions();
 				}
 				
 				reader.Close();
@@ -571,7 +655,7 @@ namespace CEWSP.ApplicationSettings
 					reader.Close();
 				
 				CLogfile.Instance.LogError(String.Format("Failed to load application settings! Error: {0}",
-				                                         e.Message));
+				                                         e.Message));	// LOCALIZE
 				
 				return false;
 			}
@@ -599,6 +683,7 @@ namespace CEWSP.ApplicationSettings
 			XmlTextWriter writer = null;
 			try
 			{
+				SaveProgramDefinitions();
 				 writer = new XmlTextWriter(m_sFileSavePath, System.Text.Encoding.UTF8);
 				writer.Formatting = Formatting.Indented;
 				
@@ -721,6 +806,168 @@ namespace CEWSP.ApplicationSettings
 			string val = GetValue(ESettingsStrings.SourceTrackerWatchDirs).GetValueString().ToLower();
 			
 			return (val == SourceFileTracking.ETrackedDirs.eTD_Both || val == SourceFileTracking.ETrackedDirs.eTD_Root);
+		}
+		
+		private void SaveProgramDefinitions()
+		{
+			XmlTextWriter writer = null;
+			
+			try
+			{
+				if (File.Exists(m_sProgramDefSavePath))
+					File.Delete(m_sProgramDefSavePath);
+				
+				writer = new XmlTextWriter(File.Open(m_sProgramDefSavePath, FileMode.Create), System.Text.Encoding.UTF8);
+				writer.Formatting = Formatting.Indented;
+				writer.WriteStartDocument();
+				
+				
+				writer.WriteStartElement("ProgramDefs");
+				
+			
+				
+				foreach (var prog in DCCPrograms.Values)
+				{
+
+					if (prog != null)
+					{
+						writer.WriteStartElement("ProgramDef");
+						writer.WriteAttributeString("name", prog.Name);
+						//writer.WriteAttributeString("exec", prog.GetConcatenatedExecs());
+						//writer.WriteAttributeString("file", prog.GetConcatenatedStartups());
+						
+						foreach (string progKey in prog.Programs.Keys)
+						{
+							SDCCProgram progele;
+							prog.Programs.TryGetValue(progKey, out progele);
+							
+							writer.WriteStartElement("Program");
+							writer.WriteAttributeString("name", progele.Name);
+							writer.WriteAttributeString("Exec", progele.ExecutablePath);
+							
+							foreach (string  fileKey in progele.StartupFiles.Keys) 
+							{
+								SStartupFile file;
+								progele.StartupFiles.TryGetValue(fileKey, out file);
+								
+								writer.WriteStartElement("File");
+								
+								writer.WriteAttributeString("name", file.Name);
+								writer.WriteAttributeString("path", file.FullName);
+								writer.WriteAttributeString("copy", file.Copy.ToString());
+								writer.WriteAttributeString("launch", file.LaunchWithProgram.ToString());
+								
+								writer.WriteEndElement();
+							}
+							
+							writer.WriteEndElement();
+						}
+						
+						writer.WriteEndElement();
+					}
+				}
+				
+				writer.WriteEndElement();
+				writer.WriteEndDocument();
+				
+				writer.Close();
+			} 
+			catch (Exception e)
+			{
+				if (writer != null)
+					writer.Close();
+				
+				CUserInteractionUtils.ShowErrorMessageBox(e.Message); // TODO: More info pls
+			}
+		}
+		
+		private void LoadProgramDefinitions()
+		{
+			XmlTextReader reader = null;
+			
+			try
+			{
+				if (!File.Exists(m_sProgramDefSavePath))
+					SaveProgramDefinitions();
+				
+				
+				reader = new XmlTextReader(m_sProgramDefSavePath);
+				string currentDef = "";
+				string currentProg = "";
+				while (reader.Read())
+				{
+					reader.MoveToElement();
+					
+					if (reader.LocalName == "ProgramDef" && reader.AttributeCount > 0)
+					{
+						reader.MoveToNextAttribute();
+						
+						var def = new CDCCDefinition();
+						
+						def.Name = reader.Value;
+						
+						SetDCCProgram(def);
+						currentDef = reader.Value;
+					}
+					else if (reader.LocalName == "Program" && reader.AttributeCount > 0)
+					{
+						reader.MoveToNextAttribute();
+						
+						SDCCProgram program = new SDCCProgram();
+						
+						program.Name = reader.Value;
+						
+						reader.MoveToNextAttribute();
+						
+						program.ExecutablePath = reader.Value;
+						
+						GetDCCProgram(currentDef).Programs.Add(program.Name, program);
+						
+						currentProg = program.Name;
+					}
+					else if (reader.LocalName == "File")
+					{
+						SDCCProgram prog = GetDCCProgram(currentDef).GetProgram(currentProg);
+						
+						SStartupFile file = new SStartupFile("", "");
+						
+						reader.MoveToNextAttribute();
+						
+						file.Name = reader.Value;
+						
+						reader.MoveToNextAttribute();
+						
+						file.SetFilePath(reader.Value);
+						
+						reader.MoveToNextAttribute();
+						
+						bool boolVal;
+						Boolean.TryParse(reader.Value, out boolVal);
+						file.Copy = boolVal;
+						
+						reader.MoveToNextAttribute();
+						
+						Boolean.TryParse(reader.Value, out boolVal);
+						file.LaunchWithProgram = boolVal;
+						
+						prog.StartupFiles.Add(file.Name, file);
+									
+					}
+					
+					else
+					{
+						
+					}	
+				}
+			} 
+			catch (Exception e)
+			{
+				if (reader != null)
+					reader.Close();
+				
+				CUserInteractionUtils.ShowErrorMessageBox(e.Message); // TODO: More ionfo pls
+				
+			}
 		}
 		#endregion
 		

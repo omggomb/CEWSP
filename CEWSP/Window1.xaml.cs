@@ -58,8 +58,7 @@ namespace CEWSP
 			
 			if (!CApplicationSettings.Instance.Init())
 			{
-				MessageBox.Show("Failed to load application settings!", "Critical Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				Environment.Exit(0);
+				CApplicationSettings.Instance.Reset(false);
 			}
 			
 			
