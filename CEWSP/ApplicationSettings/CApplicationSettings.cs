@@ -15,6 +15,7 @@ using System.Diagnostics;
 
 using CEWSP.Utils;
 using CEWSP.Logging;
+using CEWSP.Shortcuts;
 
 namespace CEWSP.ApplicationSettings
 {
@@ -195,6 +196,9 @@ namespace CEWSP.ApplicationSettings
 		
 		private string m_sProgramDefSavePath;
 		
+		private string m_sShortcutsSavePath;
+	
+		
 		/// <summary>
 		/// Name of the folder that contains all the template files.
 		/// </summary>
@@ -253,6 +257,8 @@ namespace CEWSP.ApplicationSettings
 			}
 		}
 		
+		public List<SShortcut> Shortcuts {get; private set;}
+		
 		#endregion
 		
 		public CApplicationSettings()
@@ -260,10 +266,11 @@ namespace CEWSP.ApplicationSettings
 			
 			Settings = new Dictionary<string, CSetting>();
 			DCCPrograms = new Dictionary<string, CDCCDefinition>();
+			Shortcuts = new List<SShortcut>();
 			
 			m_sFileSavePath = Application.UserAppDataPath + "\\ApplicationSettings.xml";
 			m_sProgramDefSavePath = Application.UserAppDataPath + "\\ProgramDefs.xml";
-			
+			m_sShortcutsSavePath = Application.UserAppDataPath + "\\ProgramShortcuts.xml";
 			Reset(false);
 		}
 	
@@ -276,6 +283,13 @@ namespace CEWSP.ApplicationSettings
 			CLogfile.Instance.LogInfo("Initialising application settings...");
 			Reset(false);
 			
+			
+			if (!File.Exists(m_sShortcutsSavePath))
+			{
+				ResetShortcuts();
+				SaveShortcutsToFile();
+				
+			}
 			return LoadApplicationSettings();
 		}
 
@@ -320,6 +334,107 @@ namespace CEWSP.ApplicationSettings
 			SetValue(AskImportOnStartupSetting);
 			SetValue(SourceTrackerWatchDirsSetting);
 			SetValue(CheckRegexOnStartupSetting);
+			
+			ResetShortcuts();
+		}
+		
+		private void ResetShortcuts()
+		{
+			Shortcuts.Clear();
+
+			for (int i = 0; i < 6; ++i)
+			{
+				SShortcut sc = new SShortcut();
+				
+				sc.Exec = "";
+				sc.Args = "";
+				sc.Name = "Shortcut" + i.ToString();
+				sc.myID = i;
+				Shortcuts.Add(sc);
+			}
+		}
+		
+		private void LoadShortcutsFromFile()
+		{	
+			XmlTextReader reader = new XmlTextReader(m_sShortcutsSavePath);
+			
+			if (reader != null)
+			{
+				Shortcuts.Clear();
+				while (reader.Read())
+				{
+					if (reader.NodeType == XmlNodeType.Element && reader.LocalName == "Shortcut")
+					{
+						
+						reader.MoveToAttribute("id");
+						int id = int.Parse(reader.Value);
+						
+						if (id >= 0 && id < 6)
+						{
+							SShortcut sc = new SShortcut();
+							
+							sc.myID = id;
+							
+							reader.MoveToAttribute("name");
+							sc.Name = reader.Value;
+							
+							reader.MoveToAttribute("exec");
+							sc.Exec = reader.Value;
+							
+							reader.MoveToAttribute("args");
+							sc.Args = reader.Value;
+							
+							Shortcuts.Add(sc);
+						}
+						
+					}
+				}
+				
+				reader.Close();
+			}
+		}
+		
+		public void SaveShortcutsToFile()
+		{
+			XmlTextWriter writer = null;
+			
+			try 
+			{
+				 writer = new XmlTextWriter(File.Open(m_sShortcutsSavePath, FileMode.Create), System.Text.Encoding.UTF8);
+				writer.Formatting = Formatting.Indented;
+				
+				if (writer != null)
+				{
+					writer.WriteStartDocument();
+					
+					writer.WriteStartElement("Shortcuts");
+					
+					foreach (SShortcut sc in Shortcuts)
+					{
+						writer.WriteStartElement("Shortcut");
+						
+						writer.WriteAttributeString("id", sc.myID.ToString());
+						writer.WriteAttributeString("name", sc.Name);
+						writer.WriteAttributeString("exec", sc.Exec);
+						writer.WriteAttributeString("args", sc.Args);
+						
+						writer.WriteEndElement();
+					}
+					
+					writer.WriteEndElement();
+					
+					writer.WriteEndDocument();
+					
+					writer.Close();
+				}
+			} 
+			catch (Exception e)
+			{
+				if (writer != null)
+					writer.Close();
+								
+				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+			}
 		}
 		
 		public void Shutdown()
@@ -643,6 +758,7 @@ namespace CEWSP.ApplicationSettings
 					}	*/
 					
 					LoadProgramDefinitions();
+					LoadShortcutsFromFile();
 				}
 				
 				reader.Close();

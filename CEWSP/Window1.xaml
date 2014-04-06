@@ -4,9 +4,9 @@
 	xmlns:f="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
 	Title="CEWSP"
 	Height="500"
-	Width="600"
+	Width="700"
 	MinHeight="500"
-	MinWidth="600"
+	MinWidth="700"
 	WindowStartupLocation="CenterScreen">
 	<Grid Name="mainGrid">
 		<Grid.RowDefinitions>
@@ -20,9 +20,11 @@
 		<Grid Name="treeViewGrid">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition
-					Width="0.5*" />
+					Width="0.45*" />
 				<ColumnDefinition
-					Width="0.5*" />
+					Width="0.45*" />
+				<ColumnDefinition
+					Width="0.1*" />
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition
@@ -104,6 +106,58 @@
 				Height="Auto"
 				Name="folderTreeView"
 				/>
+			
+			<!-- Short cut buttons -->
+			<Button		HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="0"
+						Grid.Column="2"
+						Margin="0,5,5,5"
+						Name="shortButton1"
+			        	
+			           Click="OnShortCutClicked"
+						MouseRightButtonDown="OnShortcutRightClick"/>
+			<Button		HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="1"
+						Grid.Column="2"
+						Margin="0,5,5,5"
+						Name="shortButton2"
+			        	Click="OnShortCutClicked"
+						MouseRightButtonDown="OnShortcutRightClick"/>
+			<Button		HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="2"
+						Grid.Column="2"
+						Margin="0,5,5,5"
+						Name="shortButton3"
+			        	Click="OnShortCutClicked"
+						MouseRightButtonDown="OnShortcutRightClick"/>
+			<Button		HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="3"
+						Grid.Column="2"
+						Margin="0,5,5,5"
+			        	Click="OnShortCutClicked"
+						Name="shortButton4"
+						MouseRightButtonDown="OnShortcutRightClick"/>
+			<Button		HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="4"
+						Grid.Column="2"
+						Margin="0,5,5,5"
+			        	Click="OnShortCutClicked"
+						Name="shortButton5"
+						MouseRightButtonDown="OnShortcutRightClick"/>
+			<Button		HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Grid.Row="5"
+						Grid.Column="2"
+						Margin="0,5,5,5"
+						Name="shortButton6"
+			        	Click="OnShortCutClicked"
+						MouseRightButtonDown="OnShortcutRightClick"/>
+			
 			
 			
 			<!-- Tree view buttons -->
@@ -224,6 +278,7 @@
 						Margin="8,8,0,0"
 						Name="openScriptButton"
 						Click="OnOpenScriptsClicked"/>
+			
 			
 			
 			</Grid>

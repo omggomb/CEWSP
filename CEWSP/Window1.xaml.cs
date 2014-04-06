@@ -20,13 +20,14 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.Drawing.Imaging;
 
 using CEWSP.Utils;
 using CEWSP.ApplicationSettings;
 using CEWSP.ApplicationManagement;
 using CEWSP.SourceFileTracking;
 using CEWSP.Logging;
-
+using CEWSP.Shortcuts;
 
 
 
@@ -108,6 +109,8 @@ namespace CEWSP
 					}
 				}
 			}
+			
+			RefreshShortcuts();
 			
 		}
 		
@@ -218,6 +221,16 @@ namespace CEWSP
 			return false;
 		}
 		
+		private void RefreshShortcuts()
+		{
+			shortButton1.Content = CApplicationSettings.Instance.Shortcuts[0].Name;
+			shortButton2.Content = CApplicationSettings.Instance.Shortcuts[1].Name;
+			shortButton3.Content = CApplicationSettings.Instance.Shortcuts[2].Name;
+			shortButton4.Content = CApplicationSettings.Instance.Shortcuts[3].Name;
+			shortButton5.Content = CApplicationSettings.Instance.Shortcuts[4].Name;
+			shortButton6.Content = CApplicationSettings.Instance.Shortcuts[5].Name;
+		}
+		
 		
 		#region Event handlers
 		// Event handlers
@@ -275,6 +288,43 @@ namespace CEWSP
 		void OnSetRootDirClicked(object sender, RoutedEventArgs e)
 		{
 			DemandUserSetRoot();
+		}
+		
+		void OnShortcutRightClick(object sender, RoutedEventArgs e)
+		{
+			if (sender == shortButton1)
+				ShortcutDialog.ShowMe(0);
+			else if (sender == shortButton2)
+				ShortcutDialog.ShowMe(1);
+			else if (sender == shortButton3)
+				ShortcutDialog.ShowMe(2);
+			else if (sender == shortButton4)
+				ShortcutDialog.ShowMe(3);
+			else if (sender == shortButton5)
+				ShortcutDialog.ShowMe(4);
+			else if (sender == shortButton6)
+				ShortcutDialog.ShowMe(5);
+			
+			
+			CApplicationSettings.Instance.SaveShortcutsToFile();
+			RefreshShortcuts();
+			
+		}
+		
+		void OnShortCutClicked(object sender, RoutedEventArgs e)
+		{
+			if (sender == shortButton1)
+				CApplicationSettings.Instance.Shortcuts[0].Start();
+			else if (sender == shortButton2)
+				CApplicationSettings.Instance.Shortcuts[1].Start();
+			else if (sender == shortButton3)
+				CApplicationSettings.Instance.Shortcuts[2].Start();
+			else if (sender == shortButton4)
+				CApplicationSettings.Instance.Shortcuts[3].Start();
+			else if (sender == shortButton5)
+				CApplicationSettings.Instance.Shortcuts[4].Start();
+			else if (sender == shortButton6)
+				CApplicationSettings.Instance.Shortcuts[5].Start();
 		}
 		
 		void OnAppClosing(object sender, EventArgs e)

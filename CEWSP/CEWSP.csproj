@@ -115,7 +115,20 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Properties\ShortcutDialog.Designer.cs">
+      <DependentUpon>ShortcutDialogRes.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Properties\ShortcutDialogRes.Designer.cs">
+      <DependentUpon>ShortcutDialogRes.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="Properties\WPFAssemblyInfo.cs" />
+    <Compile Include="Shortcuts\ShortcutDialog.xaml.cs">
+      <DependentUpon>ShortcutDialog.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Shortcuts\SShortcut.cs" />
     <Compile Include="SourceFileTracking\CSourceTracker.cs" />
     <Compile Include="SourceFileTracking\ImExFiles.xaml.cs">
       <DependentUpon>ImExFiles.xaml</DependentUpon>
@@ -137,12 +150,14 @@
     <Page Include="ApplicationManagement\ManageAppllicationsWindow.xaml" />
     <Page Include="ApplicationSettings\ApplicationSettingsDialog.xaml" />
     <Page Include="DragZoneDialog.xaml" />
+    <Page Include="Shortcuts\ShortcutDialog.xaml" />
     <Page Include="SourceFileTracking\ImExFiles.xaml" />
     <Page Include="ThreeDSceneDialog\ThreeDSceneDialog.xaml" />
     <Page Include="Window1.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logging" />
+    <Folder Include="Shortcuts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -163,6 +178,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <CustomToolNamespace>CEWSP.Properties</CustomToolNamespace>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\ShortcutDialogRes.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>CEWSP.Properties</CustomToolNamespace>
+      <LastGenOutput>ShortcutDialog.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

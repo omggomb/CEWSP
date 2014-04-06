@@ -1,0 +1,95 @@
+<Window x:Class="CEWSP.Shortcuts.ShortcutDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="CEWSP.Shortcuts" Height="200" Width="500"
+	xmlns:l="clr-namespace:CEWSP.Properties">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="0.25*" />
+			<RowDefinition
+				Height="0.25*" />
+			<RowDefinition
+				Height="0.25*" />	
+			<RowDefinition
+				Height="0.25*" />			
+		</Grid.RowDefinitions>
+	
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="0.7*" />
+			<ColumnDefinition
+				Width="0.3*" />
+		
+		</Grid.ColumnDefinitions>
+	
+		<!-- NAME -->
+	
+		<Label Content="{x:Static l:ShortcutDialogRes.ChooseName}" 
+				Grid.Row="0"
+				Grid.Column="0"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Top" />
+	
+		<TextBox Grid.Row="0"
+				Grid.Column="0"
+		         Name="nameTextBox"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Bottom" />
+	
+		<!-- FILE -->
+		<Label Content="{x:Static l:ShortcutDialogRes.ChooseFile}" 
+				Grid.Row="1"
+				Grid.Column="0"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Top" />
+	
+		<TextBox Grid.Row="1"
+				Grid.Column="0"
+		         Name="execTextBox"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Bottom" />
+		
+		<Button  Grid.Row="1"
+				Grid.Column="1"
+				Content="{x:Static l:Resources.CommonBrowse}"
+				Name="fileBrowseButton"
+				Click="FileBrowseButton_Click"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Bottom"
+				Margin="5,0,0,0"/>
+	
+		<!-- ARGS -->
+		<Label Content="{x:Static l:ShortcutDialogRes.CommandLineArgs}" 
+				Grid.Row="2"
+				Grid.Column="0"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Top" />
+	
+		<TextBox Grid.Row="2"
+				Grid.Column="0"
+		         Name="argsTextBox"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Bottom" />
+	
+		<!-- OK CANCEL -->
+		
+		<Button  Grid.Row="3"
+				Grid.Column="1"
+				Content="{x:Static l:Resources.CommonCancel}"
+				Name="cancelButton"
+				Click="CancelButton_Click"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Bottom"
+				Margin="5,0,0,0"/>
+		<Button  Grid.Row="3"
+				Grid.Column="0"
+				Content="{x:Static l:Resources.CommonOK}"
+				Name="okButton"
+				Click="OkButton_Click"
+				HorizontalAlignment="Right"
+				VerticalAlignment="Bottom"
+		        Width="100"
+				Margin="5,0,0,0"/>
+	</Grid>
+</Window>
