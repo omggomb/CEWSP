@@ -108,6 +108,9 @@ namespace CEWSP.ApplicationSettings
 		
 		public const string DESC_CheckIngoredRegexSanityOnStartup = "Check the regexes in the ignored files file for sanity on program startup (adds to loading time)";
 		public const string CheckIgnoredRegexSanityOnStartup = "bCheckIgnoredRegexSanityOnStartup";
+		
+		public const string DESC_GFXExproterArguments = "Argument list for gfx exproter invocation";
+		public const string GFXExporterArguments = "strGFXExproterArgs";
 	}
 	
 	/// <summary>

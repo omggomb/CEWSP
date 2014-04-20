@@ -87,6 +87,9 @@ namespace CEWSP.SourceFileTracking
 		
 		public void Init()
 		{
+			if (!Directory.Exists(".\\SourceTracker"))
+				Directory.CreateDirectory(".\\SourceTracker");
+			
 			m_trackedCERootFiles = new List<string>();
 			m_trackedGameFolderFiles = new List<string>();
 			m_ignoredFiles = new List<string>();
@@ -100,6 +103,7 @@ namespace CEWSP.SourceFileTracking
 			//m_ignoredFilesWacher.Changed += delegate { LoadIgnoredFilesList(); };
 			
 			m_lockingObject  = new object();
+			
 			
 		
 			

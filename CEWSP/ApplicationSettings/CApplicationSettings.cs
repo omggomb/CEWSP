@@ -164,6 +164,9 @@ namespace CEWSP.ApplicationSettings
 				case ESettingsStrings.RootPath:
 					return ESettingsStrings.DESC_RootPath;
 					
+				case ESettingsStrings.GFXExporterArguments:
+					return ESettingsStrings.DESC_GFXExproterArguments;
+					
 				default:
 					return "No description available";
 					
@@ -245,6 +248,7 @@ namespace CEWSP.ApplicationSettings
 		private static readonly CSetting ScriptArgumentsSetting = new CSetting(ESettingsStrings.ScriptArguments, "", ESettingsStrings.DESC_ScriptArguments, true);
 		private static readonly CSetting CheckRegexOnStartupSetting = new CSetting(ESettingsStrings.CheckIgnoredRegexSanityOnStartup, false, ESettingsStrings.DESC_CheckIngoredRegexSanityOnStartup, true);
 		private static readonly CSetting GFXExporterPathSetting = new CSetting(ESettingsStrings.GFXRelativePath, DefaultGFXExporterRelativePath, ESettingsStrings.DESC_GFXRelativePath, true);
+		private static readonly CSetting GFXExporterArgsSetting = new CSetting(ESettingsStrings.GFXExporterArguments, "", ESettingsStrings.DESC_GFXExproterArguments, true);
 		
 		private static CApplicationSettings _instance;
 		public static CApplicationSettings Instance
@@ -325,6 +329,7 @@ namespace CEWSP.ApplicationSettings
 			
 			SetValue(RCRelativePathSetting);
 			SetValue(GFXExporterPathSetting);
+			SetValue(GFXExporterArgsSetting);
 			SetValue(VerboseImportExportSetting);
 			SetValue(LastImportFilesSetting);
 			SetValue(LastExportFilesSetting);
@@ -334,6 +339,7 @@ namespace CEWSP.ApplicationSettings
 			SetValue(AskImportOnStartupSetting);
 			SetValue(SourceTrackerWatchDirsSetting);
 			SetValue(CheckRegexOnStartupSetting);
+			
 			
 			ResetShortcuts();
 		}

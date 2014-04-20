@@ -81,7 +81,7 @@ namespace CEWSP.Utils
 			
 			ProcessStartInfo info = new ProcessStartInfo(gfxPath);
 		
-			info.Arguments = fileInfo.FullName; 
+			info.Arguments = fileInfo.FullName + " " + CApplicationSettings.Instance.GetValue(ESettingsStrings.GFXExporterArguments).Value; 
 			proc.StartInfo = info;
 			
 			RunProcessWithRedirectedStdErrorStdOut(proc);
