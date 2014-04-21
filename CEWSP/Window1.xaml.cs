@@ -42,6 +42,7 @@ namespace CEWSP
 		// Attributes
 	
 		private ContextMenu m_ToolsContextMenu;
+		MenuItem m_profileHistoryContextMenu;
 		public const string m_sGameTempDirName = "TempGame";
 		
 		
@@ -120,6 +121,8 @@ namespace CEWSP
 		private void SetUpToolsContextMenu()
 		{
 			m_ToolsContextMenu = new ContextMenu();
+			m_profileHistoryContextMenu = new MenuItem();
+			m_profileHistoryContextMenu.Header = Properties.Resources.ToolsProfileHistory;
 			
 			MenuItem item = new MenuItem();			
 			item.Header = "Settings"; // LOCALIZE
@@ -169,9 +172,35 @@ namespace CEWSP
 			
 			item = new MenuItem();
 			item.Header = Properties.Resources.ToolsSourceTrackingSubmenu;
-			
 			SetupSourceFileContextMenu(ref item);
 			m_ToolsContextMenu.Items.Add(item);
+			
+			//============================================================================
+			
+			var sep = new Separator();
+			m_ToolsContextMenu.Items.Add(sep);
+			
+			item = new MenuItem();
+			item.Header = Properties.Resources.ToolsLoadProfile;
+			item.Click += OnLoadProfileClicked;
+			m_ToolsContextMenu.Items.Add(item);
+			
+			item = new MenuItem();
+			item.Header = Properties.Resources.ToolsSaveProfile;
+			item.Click += OnSaveProfileClicked;
+			m_ToolsContextMenu.Items.Add(item);
+			
+			
+			
+			RefreshProfileHistory();
+			if (m_profileHistoryContextMenu.Items.Count <= 0)
+			{
+				m_profileHistoryContextMenu.IsEnabled = false;
+			}
+			
+			m_ToolsContextMenu.Items.Add(m_profileHistoryContextMenu);
+				
+			
 			
 		}
 		/// <summary>
@@ -917,6 +946,118 @@ namespace CEWSP
 			ImExFiles.ShowWindow(EMode.eMO_Move);
 		}
 		
+		void OnLoadProfileClicked(object sender, RoutedEventArgs e)
+		{
+			bool bOK = false;
+			
+			
+			System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
+			dialog.CheckFileExists = true;
+			dialog.CheckPathExists = true;
+			dialog.InitialDirectory = new DirectoryInfo(CApplicationSettings.Instance.SettingsFilePath).FullName;
+			
+			FileInfo fileInf = null;
+			
+			while (bOK != true) 
+			{
+				System.Windows.Forms.DialogResult res = dialog.ShowDialog();
+			
+				if (res == System.Windows.Forms.DialogResult.OK)
+				{
+					fileInf = new FileInfo(dialog.FileName);
+					
+					if (fileInf.Directory.Parent.Name != "Profiles")
+					{
+						CUserInteractionUtils.ShowErrorMessageBox("Please specify a folder inside the " +  // LOCALIZE
+																CApplicationSettings.Instance.SettingsFilePath + 
+																"subdirectory of CEWSP!");
+					}
+					else
+					{
+						bOK = true;
+					}
+				
+				
+				}
+				else
+				{
+					return;
+				}
+			}
+		
+			
+			string sRelPath	= CApplicationSettings.Instance.SettingsFilePath + "\\" + fileInf.Directory.Name;
+			CApplicationSettings.Instance.LoadNewProfile(sRelPath);
+			PostLoadProfile();
+		}
+		
+		void OnSaveProfileClicked(object sender, RoutedEventArgs e)
+		{
+			CUserInteractionUtils.AskUserToEnterString("Please enter a name for the new profile", OnFinishedEnteringProfileName); // LOCALIZE
+		}
+				
+		int OnFinishedEnteringProfileName(TextBox box, System.Windows.Forms.DialogResult res)
+		{
+			string sRelPath = CApplicationSettings.Instance.SettingsFilePath + "\\" + box.Text;
+			if (!Directory.Exists(sRelPath))
+				Directory.CreateDirectory(sRelPath);
+			CApplicationSettings.Instance.SaveCurrentProfile(sRelPath);
+			SetUpToolsContextMenu();
+			return 0;
+		}
+		
+		void RefreshProfileHistory()
+		{
+			var dict = CApplicationSettings.Instance.GetProfileHistory();
+			
+			m_profileHistoryContextMenu.Items.Clear();	
+			
+			foreach (var entry in dict) 
+			{
+				MenuItem item = new MenuItem();
+				item.Header = entry.Key;
+				item.Click += delegate
+				{
+					CApplicationSettings.Instance.LoadNewProfile(entry.Value);
+					PostLoadProfile();
+				};
+				item.KeyDown += delegate(object sender, KeyEventArgs e)
+				{
+					if (e.Key == Key.Delete)
+					{
+						var res = System.Windows.Forms.MessageBox.Show(Properties.Resources.ToolsDeleteProfileFromHistoryOnly, 
+															Properties.Resources.CommonNotice,
+															System.Windows.Forms.MessageBoxButtons.YesNoCancel,
+															System.Windows.Forms.MessageBoxIcon.Question);
+						
+						if (res == System.Windows.Forms.DialogResult.Yes)
+							CApplicationSettings.Instance.DeleteProfile(entry.Key, true);
+						else if (res == System.Windows.Forms.DialogResult.No)
+							CApplicationSettings.Instance.DeleteProfile(entry.Key, false);
+						else
+						{
+							
+						}
+						
+						RefreshProfileHistory();
+						
+					}
+				};
+				m_profileHistoryContextMenu.Items.Add(item);
+			}
+		}
+		
+		void PostLoadProfile()
+		{
+			
+			RefreshShortcuts();
+			ValidateQuickAccessButtons();
+			ValidateRootPath();
+			ValidateGameFolder();
+			SetUpToolsContextMenu();
+			
+			OnShowRootFolderClicked(null, null);
+		}
 		#endregion
 		#endregion
 		

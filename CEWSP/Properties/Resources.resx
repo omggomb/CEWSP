@@ -133,7 +133,7 @@
     <value>Add</value>
   </data>
   <data name="CommonRemove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Delete</value>
   </data>
   <data name="CommonOK" xml:space="preserve">
     <value>OK</value>
@@ -163,7 +163,7 @@
     <value>Please enter a name for the file</value>
   </data>
   <data name="CommonPathDoesntExist" xml:space="preserve">
-    <value>The specified path doesn't exist! Choose an existing one!</value>
+    <value>Do you want to only delete this profile from the history?</value>
   </data>
   <data name="DCCDefProgramsLabel" xml:space="preserve">
     <value>Programs:</value>
@@ -173,7 +173,7 @@
 </value>
   </data>
   <data name="DCCDefCurrentFileLabel" xml:space="preserve">
-    <value>Current file:</value>
+    <value>Profile History</value>
   </data>
   <data name="DCCDefProgramExeLabel" xml:space="preserve">
     <value>Current program's exe:</value>
@@ -261,5 +261,20 @@
   </data>
   <data name="QuickAccesPathNonexistent" xml:space="preserve">
     <value>Cannot start process because path is not valid! Please specifiy a valif path inside the application settings!</value>
+  </data>
+  <data name="ToolsLoadProfile" xml:space="preserve">
+    <value>Load Profile</value>
+  </data>
+  <data name="ToolsSaveProfile" xml:space="preserve">
+    <value>Save Profile</value>
+  </data>
+  <data name="ToolsProfileHistory" xml:space="preserve">
+    <value>Profile History</value>
+  </data>
+  <data name="CommonDelete" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ToolsDeleteProfileFromHistoryOnly" xml:space="preserve">
+    <value>Remove profile from history only? (Yes: Only history, No: Remove from disk)</value>
   </data>
 </root>

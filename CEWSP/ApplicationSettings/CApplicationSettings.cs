@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Xml;
 using System.IO;
-using System.Diagnostics;
 
 using CEWSP.Utils;
 using CEWSP.Logging;
@@ -192,6 +191,21 @@ namespace CEWSP.ApplicationSettings
 		public Dictionary<string, CSetting> PublicSettings {get { return Settings; }}
 		
 		/// <summary>
+		/// The path to the file storing the currently active profile
+		/// </summary>
+		private string m_sCurrentProfileFilePath;
+		
+		/// <summary>
+		/// Path to the subdirectory where all profiles are stored
+		/// </summary>
+		private string m_sSettingsFilePath;
+
+		public string SettingsFilePath
+		{
+			get {return m_sSettingsFilePath;} 
+		}
+
+		/// <summary>
 		/// Complete path including filename to ApplicationSettings.xml
 		/// </summary>
 		private string m_sFileSavePath;
@@ -200,7 +214,15 @@ namespace CEWSP.ApplicationSettings
 		private string m_sProgramDefSavePath;
 		
 		private string m_sShortcutsSavePath;
-	
+		
+		string m_sProfileHistoryFile;
+		
+		Dictionary<string, string> m_profileHistory = new Dictionary<string, string>();
+
+		/// <summary>
+		/// Path to the currently used profile's directory
+		/// </summary>
+		private string m_sCurrentProfileSavePath;
 		
 		/// <summary>
 		/// Name of the folder that contains all the template files.
@@ -272,9 +294,20 @@ namespace CEWSP.ApplicationSettings
 			DCCPrograms = new Dictionary<string, CDCCDefinition>();
 			Shortcuts = new List<SShortcut>();
 			
-			m_sFileSavePath = Application.UserAppDataPath + "\\ApplicationSettings.xml";
-			m_sProgramDefSavePath = Application.UserAppDataPath + "\\ProgramDefs.xml";
-			m_sShortcutsSavePath = Application.UserAppDataPath + "\\ProgramShortcuts.xml";
+			m_sSettingsFilePath = ".\\Profiles";
+			m_sCurrentProfileFilePath = "\\currentSettingsFile.txt";
+			m_sProfileHistoryFile = m_sSettingsFilePath + "\\profileHistory.txt";
+			
+			m_sCurrentProfileSavePath = GetCurrentSettingsFolder();
+			
+			if (String.IsNullOrEmpty(m_sCurrentProfileSavePath))
+				m_sCurrentProfileSavePath = m_sSettingsFilePath + "\\Default";
+			
+			AdjustSettingsPaths();
+			
+			if (!Directory.Exists(m_sCurrentProfileSavePath))
+				Directory.CreateDirectory(m_sCurrentProfileSavePath);
+			
 			Reset(false);
 		}
 	
@@ -294,6 +327,7 @@ namespace CEWSP.ApplicationSettings
 				SaveShortcutsToFile();
 				
 			}
+		
 			return LoadApplicationSettings();
 		}
 
@@ -672,8 +706,6 @@ namespace CEWSP.ApplicationSettings
 				if (!SaveApplicationSettings())
 					return false;
 			
-			string currentDef = "";
-			string currentProg = "";
 			
 			XmlTextReader reader = null;
 			try
@@ -699,75 +731,15 @@ namespace CEWSP.ApplicationSettings
 						bool bUserEditable = bool.Parse(reader.Value);
 						
 						SetValue(new CSetting(name, val, bUserEditable));
-					}
-					/*else if (reader.LocalName == "ProgramDef" && reader.AttributeCount > 0)
-					{
-						reader.MoveToNextAttribute();
-						
-						
-						
-						var def = new CDCCDefinition();
-						
-						def.Name = reader.Value;
-						
-						SetDCCProgram(def);
-						currentDef = reader.Value;
-					}
-					else if (reader.LocalName == "Program" && reader.AttributeCount > 0)
-					{
-						reader.MoveToNextAttribute();
-						
-						SDCCProgram program = new SDCCProgram();
-						
-						program.Name = reader.Value;
-						
-						reader.MoveToNextAttribute();
-						
-						program.ExecutablePath = reader.Value;
-						
-						GetDCCProgram(currentDef).Programs.Add(program.Name, program);
-						
-						currentProg = program.Name;
-					}
-					else if (reader.LocalName == "File")
-					{
-						SDCCProgram prog = GetDCCProgram(currentDef).GetProgram(currentProg);
-						
-						SStartupFile file = new SStartupFile("", "");
-						
-						reader.MoveToNextAttribute();
-						
-						file.Name = reader.Value;
-						
-						reader.MoveToNextAttribute();
-						
-						file.SetFilePath(reader.Value);
-						
-						reader.MoveToNextAttribute();
-						
-						bool boolVal;
-						Boolean.TryParse(reader.Value, out boolVal);
-						file.Copy = boolVal;
-						
-						reader.MoveToNextAttribute();
-						
-						Boolean.TryParse(reader.Value, out boolVal);
-						file.LaunchWithProgram = boolVal;
-						
-						prog.StartupFiles.Add(file.Name, file);
-									
-					}
-					
-					else
-					{
-						
-					}	*/
-					
-					LoadProgramDefinitions();
-					LoadShortcutsFromFile();
+					}			
 				}
 				
 				reader.Close();
+				
+				LoadProgramDefinitions();
+				LoadShortcutsFromFile();
+				LoadProfileHistory();
+				
 				CLogfile.Instance.LogInfo("Successfully loaded application settings!");
 				
 			}
@@ -783,6 +755,7 @@ namespace CEWSP.ApplicationSettings
 			}
 			
 
+			
 		
 			return true;
 		}
@@ -797,15 +770,23 @@ namespace CEWSP.ApplicationSettings
 			try
 			{
 				File.Delete(m_sFileSavePath);
+				File.Delete(m_sSettingsFilePath + m_sCurrentProfileFilePath);
 			} 
 			catch (Exception)
 			{
 			}
 			
 			XmlTextWriter writer = null;
+			StreamWriter streamWriter = null;
 			try
 			{
-				SaveProgramDefinitions();
+				streamWriter = new StreamWriter(File.Open(m_sSettingsFilePath + m_sCurrentProfileFilePath, FileMode.CreateNew));
+				
+				streamWriter.WriteLine(m_sCurrentProfileSavePath);
+				streamWriter.Close();
+				
+				
+				//SaveProgramDefinitions();
 				 writer = new XmlTextWriter(m_sFileSavePath, System.Text.Encoding.UTF8);
 				writer.Formatting = Formatting.Indented;
 				
@@ -840,55 +821,7 @@ namespace CEWSP.ApplicationSettings
 					
 					writer.WriteEndElement();
 				}
-				
-				// DCC programs
-				
-				writer.WriteStartElement("DCCPrograms");
-				
-				foreach (string key in DCCPrograms.Keys)
-				{
-					CDCCDefinition prog = GetDCCProgram(key);
-					
-					if (prog != null)
-					{
-						writer.WriteStartElement("ProgramDef");
-						writer.WriteAttributeString("name", prog.Name);
-						//writer.WriteAttributeString("exec", prog.GetConcatenatedExecs());
-						//writer.WriteAttributeString("file", prog.GetConcatenatedStartups());
-						
-						foreach (string progKey in prog.Programs.Keys)
-						{
-							SDCCProgram progele;
-							prog.Programs.TryGetValue(progKey, out progele);
-							
-							writer.WriteStartElement("Program");
-							writer.WriteAttributeString("name", progele.Name);
-							writer.WriteAttributeString("Exec", progele.ExecutablePath);
-							
-							foreach (string  fileKey in progele.StartupFiles.Keys) 
-							{
-								SStartupFile file;
-								progele.StartupFiles.TryGetValue(fileKey, out file);
-								
-								writer.WriteStartElement("File");
-								
-								writer.WriteAttributeString("name", file.Name);
-								writer.WriteAttributeString("path", file.FullName);
-								writer.WriteAttributeString("copy", file.Copy.ToString());
-								writer.WriteAttributeString("launch", file.LaunchWithProgram.ToString());
-								
-								writer.WriteEndElement();
-							}
-							
-							writer.WriteEndElement();
-						}
-						
-						writer.WriteEndElement();
-					}
-				}
-				
-				writer.WriteEndElement();
-				
+			
 				writer.WriteEndElement();
 				
 				writer.Flush();
@@ -901,10 +834,14 @@ namespace CEWSP.ApplicationSettings
 				Reset(false);
 				if (writer != null) 
 					writer.Close();
+				
+				if (streamWriter != null)
+					streamWriter.Close();
+				
 				return false;
 			}
 			
-			
+			SaveProfileHistory();
 			return true;
 		}
 		
@@ -1091,6 +1028,191 @@ namespace CEWSP.ApplicationSettings
 				
 			}
 		}
+		
+		string GetCurrentSettingsFolder()
+		{
+			if (!File.Exists(m_sSettingsFilePath + m_sCurrentProfileFilePath))
+				return "";
+			
+			FileStream fileStream = null;
+			
+			try 
+			{
+				fileStream =  File.OpenRead(m_sSettingsFilePath + m_sCurrentProfileFilePath);
+				
+				StreamReader strReader = new StreamReader(fileStream);
+				
+				string sLine = strReader.ReadLine();
+				
+				strReader.Close();
+				
+				return sLine;
+			} 
+			catch (Exception e)
+			{
+				if (fileStream != null)
+					fileStream.Close();
+				
+				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+				
+				return "";
+			}
+		}
+		
+		/// <summary>
+		/// Saves old profile to file and load new one.
+		/// </summary>
+		/// <param name="sProfileFolderPath">Relative path to the folder containing the new profile</param>
+		public void LoadNewProfile(string sProfileFolderPath)
+		{
+			SaveApplicationSettings();
+			
+			if (!Directory.Exists(sProfileFolderPath))
+			{
+				CUserInteractionUtils.ShowErrorMessageBox("Could not find specified profile folder path, not loading profile!");  // LOCALIZE
+				return;
+			}
+			
+			
+			m_sCurrentProfileSavePath = sProfileFolderPath;
+			AdjustSettingsPaths();
+			LoadApplicationSettings();
+			LoadProgramDefinitions();
+			LoadShortcutsFromFile();
+			
+			var dirInfo = new DirectoryInfo(sProfileFolderPath);
+			if (dirInfo != null)
+			{
+				if (!m_profileHistory.ContainsKey(dirInfo.Name))
+					m_profileHistory.Add(dirInfo.Name, sProfileFolderPath);
+			}
+		}
+		
+		/// <summary>
+		/// Save current settings to file and sets m_sCurrentProfileSavePath accordingly
+		/// </summary>
+		/// <param name="sPathToFolder">Relative path to the folder where settings should be saved</param>
+		public void SaveCurrentProfile(string sPathToFolder)
+		{
+			if (!Directory.Exists(sPathToFolder))
+			{
+				CUserInteractionUtils.ShowErrorMessageBox("Could not find specified profile folder path, not loading profile!"); // LOCALIZE
+				return;
+			}
+			
+			m_sCurrentProfileSavePath = sPathToFolder;
+			AdjustSettingsPaths();
+			SaveApplicationSettings();
+			SaveProgramDefinitions();
+			SaveShortcutsToFile();
+			
+			var dirInfo = new DirectoryInfo(sPathToFolder);
+			if (dirInfo != null)
+			{
+				if (!m_profileHistory.ContainsKey(dirInfo.Name))
+					m_profileHistory.Add(dirInfo.Name, sPathToFolder);
+			}
+			
+		}
+		
+		/// <summary>
+		/// Adjust file paths according to m_sCurrentProfileSavePath
+		/// </summary>
+		void AdjustSettingsPaths()
+		{
+			m_sFileSavePath = m_sCurrentProfileSavePath + "\\ApplicationSettings.xml";
+			m_sProgramDefSavePath = m_sCurrentProfileSavePath + "\\ProgramDefs.xml";
+			m_sShortcutsSavePath = m_sCurrentProfileSavePath + "\\ProgramShortcuts.xml";
+		}
+		
+		public Dictionary<string, string> GetProfileHistory()
+		{
+			return new Dictionary<string, string>(m_profileHistory);
+		}
+		
+		void LoadProfileHistory()
+		{
+			if (!File.Exists(m_sProfileHistoryFile))
+				return;
+			
+			m_profileHistory.Clear();
+			
+			StreamReader reader = null;
+			
+			try
+			{
+				reader = new StreamReader(File.Open(m_sProfileHistoryFile, FileMode.Open));
+				
+				while (!reader.EndOfStream)
+				{
+					string sEntry = reader.ReadLine();
+					
+					var dirInf = new DirectoryInfo(sEntry);
+					
+					m_profileHistory.Add(dirInf.Name, sEntry);
+				}
+				
+				reader.Close();
+			} 
+			catch (Exception e)
+			{
+				if (reader != null)
+					reader.Close();
+				
+				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+			}
+		}
+		
+		void SaveProfileHistory()
+		{
+			StreamWriter writer = null;
+			
+			if (File.Exists(m_sProfileHistoryFile))
+				File.Delete(m_sProfileHistoryFile);
+			
+			try {
+				writer = new StreamWriter(File.Open(m_sProfileHistoryFile, FileMode.OpenOrCreate));
+				
+				foreach (string pro in m_profileHistory.Values)
+				{
+					writer.WriteLine(pro);
+				}
+				
+				writer.Close();
+			}
+			catch (Exception e) 
+			{
+				
+				if (writer != null)
+					writer.Close();
+				
+				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+			}
+		}
+		
+		public void DeleteProfile(string sKey, bool bHistoryOnly)
+		{
+			if (!bHistoryOnly)
+			{
+				if (m_profileHistory[sKey] == m_sCurrentProfileSavePath)
+				{
+					CUserInteractionUtils.ShowErrorMessageBox("Trying to delete currently active profile, please switch to another one first!"); // LOCALIZE
+					return;
+				}
+				
+				try {
+					Directory.Delete(m_profileHistory[sKey], true);
+				} 
+				catch (DirectoryNotFoundException)
+				{
+					
+					
+				}
+			}
+			
+			m_profileHistory.Remove(sKey);
+		}
+		
 		#endregion
 		
 	
