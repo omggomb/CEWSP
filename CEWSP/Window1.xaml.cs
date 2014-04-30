@@ -398,10 +398,10 @@ namespace CEWSP
 			FileExplorer.SetupContextMenu();
 			SetUpToolsContextMenu();
 			
-			// DONE_FIXME: Do this inside the Management window and chack whether the changes are to be changed
+			// DONE_FIXME: Do this inside the Management window and check whether the changes are to be changed
 			// FIXED: Application management dialog either doesn't touch or completely 
 			// overrides CApplicationSettings.Instance.
-			(CApplicationSettings.Instance as CApplicationSettings).SaveApplicationSettings();
+			CApplicationSettings.Instance.SaveApplicationSettings();
 			
 		}
 		

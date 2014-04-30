@@ -842,6 +842,7 @@ namespace CEWSP.ApplicationSettings
 			}
 			
 			SaveProfileHistory();
+			SaveProgramDefinitions();
 			return true;
 		}
 		
@@ -1213,6 +1214,20 @@ namespace CEWSP.ApplicationSettings
 			m_profileHistory.Remove(sKey);
 		}
 		
+		
+		List<SDCCProgram> GetAllDCCProgramsDefined()
+		{
+			var returnList = new List<SDCCProgram>();
+			foreach (CDCCDefinition def in DCCPrograms.Values) 
+			{
+				foreach (SDCCProgram prog in def.Programs.Values) 
+				{
+					returnList.Add(prog);
+				}
+			}
+			
+			return returnList;
+		}
 		#endregion
 		
 	

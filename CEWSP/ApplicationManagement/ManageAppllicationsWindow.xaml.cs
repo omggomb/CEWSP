@@ -548,6 +548,21 @@ namespace CEWSP.ApplicationManagement
 		void OnAddNewProgramClicked(object sender, RoutedEventArgs args)
 		{
 			CUserInteractionUtils.AskUserToEnterString(Properties.Resources.DCCDefEnterProgName, AddProgramEntryCallback);
+
+			var grid = new Grid();
+			var label = new Label();
+			label.Content = "Either enter name or choose existing";
+			grid.Children.Add(label);
+			
+			var window = new Window();
+			window.Content = grid;
+			
+			var listBox = new ListBox();
+			listBox.Items.Add(new ListBoxItem());
+			grid.Children.Add(listBox);
+			
+			window.Show();
+						
 		}
 			
 		void OnRemoveFileClicked(object sender, RoutedEventArgs args)
