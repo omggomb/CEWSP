@@ -48,6 +48,14 @@ namespace CEWSP.Shortcuts
 			m_currentSC.Name = nameTextBox.Text = CApplicationSettings.Instance.Shortcuts[id].Name;
 			m_currentSC.Exec = execTextBox.Text = CApplicationSettings.Instance.Shortcuts[id].Exec;
 			m_currentSC.Args = argsTextBox.Text = CApplicationSettings.Instance.Shortcuts[id].Args;
+			
+			var definedPrograms = CApplicationSettings.Instance.GetAllDCCProgramsDefined();
+			foreach (var program in definedPrograms) 
+			{
+				var item = new ComboBoxItem();
+				item.Content = program.Key;
+				existingProgComboBox.Items.Add(item);
+			}
 		}
 		
 		void FileBrowseButton_Click(object sender, RoutedEventArgs e)
@@ -71,15 +79,39 @@ namespace CEWSP.Shortcuts
 		
 		void OkButton_Click(object sender, RoutedEventArgs e)
 		{
-			m_currentSC.Name = nameTextBox.Text;
-			m_currentSC.Exec = execTextBox.Text;
-			m_currentSC.Args = argsTextBox.Text;
+			
+				m_currentSC.Name = nameTextBox.Text;
+				m_currentSC.Exec = execTextBox.Text;
+				m_currentSC.Args = argsTextBox.Text;
+			
+		
 			
 			
 			CApplicationSettings.Instance.Shortcuts.RemoveAt(m_currentSC.myID);
 			CApplicationSettings.Instance.Shortcuts.Insert(m_currentSC.myID, m_currentSC);
 			
 			Close();
+		}
+		
+		void ToggleInputFields(bool bEnabled)
+		{
+			nameTextBox.IsEnabled = bEnabled;
+			execTextBox.IsEnabled = bEnabled;
+			//argsTextBox.IsEnabled = bEnabled;
+			fileBrowseButton.IsEnabled = bEnabled;
+		}
+		void ExistingProgComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+		{
+			var programs = CApplicationSettings.Instance.GetAllDCCProgramsDefined();
+			SDCCProgram prog = null;
+			string sSelected = (existingProgComboBox.SelectedItem as ComboBoxItem).Content as string; 
+			
+			if (programs.TryGetValue(sSelected, out prog))
+			{
+				nameTextBox.Text = prog.Name;
+				execTextBox.Text = prog.ExecutablePath;
+			}
+			
 		}
 	}
 }

@@ -1215,14 +1215,15 @@ namespace CEWSP.ApplicationSettings
 		}
 		
 		
-		List<SDCCProgram> GetAllDCCProgramsDefined()
+		public Dictionary<string, SDCCProgram> GetAllDCCProgramsDefined()
 		{
-			var returnList = new List<SDCCProgram>();
+			var returnList = new Dictionary<string, SDCCProgram>();
 			foreach (CDCCDefinition def in DCCPrograms.Values) 
 			{
 				foreach (SDCCProgram prog in def.Programs.Values) 
 				{
-					returnList.Add(prog);
+					if (!returnList.ContainsKey(prog.Name))
+						returnList.Add(prog.Name, prog);
 				}
 			}
 			

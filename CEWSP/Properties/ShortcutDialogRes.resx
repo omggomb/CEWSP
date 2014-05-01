@@ -126,4 +126,7 @@
   <data name="CommandLineArgs" xml:space="preserve">
     <value>Please enter additional command line arguments if desired.</value>
   </data>
+  <data name="ChooseExisting" xml:space="preserve">
+    <value>Choose an existing program</value>
+  </data>
 </root>

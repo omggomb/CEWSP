@@ -364,7 +364,7 @@ namespace CEWSP.ApplicationManagement
 			return 0;
 		}
 		
-		int AddProgramEntryCallback(TextBox box, System.Windows.Forms.DialogResult res)
+		bool AddProgramEntryCallback(TextBox box, System.Windows.Forms.DialogResult res)
 		{
 			if (GetCurrentDefinition() != null)
 			{
@@ -373,6 +373,7 @@ namespace CEWSP.ApplicationManagement
 				if (def.Programs.ContainsKey(box.Text))
 				{
 					CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefDuplicateEntry + " " + box.Text);
+					return false;
 				}
 				
 				SDCCProgram prog = new SDCCProgram();
@@ -384,7 +385,7 @@ namespace CEWSP.ApplicationManagement
 				UpdateListViews();
 			}
 				
-			return 0;
+			return true;
 		}
 		
 		int AddFileEntryCallback(TextBox box, System.Windows.Forms.DialogResult res)
@@ -547,21 +548,145 @@ namespace CEWSP.ApplicationManagement
 		
 		void OnAddNewProgramClicked(object sender, RoutedEventArgs args)
 		{
-			CUserInteractionUtils.AskUserToEnterString(Properties.Resources.DCCDefEnterProgName, AddProgramEntryCallback);
+			//CUserInteractionUtils.AskUserToEnterString(Properties.Resources.DCCDefEnterProgName, AddProgramEntryCallback);
 
 			var grid = new Grid();
+			for (int i = 0; i < 5; i++)
+			{
+				var rowDef = new RowDefinition();
+				rowDef.Height = new GridLength(12, GridUnitType.Star);
+				grid.RowDefinitions.Add(rowDef);
+			}
+			
+			// Label
 			var label = new Label();
-			label.Content = "Either enter name or choose existing";
+			label.Content = "Either enter name or choose existing"; // LOCALIZE
+			label.SetValue(Grid.RowProperty, 0);
 			grid.Children.Add(label);
 			
+			// Combobox
+			var comboBox = new ComboBox();
+			comboBox.SetValue(Grid.RowProperty, 1);
+			// items in combobox
+			var progs = CApplicationSettings.Instance.GetAllDCCProgramsDefined();
+			
+			foreach (var prog in progs.Keys) 
+			{
+				var item = new ComboBoxItem();
+				item.Content = prog;
+				comboBox.Items.Add(item);
+			}
+			grid.Children.Add(comboBox);
+			
+			// Name label
+			label = new Label();
+			label.Content = "Name"; // LOCALIZE
+			label.SetValue(Grid.RowProperty, 2); 
+			grid.Children.Add(label);
+			
+			// text box
+			var textBox = new TextBox();
+			textBox.Text = "New Program";
+			textBox.SetValue(Grid.RowProperty, 3);
+			grid.Children.Add(textBox);
+			
+			
+			// Ok Cancel
+			var okCancGrid = new Grid();
+			okCancGrid.SetValue(Grid.RowProperty, 4);
+			
+			var colDef = new ColumnDefinition();
+			colDef.Width = new GridLength(50, GridUnitType.Star);
+			okCancGrid.ColumnDefinitions.Add(colDef);
+			colDef = new ColumnDefinition();
+			colDef.Width = new GridLength(50, GridUnitType.Star);
+			okCancGrid.ColumnDefinitions.Add(colDef);
+
+			
+			var okBtn = new Button();
+			okBtn.Content = Properties.Resources.CommonOK;
+			okBtn.SetValue(Grid.ColumnProperty, 0);
+			okCancGrid.Children.Add(okBtn);
+			
+			var cancButton = new Button();
+			cancButton.Content = Properties.Resources.CommonCancel;
+			cancButton.SetValue(Grid.ColumnProperty, 1);
+			okCancGrid.Children.Add(cancButton);
+			
+			grid.Children.Add(okCancGrid);
+			
 			var window = new Window();
+			window.SizeToContent = SizeToContent.WidthAndHeight;
 			window.Content = grid;
+			window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+			window.Title = "Add new program"; // LOCALIZE
 			
-			var listBox = new ListBox();
-			listBox.Items.Add(new ListBoxItem());
-			grid.Children.Add(listBox);
+			comboBox.SelectionChanged += delegate
+			{
+				textBox.IsEnabled = false;
+			};
 			
-			window.Show();
+			okBtn.Click += delegate
+			{
+				// If there's a wrong entry, keep the window open
+				bool bCloseWindow = false;
+				
+				if (comboBox.SelectedIndex != -1)
+				{
+					var programs = CApplicationSettings.Instance.GetAllDCCProgramsDefined();
+					string sSelected = (comboBox.SelectedItem as ComboBoxItem).Content as string;
+					
+					var curDef = GetCurrentDefinition();		
+					
+					if (curDef == null)
+						return;
+					
+					if (!curDef.Programs.ContainsKey(sSelected))
+					{
+						SDCCProgram prog = null;
+						if (programs.TryGetValue(sSelected, out prog))
+						{
+							curDef.Programs.Add(prog.Name, prog);
+							UpdateDataGrid();
+							UpdateListViews();
+							bCloseWindow = true;
+						}
+					}
+					else
+					{
+						CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefDuplicateEntry + " " + sSelected);
+					}
+					
+				}
+				else
+				{
+					if (textBox.Text.Length > 0)
+					{
+						bCloseWindow = AddProgramEntryCallback(textBox, System.Windows.Forms.DialogResult.OK);
+					}
+					else
+					{
+						CUserInteractionUtils.ShowErrorMessageBox("Please enter a name or choose an existing program from the dropdown!"); // LOCALIZE
+					}
+				}
+				
+				if (bCloseWindow)
+					window.Close();
+				else
+				{
+					comboBox.SelectedIndex = -1;
+					textBox.IsEnabled = true;
+				}
+			};
+			
+			cancButton.Click += delegate 
+			{
+				window.Close();
+			};
+			
+			
+			
+			window.ShowDialog();
 						
 		}
 			

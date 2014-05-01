@@ -277,4 +277,7 @@
   <data name="ToolsDeleteProfileFromHistoryOnly" xml:space="preserve">
     <value>Remove profile from history only? (Yes: Only history, No: Remove from disk)</value>
   </data>
+  <data name="CommonOr" xml:space="preserve">
+    <value>Or</value>
+  </data>
 </root>
