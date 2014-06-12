@@ -61,6 +61,15 @@ namespace CEWSP.Properties {
 		}
 		
 		/// <summary>
+		///   Looks up a localized string similar to Please enter a name for the new profile..
+		/// </summary>
+		public static string AskEntryProfileName {
+			get {
+				return ResourceManager.GetString("AskEntryProfileName", resourceCulture);
+			}
+		}
+		
+		/// <summary>
 		///   Looks up a localized string similar to The game folder has been set to a new path! Would you like to update the system.cfg file to point to the new directory?.
 		/// </summary>
 		public static string AskGameFolderUpdateCFG {
@@ -220,6 +229,15 @@ namespace CEWSP.Properties {
 		public static string CommonTrue {
 			get {
 				return ResourceManager.GetString("CommonTrue", resourceCulture);
+			}
+		}
+		
+		/// <summary>
+		///   Looks up a localized string similar to User entry required.
+		/// </summary>
+		public static string CommonUserEntry {
+			get {
+				return ResourceManager.GetString("CommonUserEntry", resourceCulture);
 			}
 		}
 		

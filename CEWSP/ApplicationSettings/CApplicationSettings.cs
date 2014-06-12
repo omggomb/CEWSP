@@ -16,6 +16,8 @@ using CEWSP.Utils;
 using CEWSP.Logging;
 using CEWSP.Shortcuts;
 
+using OmgUtils.UserInteraction;
+
 namespace CEWSP.ApplicationSettings
 {
 	public enum ESettingsType
@@ -473,7 +475,7 @@ namespace CEWSP.ApplicationSettings
 				if (writer != null)
 					writer.Close();
 								
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+				UserInteractionUtils.ShowErrorMessageBox(e.Message);
 			}
 		}
 		
@@ -937,7 +939,7 @@ namespace CEWSP.ApplicationSettings
 				if (writer != null)
 					writer.Close();
 				
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message); // TODO: More info pls
+				UserInteractionUtils.ShowErrorMessageBox(e.Message); // TODO: More info pls
 			}
 		}
 		
@@ -1025,7 +1027,7 @@ namespace CEWSP.ApplicationSettings
 				if (reader != null)
 					reader.Close();
 				
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message); // TODO: More ionfo pls
+				UserInteractionUtils.ShowErrorMessageBox(e.Message); // TODO: More ionfo pls
 				
 			}
 		}
@@ -1054,7 +1056,7 @@ namespace CEWSP.ApplicationSettings
 				if (fileStream != null)
 					fileStream.Close();
 				
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+				UserInteractionUtils.ShowErrorMessageBox(e.Message);
 				
 				return "";
 			}
@@ -1070,7 +1072,7 @@ namespace CEWSP.ApplicationSettings
 			
 			if (!Directory.Exists(sProfileFolderPath))
 			{
-				CUserInteractionUtils.ShowErrorMessageBox("Could not find specified profile folder path, not loading profile!");  // LOCALIZE
+				UserInteractionUtils.ShowErrorMessageBox("Could not find specified profile folder path, not loading profile!");  // LOCALIZE
 				return;
 			}
 			
@@ -1097,7 +1099,7 @@ namespace CEWSP.ApplicationSettings
 		{
 			if (!Directory.Exists(sPathToFolder))
 			{
-				CUserInteractionUtils.ShowErrorMessageBox("Could not find specified profile folder path, not loading profile!"); // LOCALIZE
+				UserInteractionUtils.ShowErrorMessageBox("Could not find specified profile folder path, not loading profile!"); // LOCALIZE
 				return;
 			}
 			
@@ -1160,7 +1162,7 @@ namespace CEWSP.ApplicationSettings
 				if (reader != null)
 					reader.Close();
 				
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+				UserInteractionUtils.ShowErrorMessageBox(e.Message);
 			}
 		}
 		
@@ -1187,7 +1189,7 @@ namespace CEWSP.ApplicationSettings
 				if (writer != null)
 					writer.Close();
 				
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+				UserInteractionUtils.ShowErrorMessageBox(e.Message);
 			}
 		}
 		
@@ -1197,7 +1199,7 @@ namespace CEWSP.ApplicationSettings
 			{
 				if (m_profileHistory[sKey] == m_sCurrentProfileSavePath)
 				{
-					CUserInteractionUtils.ShowErrorMessageBox("Trying to delete currently active profile, please switch to another one first!"); // LOCALIZE
+					UserInteractionUtils.ShowErrorMessageBox("Trying to delete currently active profile, please switch to another one first!"); // LOCALIZE
 					return;
 				}
 				

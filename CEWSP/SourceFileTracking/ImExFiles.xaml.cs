@@ -7,18 +7,13 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Forms;
-using System.IO;
 
-using CEWSP.Utils;
+using OmgUtils.Path;
+using OmgUtils.UserInteraction;
 
 namespace CEWSP.SourceFileTracking
 {
@@ -127,7 +122,7 @@ namespace CEWSP.SourceFileTracking
 				string finalPath = filePath;
 				if (!finalPath.Contains("."))
 				{
-					CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonNoFileNameSpecified);
+					UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonNoFileNameSpecified);
 					return;
 				}
 				
@@ -135,7 +130,7 @@ namespace CEWSP.SourceFileTracking
 				
 				if (info.Extension != CSourceTracker.FileExtension)
 				{
-					finalPath = CPathUtils.ChangeExtension(finalPath, CSourceTracker.FileExtension);
+					finalPath = PathUtils.ChangeExtension(finalPath, CSourceTracker.FileExtension);
 				}
 				
 				if (!info.Directory.Exists)
@@ -162,7 +157,7 @@ namespace CEWSP.SourceFileTracking
 							EFileRoot targetRoot = CSourceTracker.Instance.GetTrackingFileAffection(finalPath);
 							if (!bDoBoth && targetRoot != root)
 							{
-								CUserInteractionUtils.ShowErrorMessageBox(Properties.ImportExportResources.AffectionMissmatch);
+								UserInteractionUtils.ShowErrorMessageBox(Properties.ImportExportResources.AffectionMissmatch);
 								return;
 							}
 							
@@ -178,7 +173,7 @@ namespace CEWSP.SourceFileTracking
 							else
 							{
 								string name = finalPath;
-								string noExtension = CPathUtils.RemoveExtension(name);
+								string noExtension = PathUtils.RemoveExtension(name);
 								string rootFile = noExtension;
 								string gameFile = noExtension;
 								if (!rootFile.Contains("_Root"))

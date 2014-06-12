@@ -21,6 +21,8 @@ using CEWSP.ApplicationSettings;
 using CEWSP.Utils;
 using CEWSP.ApplicationManagement;
 
+using OmgUtils.UserInteraction;
+
 namespace CEWSP.ApplicationManagement
 {
 	/// <summary>
@@ -237,7 +239,7 @@ namespace CEWSP.ApplicationManagement
 		{
 			if (!ValidateDefs())
 			{
-				CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefChangesNotSaved);
+				UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefChangesNotSaved);
 				return false;
 			}
 			
@@ -251,7 +253,7 @@ namespace CEWSP.ApplicationManagement
 				}
 				else
 				{
-					CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist + " (" + programExeTextBox.Text + ")");
+					UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist + " (" + programExeTextBox.Text + ")");
 				}
 				
 				if (GetCurrentStartupFile() != null)
@@ -267,7 +269,7 @@ namespace CEWSP.ApplicationManagement
 					}
 					else
 					{
-						CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist + " (" + startupFileTextBox.Text + ")");
+						UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist + " (" + startupFileTextBox.Text + ")");
 					}
 				}
 				
@@ -341,15 +343,15 @@ namespace CEWSP.ApplicationManagement
 		//#########################################################################################
 		// Callbacks
 		//#########################################################################################
-		int ProgramDefAddCallback(TextBox box, System.Windows.Forms.DialogResult res)
+		void ProgramDefAddCallback(TextBox box, MessageBoxResult res)
 		{
 			
-			if (res != System.Windows.Forms.DialogResult.Cancel)
+			if (res != MessageBoxResult.Cancel)
 			{
 				if (m_dccDefCopy.ContainsKey(box.Text))
 				{
-					CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefDuplicateEntry + " " + box.Text);
-					return 0;
+					UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefDuplicateEntry + " " + box.Text);
+					return ;
 				}
 				
 				CDCCDefinition newDef = new CDCCDefinition();
@@ -361,7 +363,7 @@ namespace CEWSP.ApplicationManagement
 				
 				TrySelectDCCDef(newDef.Name);
 			}
-			return 0;
+			return;
 		}
 		
 		bool AddProgramEntryCallback(TextBox box, System.Windows.Forms.DialogResult res)
@@ -372,7 +374,7 @@ namespace CEWSP.ApplicationManagement
 				
 				if (def.Programs.ContainsKey(box.Text))
 				{
-					CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefDuplicateEntry + " " + box.Text);
+					UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefDuplicateEntry + " " + box.Text);
 					return false;
 				}
 				
@@ -388,16 +390,18 @@ namespace CEWSP.ApplicationManagement
 			return true;
 		}
 		
-		int AddFileEntryCallback(TextBox box, System.Windows.Forms.DialogResult res)
+		void AddFileEntryCallback(TextBox box, MessageBoxResult res)
 		{
+			if (res == MessageBoxResult.Cancel)
+				return;
 			if (GetCurrentProgram() != null)
 			{
 				SDCCProgram prog = GetCurrentProgram();
 				
 				if (prog.StartupFiles.ContainsKey(box.Text))
 				{
-					CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefDuplicateEntry + " " + box.Text);
-					return 0;
+					UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefDuplicateEntry + " " + box.Text);
+					return ;
 				}
 				
 				SStartupFile newFile = new SStartupFile(box.Text, "");
@@ -406,7 +410,7 @@ namespace CEWSP.ApplicationManagement
 				RefreshFilesListView();
 			}
 			
-			return 0;
+			return ;
 		}
 		
 		private bool ValidateDefs()
@@ -419,7 +423,7 @@ namespace CEWSP.ApplicationManagement
 					{
 						if (!File.Exists(file.FullName))
 						{
-							CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist +
+							UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist +
 							                                          " :" + file.FullName +
 							                                          " (" + file.Name + ")");
 							return false;
@@ -428,7 +432,7 @@ namespace CEWSP.ApplicationManagement
 					
 					if (!File.Exists(prog.ExecutablePath))
 					{
-						CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist +
+						UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist +
 							                                          " :" + prog.ExecutablePath +
 							                                          " (" + prog.Name + ")");
 							return false;
@@ -543,7 +547,10 @@ namespace CEWSP.ApplicationManagement
 		// Button interaction
 		void OnAddProgramDefinitionClicked(object sender, RoutedEventArgs args)
 		{	
-			CUserInteractionUtils.AskUserToEnterString(Properties.Resources.DCCDefEnterDefName, ProgramDefAddCallback);
+			UserInteractionUtils.AskUserToEnterString(Properties.Resources.CommonUserEntry,
+			                                          Properties.Resources.DCCDefEnterDefName, 
+			                                          new UserInteractionUtils.UserFinishedEnteringStringDelegate(ProgramDefAddCallback),
+			                                         Properties.Resources.CommonOK, Properties.Resources.CommonCancel);
 		}
 		
 		void OnAddNewProgramClicked(object sender, RoutedEventArgs args)
@@ -654,7 +661,7 @@ namespace CEWSP.ApplicationManagement
 					}
 					else
 					{
-						CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefDuplicateEntry + " " + sSelected);
+						UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.DCCDefDuplicateEntry + " " + sSelected);
 					}
 					
 				}
@@ -666,7 +673,7 @@ namespace CEWSP.ApplicationManagement
 					}
 					else
 					{
-						CUserInteractionUtils.ShowErrorMessageBox("Please enter a name or choose an existing program from the dropdown!"); // LOCALIZE
+						UserInteractionUtils.ShowErrorMessageBox("Please enter a name or choose an existing program from the dropdown!"); // LOCALIZE
 					}
 				}
 				
@@ -707,7 +714,10 @@ namespace CEWSP.ApplicationManagement
 		
 		void OnAddFileClicked(object sender, RoutedEventArgs args)
 		{			
-			CUserInteractionUtils.AskUserToEnterString(Properties.Resources.DCCDefEnterFileName, AddFileEntryCallback);
+			UserInteractionUtils.AskUserToEnterString(Properties.Resources.CommonUserEntry,
+			                                          Properties.Resources.DCCDefEnterFileName, 
+			                                          new UserInteractionUtils.UserFinishedEnteringStringDelegate(AddFileEntryCallback),
+			                                         Properties.Resources.CommonOK, Properties.Resources.CommonCancel);
 		}
 		
 		void OnApplyChangesClicked(object sender, RoutedEventArgs args)

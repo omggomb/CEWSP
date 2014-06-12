@@ -280,4 +280,10 @@
   <data name="CommonOr" xml:space="preserve">
     <value>Or</value>
   </data>
+  <data name="CommonUserEntry" xml:space="preserve">
+    <value>User entry required</value>
+  </data>
+  <data name="AskEntryProfileName" xml:space="preserve">
+    <value>Please enter a name for the new profile.</value>
+  </data>
 </root>

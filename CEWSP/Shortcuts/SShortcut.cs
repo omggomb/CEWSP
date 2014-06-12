@@ -11,6 +11,9 @@ using System.IO;
 using System.Diagnostics;
 using CEWSP.Utils;
 
+
+using OmgUtils.UserInteraction;
+
 namespace CEWSP.Shortcuts
 {
 	/// <summary>
@@ -36,7 +39,7 @@ namespace CEWSP.Shortcuts
 		{
 			if (!File.Exists(Exec))
 			{
-				CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist + "(" + Exec + ")");
+				UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist + "(" + Exec + ")");
 				return;
 			}
 			

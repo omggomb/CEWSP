@@ -22,6 +22,10 @@ using Microsoft.VisualBasic.FileIO;
 using CEWSP.Utils;
 using CEWSP.SourceFileTracking;
 
+using OmgUtils.Path;
+using OmgUtils.ProcessUt;
+using OmgUtils.UserInteraction;
+
 
 
 
@@ -883,13 +887,13 @@ namespace CEWSP
 						}
 						else
 						{
-							CProcessUtils.CopyFile(fileSource, fileTarget, false);
+							ProcessUtils.CopyFile(fileSource, fileTarget, false);
 						}
 					} 
 					catch (Exception e)
 					{
 						
-						CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+						UserInteractionUtils.ShowErrorMessageBox(e.Message);
 						m_bIsFileCut = false;
 					}
 				}
@@ -903,11 +907,11 @@ namespace CEWSP
 						
 						if (m_bIsFileCut)
 						{
-							CProcessUtils.MoveDirectory(dirInf.FullName, targetDir, false);
+							ProcessUtils.MoveDirectory(dirInf.FullName, targetDir, false);
 						}
 						else
 						{
-							CProcessUtils.CopyDirectory(dirInf.FullName, targetDir, false);
+							ProcessUtils.CopyDirectory(dirInf.FullName, targetDir, false);
 						}
 					}
 				}
@@ -953,7 +957,7 @@ namespace CEWSP
 				    e is UnauthorizedAccessException ||
 				    e is IOException)
 				{
-					CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+					UserInteractionUtils.ShowErrorMessageBox(e.Message);
 				}
 				else
 					throw;
@@ -987,7 +991,7 @@ namespace CEWSP
 				catch (Exception e)
 				{
 					
-					CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+					UserInteractionUtils.ShowErrorMessageBox(e.Message);
 				}
 			}
 		}
@@ -1014,7 +1018,7 @@ namespace CEWSP
 				{
 					var fileInfo = new FileInfo(selectedItem.FullPath);
 					
-					string sNewExtension = CPathUtils.GetExtension(box.Text);
+					string sNewExtension = PathUtils.GetExtension(box.Text);
 					
 					if (sNewExtension != box.Text && sNewExtension != fileInfo.Extension.TrimStart('.'))
 					{
@@ -1034,7 +1038,7 @@ namespace CEWSP
 						if (sNewExtension == box.Text)
 							sNewExtension = fileInfo.Extension.TrimStart('.');
 					}
-					string filename = CPathUtils.RemoveExtension(CPathUtils.GetFilename(box.Text));
+					string filename = PathUtils.RemoveExtension(PathUtils.GetFilename(box.Text));
 					FileSystem.RenameFile(selectedItem.FullPath, filename + "." + sNewExtension);
 				}
 			} 
@@ -1044,7 +1048,7 @@ namespace CEWSP
 				    e is UnauthorizedAccessException ||
 				    e is IOException)
 				{
-					CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+					UserInteractionUtils.ShowErrorMessageBox(e.Message);
 				}
 				else
 					throw;
@@ -1152,7 +1156,7 @@ namespace CEWSP
 			if (!selectedItem.IsDirectory)
 			{
 				FileInfo info = new FileInfo(selectedItem.FullPath);
-				CProcessUtils.RunRC(info);
+				CryEngineProcessUtils.RunRC(info);
 			}
 		}
 		
@@ -1227,7 +1231,7 @@ namespace CEWSP
 			
 			if (selectedItem.IsDirectory)
 			{
-				CUserInteractionUtils.ShowErrorMessageBox("You can only run the gfxexporter on files (directory was selected)"); // LOCALIZE
+				UserInteractionUtils.ShowErrorMessageBox("You can only run the gfxexporter on files (directory was selected)"); // LOCALIZE
 				return;
 			}
 			else
@@ -1236,11 +1240,11 @@ namespace CEWSP
 				
 				if (fileInf.Extension != ".swf")
 				{
-					CUserInteractionUtils.ShowErrorMessageBox("You can only run the gfxexporter on .swf files"); // LOCALIZE
+					UserInteractionUtils.ShowErrorMessageBox("You can only run the gfxexporter on .swf files"); // LOCALIZE
 					return;
 				}
 				
-				CProcessUtils.RunGFXExporter(fileInf);
+				CryEngineProcessUtils.RunGFXExporter(fileInf);
 			}
 			
 	
@@ -1257,7 +1261,7 @@ namespace CEWSP
 					dirPath = item.FullPath;
 				else
 				{
-					dirPath = CPathUtils.GetFilePath(item.FullPath);
+					dirPath = PathUtils.GetFilePath(item.FullPath);
 				}
 				
 				Process proc = new Process();

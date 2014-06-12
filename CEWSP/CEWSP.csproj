@@ -140,7 +140,6 @@
     </Compile>
     <Compile Include="Utils\CPathUtils.cs" />
     <Compile Include="Utils\CProcessUtils.cs" />
-    <Compile Include="Utils\CUserInteractionUtils.cs" />
     <Compile Include="Window1.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>Window1.xaml</DependentUpon>
@@ -184,6 +183,16 @@
       <CustomToolNamespace>CEWSP.Properties</CustomToolNamespace>
       <LastGenOutput>ShortcutDialog.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExplorerTreeViewControl\ExplorerTreeView.csproj">
+      <Project>{79810A14-6959-4D1C-A158-C75F20520B94}</Project>
+      <Name>ExplorerTreeView</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OmgUtils\OmgUtils.csproj">
+      <Project>{BB032932-C16B-4BC4-AA82-8427158A6654}</Project>
+      <Name>OmgUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

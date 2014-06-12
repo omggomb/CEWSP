@@ -1,8 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-# SharpDevelop 5.0
+# SharpDevelop 4.4
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CEWSP", "CEWSP\CEWSP.csproj", "{A7EFB02B-10D3-4D27-9267-B197655EDE2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExplorerTreeView", "ExplorerTreeViewControl\ExplorerTreeView.csproj", "{79810A14-6959-4D1C-A158-C75F20520B94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OmgUtils", "OmgUtils\OmgUtils.csproj", "{BB032932-C16B-4BC4-AA82-8427158A6654}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,5 +18,13 @@ Global
 		{A7EFB02B-10D3-4D27-9267-B197655EDE2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7EFB02B-10D3-4D27-9267-B197655EDE2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7EFB02B-10D3-4D27-9267-B197655EDE2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79810A14-6959-4D1C-A158-C75F20520B94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79810A14-6959-4D1C-A158-C75F20520B94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79810A14-6959-4D1C-A158-C75F20520B94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79810A14-6959-4D1C-A158-C75F20520B94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB032932-C16B-4BC4-AA82-8427158A6654}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB032932-C16B-4BC4-AA82-8427158A6654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB032932-C16B-4BC4-AA82-8427158A6654}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB032932-C16B-4BC4-AA82-8427158A6654}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 EndGlobal

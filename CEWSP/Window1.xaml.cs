@@ -29,6 +29,9 @@ using CEWSP.SourceFileTracking;
 using CEWSP.Logging;
 using CEWSP.Shortcuts;
 
+using OmgUtils.ProcessUt;
+using OmgUtils.UserInteraction;
+
 
 
 namespace CEWSP
@@ -493,7 +496,7 @@ namespace CEWSP
 			
 			if (!File.Exists(path))
 			{
-				CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.QuickAccesPathNonexistent);
+				UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.QuickAccesPathNonexistent);
 				return;
 			}
 			
@@ -719,7 +722,7 @@ namespace CEWSP
             		
             		Directory.CreateDirectory(sFullTempDirPath);
             		
-            		CProcessUtils.CopyDirectory(sGameFolder, sFullTempDirPath);
+            		ProcessUtils.CopyDirectory(sGameFolder, sFullTempDirPath);
             		SetGameFolderInSysCFG(sFullTempDirPath);
             		return true;
             	}
@@ -827,7 +830,7 @@ namespace CEWSP
 					}
 					else
 					{
-						CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.RootNotValidNoSaveChanges);
+						UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.RootNotValidNoSaveChanges);
 					}
 				}
         }
@@ -968,7 +971,7 @@ namespace CEWSP
 					
 					if (fileInf.Directory.Parent.Name != "Profiles")
 					{
-						CUserInteractionUtils.ShowErrorMessageBox("Please specify a folder inside the " +  // LOCALIZE
+						UserInteractionUtils.ShowErrorMessageBox("Please specify a folder inside the " +  // LOCALIZE
 																CApplicationSettings.Instance.SettingsFilePath + 
 																"subdirectory of CEWSP!");
 					}
@@ -993,17 +996,22 @@ namespace CEWSP
 		
 		void OnSaveProfileClicked(object sender, RoutedEventArgs e)
 		{
-			CUserInteractionUtils.AskUserToEnterString("Please enter a name for the new profile", OnFinishedEnteringProfileName); // LOCALIZE
+			UserInteractionUtils.AskUserToEnterString(Properties.Resources.CommonUserEntry, 
+			                                          Properties.Resources.AskEntryProfileName,
+			                                          new UserInteractionUtils.UserFinishedEnteringStringDelegate(OnFinishedEnteringProfileName),
+			                                         Properties.Resources.CommonOK, Properties.Resources.CommonCancel); 
 		}
 				
-		int OnFinishedEnteringProfileName(TextBox box, System.Windows.Forms.DialogResult res)
+		void OnFinishedEnteringProfileName(TextBox box, MessageBoxResult res)
 		{
+			if (res == MessageBoxResult.Cancel)
+				return;
+			
 			string sRelPath = CApplicationSettings.Instance.SettingsFilePath + "\\" + box.Text;
 			if (!Directory.Exists(sRelPath))
 				Directory.CreateDirectory(sRelPath);
 			CApplicationSettings.Instance.SaveCurrentProfile(sRelPath);
 			SetUpToolsContextMenu();
-			return 0;
 		}
 		
 		void RefreshProfileHistory()
