@@ -327,7 +327,7 @@ namespace CEWSP
 			}
 		}
 		
-		private static void MarkAsTracked( CustomTreeItem item)
+		public static void MarkAsTracked( CustomTreeItem item)
 		{
 			var stack = item.Header as StackPanel;
 			

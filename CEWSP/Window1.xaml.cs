@@ -48,7 +48,7 @@ namespace CEWSP
 		MenuItem m_profileHistoryContextMenu;
 		public const string m_sGameTempDirName = "TempGame";
 		
-		
+		CewspTreeItemFactory m_treeItemFactory;
 		#endregion
 		
 		
@@ -115,10 +115,12 @@ namespace CEWSP
 			
 			RefreshShortcuts();
 			
+			m_treeItemFactory = new CewspTreeItemFactory();
+			
 			explorerTreeView.WatchDir = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
 			explorerTreeView.IsWatching = true;
 			
-			explorerTreeView.InitializeTree();
+			explorerTreeView.InitializeTree(m_treeItemFactory);
 			
 			ExplorerContextMenu.SetupCESpecificEntries(ref explorerTreeView);
 			
@@ -430,7 +432,7 @@ namespace CEWSP
 			ValidateRootPath();
 			string sRootPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
 			explorerTreeView.WatchDir = sRootPath;
-		    explorerTreeView.InitializeTree();
+		    explorerTreeView.InitializeTree(m_treeItemFactory);
 		}
 		
 		void OnShowGameFolderClicked(object sender, RoutedEventArgs e)
@@ -443,7 +445,7 @@ namespace CEWSP
 		   
 		    
 		    explorerTreeView.WatchDir = sRootPath;
-		    explorerTreeView.InitializeTree();
+		    explorerTreeView.InitializeTree(m_treeItemFactory);
 		}
 		
 		

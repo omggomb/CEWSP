@@ -99,7 +99,9 @@
       <DependentUpon>DragZoneDialog.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ExplorerContextMenu.cs" />
+    <Compile Include="Explorer\CewspTreeItemFactory.cs" />
+    <Compile Include="Explorer\CewspTreeViewItem.cs" />
+    <Compile Include="Explorer\ExplorerContextMenu.cs" />
     <Compile Include="Logging\CLogfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\DragZoneResources.Designer.cs">
@@ -156,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logging" />
+    <Folder Include="Explorer" />
     <Folder Include="Shortcuts" />
   </ItemGroup>
   <ItemGroup>
