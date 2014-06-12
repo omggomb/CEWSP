@@ -71,8 +71,7 @@ namespace CEWSP
 			setRootDirButton.ToolTip = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
 			setGamefolderButton.ToolTip = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
 			
-			FileExplorer.Init(ref folderTreeView);
-	
+			
 			
 			
 			ValidateRootPath();
@@ -81,7 +80,7 @@ namespace CEWSP
 			SetUpToolsContextMenu();
 			ValidateQuickAccessButtons();
 			
-			OnShowRootFolderClicked(null, null);
+			//OnShowRootFolderClicked(null, null);
 			
 			CSourceTracker.Instance.Init();
 			//string root = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).ToString();
@@ -115,6 +114,13 @@ namespace CEWSP
 			}
 			
 			RefreshShortcuts();
+			
+			explorerTreeView.WatchDir = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
+			explorerTreeView.IsWatching = true;
+			
+			explorerTreeView.InitializeTree();
+			
+			ExplorerContextMenu.SetupCESpecificEntries(ref explorerTreeView);
 			
 		}
 		
@@ -277,44 +283,7 @@ namespace CEWSP
 				dialog.ShowWindow(filenames);
 			}
 			
-			/*List<FileInfo> files = new List<FileInfo>();
-			List<DirectoryInfo> dirs = new List<DirectoryInfo>();
 			
-			if (filenames.Length > 0)
-			{
-				
-				foreach (string  file in filenames)
-				{
-					if (File.Exists(file))
-					{
-						FileInfo info = new FileInfo(file);
-						
-						files.Add(info);
-					} 
-					else
-					{
-						if (Directory.Exists(file))
-						{
-							dirs.Add(new DirectoryInfo(file));
-						}
-						else
-						{
-							// Something went wrong....
-						}
-					}
-				}
-				
-				if (files.Count > 0)
-				{
-					var filesDialog = new DragZoneDialog();
-					filesDialog.ShowWindow(files);
-				}
-				if (dirs.Count > 0)
-				{
-					var dirsDialog = new DragZoneDialog();
-					dirsDialog.ShowWindow(dirs);
-				}
-			}*/
 		}
 		
 		void OnSetRootDirClicked(object sender, RoutedEventArgs e)
@@ -398,7 +367,7 @@ namespace CEWSP
 			window.ShowDialog();
 			
 			// Update the file explorer context menu
-			FileExplorer.SetupContextMenu();
+		
 			SetUpToolsContextMenu();
 			
 			// DONE_FIXME: Do this inside the Management window and check whether the changes are to be changed
@@ -459,8 +428,9 @@ namespace CEWSP
 		void OnShowRootFolderClicked(object sender, RoutedEventArgs e)
 		{
 			ValidateRootPath();
-			FillTreeView(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString());
-			FileExplorer.BeginWatching(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString());
+			string sRootPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
+			explorerTreeView.WatchDir = sRootPath;
+		    explorerTreeView.InitializeTree();
 		}
 		
 		void OnShowGameFolderClicked(object sender, RoutedEventArgs e)
@@ -469,14 +439,14 @@ namespace CEWSP
 		    string sRootPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
 			//folderTreeView.Items.Clear();
 		    
-		    FillTreeView(sRootPath);
-		    FileExplorer.BeginWatching(sRootPath);
+		  
+		   
+		    
+		    explorerTreeView.WatchDir = sRootPath;
+		    explorerTreeView.InitializeTree();
 		}
 		
-		void FillTreeView(string sRoot)
-		{
-			FileExplorer.PopulateTreeView(sRoot);
-		}
+		
 	
 		
 		void OnLaunchSB64bitClicked(object sender, RoutedEventArgs e)
@@ -793,7 +763,7 @@ namespace CEWSP
         	TryAlterSystemCFG(sNewPath);
         	CSourceTracker.Instance.Reset(EFileRoot.eFR_GameFolder, false);
         	CSourceTracker.Instance.ClearCurrentTrackingList(EFileRoot.eFR_GameFolder);
-        	if (FileExplorer.CurrentDirectoryWatched == sOldPath)
+        	if (explorerTreeView.WatchDir == sOldPath)
         		OnShowGameFolderClicked(null, null);
         	setGamefolderButton.ToolTip = sNewPath;
         }
@@ -808,7 +778,7 @@ namespace CEWSP
         	TryAlterSystemCFG(CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString());
         	CSourceTracker.Instance.Reset(EFileRoot.eFR_CERoot, false);
         	CSourceTracker.Instance.ClearCurrentTrackingList(EFileRoot.eFR_CERoot);
-        	if (FileExplorer.CurrentDirectoryWatched == sOldPath)
+        	if (explorerTreeView.WatchDir == sOldPath)
         		OnShowRootFolderClicked(null, null);
         	setRootDirButton.ToolTip = sNewPath;
         	ValidateQuickAccessButtons();
@@ -1067,6 +1037,8 @@ namespace CEWSP
 			OnShowRootFolderClicked(null, null);
 		}
 		#endregion
+		
+		
 		#endregion
 		
 		

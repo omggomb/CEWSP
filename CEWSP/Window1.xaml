@@ -2,6 +2,7 @@
 <Window
 	x:Class="CEWSP.Window1" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:f="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+	xmlns:c="clr-namespace:ExplorerTreeView;assembly=ExplorerTreeView"
 	Title="CEWSP"
 	Height="500"
 	Width="700"
@@ -95,7 +96,7 @@
 				Click="OnToolsClicked"/>
 			
 			
-			<TreeView
+			<!--<TreeView
 				Grid.Column="1"
 				Grid.Row="0"
 				Grid.RowSpan="6"
@@ -105,6 +106,19 @@
 				Width="Auto"
 				Height="Auto"
 				Name="folderTreeView"
+				Visibility="Hidden"
+				/> -->
+			
+			<c:ExplorerTreeViewControl
+				Grid.Column="1"
+				Grid.Row="0"
+				Grid.RowSpan="6"
+				VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch"
+				Margin="8,25,8,8"
+				Width="Auto"
+				Height="Auto"
+				Name="explorerTreeView"
 				/>
 			
 			<!-- Short cut buttons -->
