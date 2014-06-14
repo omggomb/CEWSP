@@ -37,7 +37,7 @@ namespace CEWSP
 		public static void SetupCESpecificEntries(ref ExplorerTreeViewControl target)
 		{
 			m_targetTreeView = target;
-		
+			
 			
 			var menu = target.GlobalContextMenu;
 			
@@ -51,7 +51,7 @@ namespace CEWSP
 			item.Header = "New asset"; // LOCALIZE
 			
 			List<string> dccdefs = CApplicationSettings.Instance.GetAllDCCProgramNames();
-		
+			
 			
 			foreach (string dccdef in dccdefs)
 			{
@@ -71,12 +71,12 @@ namespace CEWSP
 			MenuItem runWithItem = new MenuItem();
 			runWithItem.Header = "Run with..."; // LOCALIZE
 			
-			item = new MenuItem();			
+			item = new MenuItem();
 			item.Header = "Run with rc"; // LOCALIZE
 			item.Click += OnContextRunRCClicked;
 			runWithItem.Items.Add(item);
 			
-			item = new MenuItem();			
+			item = new MenuItem();
 			item.Header = "Run with gfxExporter"; // LOCALIZE
 			item.Click += OnContextRunGFXClicked;
 			runWithItem.Items.Add(item);
@@ -93,7 +93,7 @@ namespace CEWSP
 			{
 				CDCCDefinition def = CApplicationSettings.Instance.GetDCCProgram(defName);
 				
-				foreach (SDCCProgram program in def.Programs.Values) 
+				foreach (SDCCProgram program in def.Programs.Values)
 				{
 					if (addedPrograms.Contains(program.Name))
 						continue;
@@ -102,7 +102,7 @@ namespace CEWSP
 					
 					programItem.Header = program.Name;
 					
-					programItem.Click += delegate 
+					programItem.Click += delegate
 					{
 						var selectedItem = m_targetTreeView.SelectedItem as CustomTreeItem;
 						if (selectedItem != null)
@@ -192,12 +192,12 @@ namespace CEWSP
 				CryEngineProcessUtils.RunGFXExporter(fileInf);
 			}
 			
-	
+			
 		}
 		
 		static void OnContextTrackClicked(object sender, RoutedEventArgs args)
 		{
-			var selectedItem = m_targetTreeView.SelectedItem as CustomTreeItem;
+			var selectedItem = m_targetTreeView.SelectedItem as CewspTreeViewItem;
 			
 			// TODO: If its a directory, add all files in it ( not recursive)
 			if (selectedItem != null)
@@ -206,19 +206,22 @@ namespace CEWSP
 				{
 					if (CSourceTracker.Instance.AddFileToTracking(selectedItem.FullPathToReference, EFileRoot.eFR_CERoot, true))
 					{
-						MarkAsTracked(selectedItem);
+						RefreshParentTrackingMark(selectedItem);
 					}
 				}
 				else
 				{
-					TrackDirectory(selectedItem);
+					TrackDirectory(new DirectoryInfo(selectedItem.FullPathToReference));
+					RefreshParentTrackingMark(selectedItem);
 				}
+				
+				selectedItem.MarkTracked();
 			}
 		}
 		
 		static void OnContextStopTrackClicked(object sender, RoutedEventArgs args)
 		{
-			var selectedItem = m_targetTreeView.SelectedItem as CustomTreeItem;
+			var selectedItem = m_targetTreeView.SelectedItem as CewspTreeViewItem;
 			
 			// TODO: If its a directory, remove all files in it ( not recursive)
 			if (selectedItem != null)
@@ -226,12 +229,18 @@ namespace CEWSP
 				if (!selectedItem.IsDirectory)
 				{
 					CSourceTracker.Instance.RemoveFileFromTracking(selectedItem.FullPathToReference, EFileRoot.eFR_CERoot);
-					UnmarkTracked(selectedItem);
+					
+					RefreshParentTrackingMark(selectedItem);
+					
 				}
 				else
-				{				
-					UntrackDirectory(selectedItem);
+				{
+					UntrackDirectory(new DirectoryInfo(selectedItem.FullPathToReference));
+					
+					RefreshParentTrackingMark(selectedItem);
 				}
+				
+				selectedItem.UnmarkTracked();
 			}
 		}
 		
@@ -259,7 +268,7 @@ namespace CEWSP
 			
 			
 			def.Start(savepath);
-					
+			
 			
 			
 			return 0;
@@ -270,7 +279,7 @@ namespace CEWSP
 		/// </summary>
 		/// <param name="callbackOnPressedEnter">Called when enter is pressed while the text box has focus</param>
 		private static void ShowAdHocMessageBox(Func<TextBox, int> callbackOnPressedEnter)
-		{			
+		{
 			TextBox box = new TextBox();
 			
 			
@@ -292,21 +301,21 @@ namespace CEWSP
 			
 			
 			Grid parentGrid = m_targetTreeView.Parent as Grid;
-		
-				
+			
+			
 			if (parentGrid != null)
 			{
-			
-				box.KeyDown += delegate(object sender, System.Windows.Input.KeyEventArgs e) 
-				{ 
+				
+				box.KeyDown += delegate(object sender, System.Windows.Input.KeyEventArgs e)
+				{
 					if (e.Key == System.Windows.Input.Key.Enter)
 					{
-	
+						
 						if (CPathUtils.IsStringCEConform(box.Text))
 						{
 							parentGrid.Children.Remove(box);
 							callbackOnPressedEnter(box);
-						}	
+						}
 						else
 							box.Text = "";
 					}
@@ -327,79 +336,53 @@ namespace CEWSP
 			}
 		}
 		
-		public static void MarkAsTracked( CustomTreeItem item)
+		private static void TrackDirectory(DirectoryInfo directory)
 		{
-			var stack = item.Header as StackPanel;
-			
-			if (stack != null)
+			foreach (var element in directory.GetDirectories())
 			{
-				var label = stack.Children[1] as Label;
-				
-				if (label  != null)
-				{
-					string sOldName = label.Content as string;
-					
-					if (!sOldName.Contains("[Tracked]"))
-					{
-						sOldName += " [Tracked]";
-						label.Content = sOldName;
-					}
-				}
+				TrackDirectory(element);
+			}
+			
+			foreach (var element in directory.GetFiles())
+			{
+				CSourceTracker.Instance.AddFileToTracking(element.FullName, CSourceTracker.Instance.GetTrackingFileAffection(element.FullName), true);
 			}
 		}
 		
-		private static void UnmarkTracked( CustomTreeItem item)
+		
+		private static void UntrackDirectory(DirectoryInfo directory)
 		{
-			var stack = item.Header as StackPanel;
-			
-			if (stack != null)
+			foreach (var element in directory.GetDirectories())
 			{
-				var label = stack.Children[1] as Label;
-				
-				if (label  != null)
-				{
-					string sOldName = label.Content as string;
-					
-					if (sOldName.Contains("[Tracked]"))
-					{
-						sOldName = item.IdentificationName;
-						label.Content = sOldName;
-					}
-				}
+				UntrackDirectory(element);
+			}
+			
+			foreach (var element in directory.GetFiles())
+			{
+				CSourceTracker.Instance.RemoveFileFromTracking(element.FullName, CSourceTracker.Instance.GetTrackingFileAffection(element.FullName));
 			}
 		}
 		
-		private static void TrackDirectory(CustomTreeItem directory)
+		static void RefreshParentTrackingMark(CewspTreeViewItem item)
 		{
-			foreach (CustomTreeItem item in directory.Items)
+			var parent = item;
+			
+			while ((parent = parent.Parent as CewspTreeViewItem) != null)  
 			{
-				if (item.IsDirectory)
+				string sRelPath = CPathUtils.MakeRelative(parent.FullPathToReference);
+				
+				sRelPath += "\\";
+				
+				if (CSourceTracker.Instance.DoesDirectoryContainTrackedFile(sRelPath))
 				{
-					TrackDirectory(item);
+					parent.MarkTracked(false);
 				}
 				else
 				{
-					CSourceTracker.Instance.AddFileToTracking(item.FullPathToReference, EFileRoot.eFR_CERoot);
-					
-					MarkAsTracked(item);
+					parent.UnmarkTracked(false);
 				}
 			}
-		}
-		
-		private static void UntrackDirectory(CustomTreeItem directory)
-		{
-			foreach (CustomTreeItem item in directory.Items)
-			{
-				if (item.IsDirectory)
-				{
-					UntrackDirectory(item);
-				}
-				else
-				{
-					CSourceTracker.Instance.RemoveFileFromTracking(item.FullPathToReference, EFileRoot.eFR_CERoot);
-					UnmarkTracked(item);
-				}
-			}
+			
 		}
 		
 	}

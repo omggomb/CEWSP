@@ -139,6 +139,36 @@ namespace CEWSP.Utils
 			                            
 		}
 		
+		public static string MakeRelative(string sPath)
+		{
+			string sRelPath = CPathUtils.ExtractRelativeToGameFolder(sPath);
+			
+			if (sRelPath == sPath)
+				sRelPath = CPathUtils.ExtractRelativeToRoot(sPath);
+			
+			return sRelPath;
+		}
 		
+		public static string MakeRelative(string sPath, out SourceFileTracking.EFileRoot detectedRoot)
+		{
+			detectedRoot = GetRoot(sPath);
+			
+			return MakeRelative(sPath);
+		}
+		
+		public static SourceFileTracking.EFileRoot GetRoot(string sPath)
+		{
+			string sRelPath = CPathUtils.ExtractRelativeToGameFolder(sPath);
+			
+			if (sRelPath == sPath)
+			{
+				sRelPath = CPathUtils.ExtractRelativeToRoot(sPath);
+				return SourceFileTracking.EFileRoot.eFR_CERoot;
+			}
+			else
+			{
+				return SourceFileTracking.EFileRoot.eFR_GameFolder;
+			}
+		}
 	}
 }

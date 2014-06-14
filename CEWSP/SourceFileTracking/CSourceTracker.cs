@@ -875,6 +875,23 @@ namespace CEWSP.SourceFileTracking
 			
 			m_ignoredFilesWacher.EnableRaisingEvents = true;
 		}
+		
+		public bool DoesDirectoryContainTrackedFile(string sPathToDirectory)
+		{
+			foreach (var element in m_trackedCERootFiles) 
+			{
+				if (element.Contains(sPathToDirectory))
+					return true;
+			}
+			
+			foreach (var element in m_trackedGameFolderFiles) 
+			{
+				if (element.Contains(sPathToDirectory))
+					return true;
+			}
+			
+			return false;
+		}
 
 		private bool CheckIgnoredFilesSanity()
 		{
