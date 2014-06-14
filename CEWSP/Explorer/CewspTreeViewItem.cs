@@ -1,13 +1,12 @@
 ﻿/*
  * Created by SharpDevelop.
- * User: Ihatenames
+ * User: omggomb
  * Date: 12.06.2014
  * Time: 16:33
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using System.Windows.Controls;
 using CEWSP;
 using CEWSP.SourceFileTracking;
 using CEWSP.Utils;
@@ -25,6 +24,10 @@ namespace CEWSP
 			
 		}
 		
+		/// <summary>
+		/// Additionally marks an entry as tracked if need be
+		/// </summary>
+		/// <param name="oEntryImage"></param>
 		public override void MakeHeader(System.Windows.Controls.Image oEntryImage)
 		{
 			base.MakeHeader(oEntryImage);
@@ -48,6 +51,10 @@ namespace CEWSP
 			}
 		}
 		
+		/// <summary>
+		/// Adds [Tracked] to the DisplayName property of this entry
+		/// </summary>
+		/// <param name="bIncludeSubDirs">If true, marks all children of this item as tracked, too</param>
 		public void MarkTracked(bool bIncludeSubDirs = true)
 		{
 			if (IsDirectory && bIncludeSubDirs)
@@ -58,27 +65,20 @@ namespace CEWSP
 				}
 			}
 			
-			var stack = Header as StackPanel;
 			
-			if (stack != null)
+			
+			if (!DisplayName.Contains("[Tracked]"))
 			{
-				var label = stack.Children[1] as Label;
-				
-				if (label  != null)
-				{
-					string sOldName = label.Content as string;
-					
-					if (!sOldName.Contains("[Tracked]"))
-					{
-						sOldName += " [Tracked]";
-						label.Content = sOldName;
-					}
-				}
+				DisplayName = IdentificationName + " [Tracked]";
+				MakeHeader(null);
 			}
-			
 			
 		}
 		
+		/// <summary>
+		/// Removes [Tracked] from the item's display name
+		/// </summary>
+		/// <param name="bIncludeSubDirs">If true removes track indicator from all children, too</param>
 		public void UnmarkTracked(bool bIncludeSubDirs = true)
 		{
 			if (IsDirectory && bIncludeSubDirs)
@@ -89,39 +89,12 @@ namespace CEWSP
 				}
 			}
 			
-			var stack = Header as StackPanel;
 			
-			if (stack != null)
+			if (DisplayName.Contains("[Tracked]"))
 			{
-				var label = stack.Children[1] as Label;
-				
-				if (label  != null)
-				{
-					string sOldName = label.Content as string;
-					
-					if (sOldName.Contains("[Tracked]"))
-					{
-						sOldName = IdentificationName;
-						label.Content = sOldName;
-					}
-				}
-			}
-			
-			
+				DisplayName = IdentificationName;
+				MakeHeader(null);
+			}	
 		}
-		
-		void RefreshParentTrackingMark(CewspTreeViewItem item)
-		{
-			var par = item.GetParentSave() as CewspTreeViewItem;
-			
-			string sRelPath = CPathUtils.ExtractRelativeToGameFolder(FullPathToReference);
-			
-			if (sRelPath == FullPathToReference)
-				sRelPath = CPathUtils.ExtractRelativeToRoot(FullPathToReference);
-			
-			sRelPath += "\\";
-			
-		
-		}	
 	}
 }

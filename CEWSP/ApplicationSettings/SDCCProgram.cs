@@ -1,6 +1,6 @@
 ﻿/*
  * Created by SharpDevelop.
- * User: Ihatenames
+ * User: omggomb
  * Date: 18.10.2013
  * Time: 12:51
  * 

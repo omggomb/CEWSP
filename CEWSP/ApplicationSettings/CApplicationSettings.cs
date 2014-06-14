@@ -774,8 +774,9 @@ namespace CEWSP.ApplicationSettings
 				File.Delete(m_sFileSavePath);
 				File.Delete(m_sSettingsFilePath + m_sCurrentProfileFilePath);
 			} 
-			catch (Exception)
+			catch (Exception e)
 			{
+				UserInteractionUtils.ShowErrorMessageBox(e.Message, Properties.Resources.CommonError);
 			}
 			
 			XmlTextWriter writer = null;

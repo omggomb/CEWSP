@@ -1,6 +1,6 @@
 ﻿/*
  * Created by SharpDevelop.
- * User: Ihatenames
+ * User: omggomb
  * Date: 12.06.2014
  * Time: 16:29
  * 
@@ -18,16 +18,17 @@ namespace CEWSP
 	/// Description of CewspTreeItemFactory.
 	/// </summary>
 	public class CewspTreeItemFactory : TreeItemFactory
-	{
-		public CewspTreeItemFactory()
-		{
-		}
-		
+	{		
 		public CustomTreeItem CreateCustomTreeItemInstance()
 		{
 			return new CewspTreeViewItem();
 		}
 		
+		/// <summary>
+		/// We use a custom made, yellowing folder icon here.
+		/// </summary>
+		/// <param name="itemThatIsUsed"></param>
+		/// <returns></returns>
 		public System.Windows.Controls.Image CreateFolderIconImage(CustomTreeItem itemThatIsUsed)
 		{
 			var img = new System.Windows.Controls.Image();

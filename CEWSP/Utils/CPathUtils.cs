@@ -18,11 +18,8 @@ namespace CEWSP.Utils
 	/// <summary>
 	/// Path utilities.
 	/// </summary>
-	public class CPathUtils
+	public static class CPathUtils
 	{
-		public CPathUtils()
-		{
-		}
 		
 		/// <summary>
 		/// Checks whether a given string will cause problems inside CE (e.g is neither a letter nor digit
@@ -100,6 +97,11 @@ namespace CEWSP.Utils
 			return sPath;
 		}
 		
+		/// <summary>
+		/// Tries to make the given path relative to the currently set game folder
+		/// </summary>
+		/// <param name="sPath">Path that should be made relative</param>
+		/// <returns>If succede the relative path, else the unchanged given path (sPath)</returns>
 		public static string ExtractRelativeToGameFolder(string sPath)
 		{
 			string gameFolder = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
@@ -114,7 +116,10 @@ namespace CEWSP.Utils
 		}
 		
 		
-		
+		/// <summary>
+		/// Looks up the version number of the CE Editor executable
+		/// </summary>
+		/// <returns>Null if failed</returns>
 		public static FileVersionInfo GetCEVersion()
 		{
 			CSetting root = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath);
@@ -130,6 +135,10 @@ namespace CEWSP.Utils
 			return null;
 		}
 		
+		/// <summary>
+		/// Creates a string from the CE Editor executable version number
+		/// </summary>
+		/// <returns>Empty string if failed</returns>
 		public static string GetCEVersionAsString()
 		{
 			FileVersionInfo info = GetCEVersion();
@@ -139,6 +148,11 @@ namespace CEWSP.Utils
 			                            
 		}
 		
+		/// <summary>
+		/// Tries to make the given path relative to either the game or the root folder.
+		/// </summary>
+		/// <param name="sPath"></param>
+		/// <returns></returns>
 		public static string MakeRelative(string sPath)
 		{
 			string sRelPath = CPathUtils.ExtractRelativeToGameFolder(sPath);
@@ -149,6 +163,12 @@ namespace CEWSP.Utils
 			return sRelPath;
 		}
 		
+		/// <summary>
+		/// Makes path relative
+		/// </summary>
+		/// <param name="sPath">Path to be made relative</param>
+		/// <param name="detectedRoot">The file root that was detected for this path</param>
+		/// <returns></returns>
 		public static string MakeRelative(string sPath, out SourceFileTracking.EFileRoot detectedRoot)
 		{
 			detectedRoot = GetRoot(sPath);
@@ -156,6 +176,11 @@ namespace CEWSP.Utils
 			return MakeRelative(sPath);
 		}
 		
+		/// <summary>
+		/// Detects whether the given path is inside or outside the game folder
+		/// </summary>
+		/// <param name="sPath"></param>
+		/// <returns></returns>
 		public static SourceFileTracking.EFileRoot GetRoot(string sPath)
 		{
 			string sRelPath = CPathUtils.ExtractRelativeToGameFolder(sPath);

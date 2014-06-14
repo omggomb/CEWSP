@@ -122,7 +122,7 @@ namespace CEWSP
 			
 			explorerTreeView.InitializeTree(m_treeItemFactory);
 			
-			ExplorerContextMenu.SetupCESpecificEntries(ref explorerTreeView);
+			ExplorerSetup.SetupCESpecificEntries(ref explorerTreeView);
 			
 		}
 		

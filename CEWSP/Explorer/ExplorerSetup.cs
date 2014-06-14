@@ -1,6 +1,6 @@
 ﻿/*
  * Created by SharpDevelop.
- * User: Ihatenames
+ * User: omggomb
  * Date: 12.06.2014
  * Time: 15:00
  * 
@@ -22,18 +22,25 @@ using OmgUtils.UserInteraction;
 namespace CEWSP
 {
 	/// <summary>
-	/// Description of ExplorerContextMenu.
+	/// Class that sets up the explorer context menu and takes care of 
+	/// the resulting events
 	/// </summary>
-	public class ExplorerContextMenu
+	public static class ExplorerSetup
 	{
+		/// <summary>
+		/// The treeview that this class operates on
+		/// </summary>
 		static ExplorerTreeViewControl m_targetTreeView;
 		
+		/// <summary>
+		/// Used with the NewAsset button.
+		/// </summary>
 		static string m_sRequestedDCCPackage;
 		
-		public ExplorerContextMenu()
-		{
-		}
-		
+		/// <summary>
+		/// Adds CE specific context menu entries to the GlobalContextMenu of the ExplorerTreeViewControl
+		/// </summary>
+		/// <param name="target">The target ExplorerTreeViewControl instance</param>
 		public static void SetupCESpecificEntries(ref ExplorerTreeViewControl target)
 		{
 			m_targetTreeView = target;
@@ -158,6 +165,11 @@ namespace CEWSP
 			ShowAdHocMessageBox(TriggerNewAssetSave);
 		}
 		
+		/// <summary>
+		/// Runs the resource compiler on the selected file if any
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		static void OnContextRunRCClicked(object sender, RoutedEventArgs args)
 		{
 			var selectedItem = m_targetTreeView.SelectedItem as CustomTreeItem;
@@ -169,6 +181,11 @@ namespace CEWSP
 			}
 		}
 		
+		/// <summary>
+		/// Runs the gfx exporter on the selected file, if any
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		static void OnContextRunGFXClicked(object sender, RoutedEventArgs args)
 		{
 			
@@ -195,6 +212,11 @@ namespace CEWSP
 			
 		}
 		
+		/// <summary>
+		/// Adds the selected file or directory to the source tracker and marks the tree items as "Tracked"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		static void OnContextTrackClicked(object sender, RoutedEventArgs args)
 		{
 			var selectedItem = m_targetTreeView.SelectedItem as CewspTreeViewItem;
@@ -219,6 +241,11 @@ namespace CEWSP
 			}
 		}
 		
+		/// <summary>
+		/// Removes the selected file or directory from the source tracker and removes the "Tracked" mark.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		static void OnContextStopTrackClicked(object sender, RoutedEventArgs args)
 		{
 			var selectedItem = m_targetTreeView.SelectedItem as CewspTreeViewItem;
@@ -244,6 +271,12 @@ namespace CEWSP
 			}
 		}
 		
+		/// <summary>
+		/// Called after the user has entered a valid name for the new asset. See
+		/// <see cref="ShowAdHocMessageBox"/>
+		/// </summary>
+		/// <param name="box">The TextBox into which the user entered the desired name</param>
+		/// <returns>Return value does not inidicate anything, legacy of using Func instead of delegate</returns>
 		static int TriggerNewAssetSave(TextBox box)
 		{
 			var selectedItem = m_targetTreeView.SelectedItem as CustomTreeItem;
@@ -268,9 +301,6 @@ namespace CEWSP
 			
 			
 			def.Start(savepath);
-			
-			
-			
 			return 0;
 		}
 		
@@ -336,7 +366,12 @@ namespace CEWSP
 			}
 		}
 		
-		private static void TrackDirectory(DirectoryInfo directory)
+		/// <summary>
+		/// Adds the specified directory to the source tracker. Include subdirs recursively.
+		/// Potentially very slow!
+		/// </summary>
+		/// <param name="directory"></param>
+		 static void TrackDirectory(DirectoryInfo directory)
 		{
 			foreach (var element in directory.GetDirectories())
 			{
@@ -349,8 +384,12 @@ namespace CEWSP
 			}
 		}
 		
-		
-		private static void UntrackDirectory(DirectoryInfo directory)
+		/// <summary>
+		/// Removes a directory and it subcontents from the source tracker.
+		/// Potentially very slow!
+		/// </summary>
+		/// <param name="directory"></param>
+		 static void UntrackDirectory(DirectoryInfo directory)
 		{
 			foreach (var element in directory.GetDirectories())
 			{
@@ -363,6 +402,11 @@ namespace CEWSP
 			}
 		}
 		
+		 /// <summary>
+		 /// Travels through all the parent of the specified tree item and checks whether they 
+		 /// need to be marked as tracked or not
+		 /// </summary>
+		 /// <param name="item"></param>
 		static void RefreshParentTrackingMark(CewspTreeViewItem item)
 		{
 			var parent = item;

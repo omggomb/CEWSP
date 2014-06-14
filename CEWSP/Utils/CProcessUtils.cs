@@ -22,12 +22,14 @@ namespace CEWSP.Utils
 	/// <summary>
 	/// Description of CProcessUtils.
 	/// </summary>
-	public class CryEngineProcessUtils
+	public static class CryEngineProcessUtils
 	{
-		public CryEngineProcessUtils()
-		{
-		}
 		
+		
+		/// <summary>
+		/// Runs the crytiff converter on the given file and display a result window afterwards
+		/// </summary>
+		/// <param name="info"></param>
 		public static void RunRCtif(FileInfo info)
 		{
 			if (CApplicationSettings.Instance.IsRootValid(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString()))
@@ -48,6 +50,10 @@ namespace CEWSP.Utils
 			
 		}
 		
+		/// <summary>
+		/// Runs the resource compiler on the given file and displays a result window afterwards
+		/// </summary>
+		/// <param name="info"></param>
 		public static void RunRC(FileInfo info)
 		{
 			if (info.Extension == ".tif")
@@ -72,6 +78,10 @@ namespace CEWSP.Utils
 			}
 		}
 		
+		/// <summary>
+		/// Runs the gfx exproter on the given file and displays a result window afterwards
+		/// </summary>
+		/// <param name="fileInfo"></param>
 		public static void RunGFXExporter(FileInfo fileInfo)
 		{
 			string root = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
