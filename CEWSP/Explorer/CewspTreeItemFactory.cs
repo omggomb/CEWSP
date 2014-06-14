@@ -7,9 +7,10 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 using ExplorerTreeView;
-
 
 namespace CEWSP
 {
@@ -25,6 +26,18 @@ namespace CEWSP
 		public CustomTreeItem CreateCustomTreeItemInstance()
 		{
 			return new CewspTreeViewItem();
+		}
+		
+		public System.Windows.Controls.Image CreateFolderIconImage(CustomTreeItem itemThatIsUsed)
+		{
+			var img = new System.Windows.Controls.Image();
+			
+			var src = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(Properties.Icons.SimpleFolderIcon.Handle,
+			                                                                 Int32Rect.Empty,
+			                                                                 BitmapSizeOptions.FromEmptyOptions());
+			
+			img.Source = src;
+			return img;
 		}
 	}
 }

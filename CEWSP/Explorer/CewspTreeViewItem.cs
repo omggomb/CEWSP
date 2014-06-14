@@ -41,7 +41,7 @@ namespace CEWSP
 				MarkTracked();
 			}
 			
-			if (IsDirectory && sRelPath != ".")
+			if (IsDirectory && sRelPath != ".\\")
 			{
 				if (CSourceTracker.Instance.DoesDirectoryContainTrackedFile(sRelPath))
 					MarkTracked(false);

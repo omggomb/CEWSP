@@ -108,6 +108,10 @@
       <DependentUpon>DragZoneResources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="Properties\Icons.Designer.cs">
+      <DependentUpon>Icons.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="Properties\ImportExportResources.Designer.cs">
       <DependentUpon>ImportExportResources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -170,6 +174,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <CustomToolNamespace>CEWSP.Properties</CustomToolNamespace>
       <LastGenOutput>DragZoneResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Icons.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Icons.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\ImportExportResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
