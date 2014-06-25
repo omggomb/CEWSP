@@ -1,6 +1,6 @@
 ﻿/*
  * Created by SharpDevelop.
- * User: Ihatenames
+ * User: omggomb
  * Date: 18.10.2013
  * Time: 12:51
  * 
@@ -12,6 +12,8 @@ using System.Diagnostics;
 using System.IO;
 
 using CEWSP.Utils;
+using OmgUtils.Path;
+using OmgUtils.ProcessUt;
 
 namespace CEWSP.ApplicationSettings
 {
@@ -212,7 +214,7 @@ namespace CEWSP.ApplicationSettings
 							Directory.CreateDirectory(directory);
 						
 						newFile = directory + "\\" + fileName + "." + file.Extension;
-						CProcessUtils.CopyFile(file.FullName, newFile);
+						ProcessUtils.CopyFile(file.FullName, newFile);
 						ExpandMacros(newFile);
 					}
 					
@@ -306,7 +308,7 @@ namespace CEWSP.ApplicationSettings
 				
 				fileContent = fileContent.Replace(m_sRootPathMacro, ceRoot);
 				fileContent = fileContent.Replace(m_sGameFolderMacro, ceGameFolder);	
-				fileContent = fileContent.Replace(m_sFileNameMacro, CPathUtils.GetFilename(info.Name));
+				fileContent = fileContent.Replace(m_sFileNameMacro, PathUtils.GetFilename(info.Name));
 				fileContent = fileContent.Replace(m_sFileMacro, info.FullName);
 				fileContent = fileContent.Replace(m_sFolderMacro, info.Directory.FullName);
 				

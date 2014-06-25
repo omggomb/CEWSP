@@ -29,6 +29,9 @@ using CEWSP.SourceFileTracking;
 using CEWSP.Logging;
 using CEWSP.Shortcuts;
 
+using OmgUtils.ProcessUt;
+using OmgUtils.UserInteraction;
+
 
 
 namespace CEWSP
@@ -45,7 +48,7 @@ namespace CEWSP
 		MenuItem m_profileHistoryContextMenu;
 		public const string m_sGameTempDirName = "TempGame";
 		
-		
+		CewspTreeItemFactory m_treeItemFactory;
 		#endregion
 		
 		
@@ -68,8 +71,7 @@ namespace CEWSP
 			setRootDirButton.ToolTip = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
 			setGamefolderButton.ToolTip = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
 			
-			FileExplorer.Init(ref folderTreeView);
-	
+			
 			
 			
 			ValidateRootPath();
@@ -78,7 +80,7 @@ namespace CEWSP
 			SetUpToolsContextMenu();
 			ValidateQuickAccessButtons();
 			
-			OnShowRootFolderClicked(null, null);
+			//OnShowRootFolderClicked(null, null);
 			
 			CSourceTracker.Instance.Init();
 			//string root = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).ToString();
@@ -112,6 +114,15 @@ namespace CEWSP
 			}
 			
 			RefreshShortcuts();
+			
+			m_treeItemFactory = new CewspTreeItemFactory();
+			
+			explorerTreeView.WatchDir = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
+			explorerTreeView.IsWatching = true;
+			
+			explorerTreeView.InitializeTree(m_treeItemFactory);
+			
+			ExplorerSetup.SetupCESpecificEntries(ref explorerTreeView);
 			
 		}
 		
@@ -274,44 +285,7 @@ namespace CEWSP
 				dialog.ShowWindow(filenames);
 			}
 			
-			/*List<FileInfo> files = new List<FileInfo>();
-			List<DirectoryInfo> dirs = new List<DirectoryInfo>();
 			
-			if (filenames.Length > 0)
-			{
-				
-				foreach (string  file in filenames)
-				{
-					if (File.Exists(file))
-					{
-						FileInfo info = new FileInfo(file);
-						
-						files.Add(info);
-					} 
-					else
-					{
-						if (Directory.Exists(file))
-						{
-							dirs.Add(new DirectoryInfo(file));
-						}
-						else
-						{
-							// Something went wrong....
-						}
-					}
-				}
-				
-				if (files.Count > 0)
-				{
-					var filesDialog = new DragZoneDialog();
-					filesDialog.ShowWindow(files);
-				}
-				if (dirs.Count > 0)
-				{
-					var dirsDialog = new DragZoneDialog();
-					dirsDialog.ShowWindow(dirs);
-				}
-			}*/
 		}
 		
 		void OnSetRootDirClicked(object sender, RoutedEventArgs e)
@@ -395,7 +369,7 @@ namespace CEWSP
 			window.ShowDialog();
 			
 			// Update the file explorer context menu
-			FileExplorer.SetupContextMenu();
+		
 			SetUpToolsContextMenu();
 			
 			// DONE_FIXME: Do this inside the Management window and check whether the changes are to be changed
@@ -456,8 +430,9 @@ namespace CEWSP
 		void OnShowRootFolderClicked(object sender, RoutedEventArgs e)
 		{
 			ValidateRootPath();
-			FillTreeView(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString());
-			FileExplorer.BeginWatching(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString());
+			string sRootPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
+			explorerTreeView.WatchDir = sRootPath;
+		    explorerTreeView.InitializeTree(m_treeItemFactory);
 		}
 		
 		void OnShowGameFolderClicked(object sender, RoutedEventArgs e)
@@ -466,14 +441,14 @@ namespace CEWSP
 		    string sRootPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
 			//folderTreeView.Items.Clear();
 		    
-		    FillTreeView(sRootPath);
-		    FileExplorer.BeginWatching(sRootPath);
+		  
+		   
+		    
+		    explorerTreeView.WatchDir = sRootPath;
+		    explorerTreeView.InitializeTree(m_treeItemFactory);
 		}
 		
-		void FillTreeView(string sRoot)
-		{
-			FileExplorer.PopulateTreeView(sRoot);
-		}
+		
 	
 		
 		void OnLaunchSB64bitClicked(object sender, RoutedEventArgs e)
@@ -493,7 +468,7 @@ namespace CEWSP
 			
 			if (!File.Exists(path))
 			{
-				CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.QuickAccesPathNonexistent);
+				UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.QuickAccesPathNonexistent);
 				return;
 			}
 			
@@ -719,7 +694,7 @@ namespace CEWSP
             		
             		Directory.CreateDirectory(sFullTempDirPath);
             		
-            		CProcessUtils.CopyDirectory(sGameFolder, sFullTempDirPath);
+            		ProcessUtils.CopyDirectory(sGameFolder, sFullTempDirPath);
             		SetGameFolderInSysCFG(sFullTempDirPath);
             		return true;
             	}
@@ -790,7 +765,7 @@ namespace CEWSP
         	TryAlterSystemCFG(sNewPath);
         	CSourceTracker.Instance.Reset(EFileRoot.eFR_GameFolder, false);
         	CSourceTracker.Instance.ClearCurrentTrackingList(EFileRoot.eFR_GameFolder);
-        	if (FileExplorer.CurrentDirectoryWatched == sOldPath)
+        	if (explorerTreeView.WatchDir == sOldPath)
         		OnShowGameFolderClicked(null, null);
         	setGamefolderButton.ToolTip = sNewPath;
         }
@@ -805,7 +780,7 @@ namespace CEWSP
         	TryAlterSystemCFG(CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString());
         	CSourceTracker.Instance.Reset(EFileRoot.eFR_CERoot, false);
         	CSourceTracker.Instance.ClearCurrentTrackingList(EFileRoot.eFR_CERoot);
-        	if (FileExplorer.CurrentDirectoryWatched == sOldPath)
+        	if (explorerTreeView.WatchDir == sOldPath)
         		OnShowRootFolderClicked(null, null);
         	setRootDirButton.ToolTip = sNewPath;
         	ValidateQuickAccessButtons();
@@ -827,7 +802,7 @@ namespace CEWSP
 					}
 					else
 					{
-						CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.RootNotValidNoSaveChanges);
+						UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.RootNotValidNoSaveChanges);
 					}
 				}
         }
@@ -968,7 +943,7 @@ namespace CEWSP
 					
 					if (fileInf.Directory.Parent.Name != "Profiles")
 					{
-						CUserInteractionUtils.ShowErrorMessageBox("Please specify a folder inside the " +  // LOCALIZE
+						UserInteractionUtils.ShowErrorMessageBox("Please specify a folder inside the " +  // LOCALIZE
 																CApplicationSettings.Instance.SettingsFilePath + 
 																"subdirectory of CEWSP!");
 					}
@@ -993,17 +968,22 @@ namespace CEWSP
 		
 		void OnSaveProfileClicked(object sender, RoutedEventArgs e)
 		{
-			CUserInteractionUtils.AskUserToEnterString("Please enter a name for the new profile", OnFinishedEnteringProfileName); // LOCALIZE
+			UserInteractionUtils.AskUserToEnterString(Properties.Resources.CommonUserEntry, 
+			                                          Properties.Resources.AskEntryProfileName,
+			                                          new UserInteractionUtils.UserFinishedEnteringStringDelegate(OnFinishedEnteringProfileName),
+			                                         Properties.Resources.CommonOK, Properties.Resources.CommonCancel); 
 		}
 				
-		int OnFinishedEnteringProfileName(TextBox box, System.Windows.Forms.DialogResult res)
+		void OnFinishedEnteringProfileName(TextBox box, MessageBoxResult res)
 		{
+			if (res == MessageBoxResult.Cancel)
+				return;
+			
 			string sRelPath = CApplicationSettings.Instance.SettingsFilePath + "\\" + box.Text;
 			if (!Directory.Exists(sRelPath))
 				Directory.CreateDirectory(sRelPath);
 			CApplicationSettings.Instance.SaveCurrentProfile(sRelPath);
 			SetUpToolsContextMenu();
-			return 0;
 		}
 		
 		void RefreshProfileHistory()
@@ -1059,6 +1039,8 @@ namespace CEWSP
 			OnShowRootFolderClicked(null, null);
 		}
 		#endregion
+		
+		
 		#endregion
 		
 		

@@ -15,37 +15,46 @@ using Microsoft.VisualBasic.FileIO;
 
 using CEWSP.ApplicationSettings;
 
+using OmgUtils.ProcessUt;
+
 namespace CEWSP.Utils
 {
 	/// <summary>
 	/// Description of CProcessUtils.
 	/// </summary>
-	public class CProcessUtils
+	public static class CryEngineProcessUtils
 	{
-		public CProcessUtils()
-		{
-		}
 		
+		
+		/// <summary>
+		/// Runs the crytiff converter on the given file and display a result window afterwards
+		/// </summary>
+		/// <param name="info"></param>
 		public static void RunRCtif(FileInfo info)
 		{
 			if (CApplicationSettings.Instance.IsRootValid(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString()))
 			{
-				string rcPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString() + 
-					CApplicationSettings.Instance.GetValue(ESettingsStrings.RCRelativePath).GetValueString();
+				string rcPath = GetValidRCPath();
 				
-			
+				
 				Process rcProcess = new Process();
 				
 				ProcessStartInfo startInfo = new ProcessStartInfo(rcPath);
 				
-				startInfo.Arguments = info.FullName + " /userdialog=1";
+				startInfo.Arguments = "\"" + info.FullName + "\"" + " /userdialog";
 				rcProcess.StartInfo = startInfo;
 				
-				RunProcessWithRedirectedStdErrorStdOut(rcProcess);
+				
+				
+				ProcessUtils.RunProcessWithRedirectedStdErrorStdOut(rcProcess, Properties.Resources.CommonNotice);
 			}
 			
 		}
 		
+		/// <summary>
+		/// Runs the resource compiler on the given file and displays a result window afterwards
+		/// </summary>
+		/// <param name="info"></param>
 		public static void RunRC(FileInfo info)
 		{
 			if (info.Extension == ".tif")
@@ -56,20 +65,25 @@ namespace CEWSP.Utils
 			{
 				if (CApplicationSettings.Instance.IsRootValid(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString()))
 				{
-					string rcPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString() + 
-						CApplicationSettings.Instance.GetValue(ESettingsStrings.RCRelativePath).GetValueString();
+					string rcPath = GetValidRCPath();
+					
+					
 					Process rcProcess = new Process();
 					
 					ProcessStartInfo startInfo = new ProcessStartInfo(rcPath);
 					
-					startInfo.Arguments = info.FullName;
+					startInfo.Arguments = "\"" + info.FullName + "\"";
 					rcProcess.StartInfo = startInfo;
 					
-					RunProcessWithRedirectedStdErrorStdOut(rcProcess);
+					ProcessUtils.RunProcessWithRedirectedStdErrorStdOut(rcProcess, Properties.Resources.CommonNotice);
 				}
 			}
 		}
 		
+		/// <summary>
+		/// Runs the gfx exproter on the given file and displays a result window afterwards
+		/// </summary>
+		/// <param name="fileInfo"></param>
 		public static void RunGFXExporter(FileInfo fileInfo)
 		{
 			string root = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
@@ -80,115 +94,27 @@ namespace CEWSP.Utils
 			Process proc = new Process();
 			
 			ProcessStartInfo info = new ProcessStartInfo(gfxPath);
-		
-			info.Arguments = fileInfo.FullName + " " + CApplicationSettings.Instance.GetValue(ESettingsStrings.GFXExporterArguments).Value; 
+			
+			info.Arguments = fileInfo.FullName + " " + CApplicationSettings.Instance.GetValue(ESettingsStrings.GFXExporterArguments).Value;
 			proc.StartInfo = info;
 			
-			RunProcessWithRedirectedStdErrorStdOut(proc);
+			ProcessUtils.RunProcessWithRedirectedStdErrorStdOut(proc, Properties.Resources.CommonNotice);
 		}
 		
 		/// <summary>
-		/// Runs the given process and redirects its sdtout and stderr to a textbox, which is shown afterwards.
+		/// Decides whether to use 32bit or 64bit rc and returns its path.
+		/// There are issues with the 64bit rc, so it will always return 32bit, if present
 		/// </summary>
-		/// <param name="process"></param>
-		public static void RunProcessWithRedirectedStdErrorStdOut(Process process)
+		/// <returns></returns>
+		public static string GetValidRCPath()
 		{
-			ProcessStartInfo info = process.StartInfo;
+			string rcPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
+					
+			string 	rc64Path  = rcPath + CApplicationSettings.Instance.GetValue(ESettingsStrings.RC64bitRelativePath).GetValueString();
+			string 	rc32Path = rcPath + CApplicationSettings.Instance.GetValue(ESettingsStrings.RCRelativePath).GetValueString();
 			
-			info.RedirectStandardOutput = true;
-			info.RedirectStandardError = true;
-			info.UseShellExecute = false;
+			return File.Exists(rc32Path) ? rc32Path : rc64Path;
 			
-			process.Start();
-			
-			StreamReader stdOut = process.StandardOutput;
-			StreamReader stdError  = process.StandardError;
-			
-			string output = stdOut.ReadToEnd() + "\n" + stdError.ReadToEnd();
-			
-			CUserInteractionUtils.DisplayRichTextBox(output);
-		}
-		
-		/// <summary>
-		/// Copies a directory.
-		/// </summary>
-		/// <param name="sPathToDir">Full path to the directory to be copied</param>
-		/// <param name="sTargetDir">Full path to the target directory</param>
-		/// <param name="bOverwrite">Overwrite existing directory?</param>
-		/// <param name="bSilent">Hide progress bar? Still shows errors</param>
-		public static void CopyDirectory(string sPathToDir, string sTargetDir, bool bOverwrite = true, bool bSilent = false)
-		{
-			if (bOverwrite)
-			{
-				if (Directory.Exists(sTargetDir))
-					Directory.Delete(sTargetDir, true);
-			}
-			
-			DirectoryInfo info = new DirectoryInfo(sPathToDir);
-			
-			FileSystem.CopyDirectory(sPathToDir, sTargetDir + "\\" + info.Name,
-			                         bSilent ? UIOption.OnlyErrorDialogs : UIOption.AllDialogs,
-			                         UICancelOption.DoNothing);
-		}
-		
-		/// <summary>
-		/// Copies a file
-		/// </summary>
-		/// <param name="sSourceFile">Full path to the file to be copied</param>
-		/// <param name="sTargetFile">Full path to the destination file</param>
-		/// <param name="bOverwrite">Overwrite exsting file?</param>
-		/// <param name="bSilent">Hide progress bar? Still shows errors</param>
-		public static void CopyFile(string sSourceFile, string sTargetFile, bool bOverwrite = true, bool bSilent = false)
-		{
-			if (bOverwrite)
-			{
-				if (File.Exists(sTargetFile))
-					File.Delete(sTargetFile);
-			}
-			
-			FileSystem.CopyFile(sSourceFile, sTargetFile,
-			                         bSilent ? UIOption.OnlyErrorDialogs : UIOption.AllDialogs,
-			                         UICancelOption.DoNothing);
-		}
-		
-		/// <summary>
-		/// Moves a directory.
-		/// </summary>
-		/// <param name="sPathToDir">Full path to the directory to be moved</param>
-		/// <param name="sTargetDir">Full path to the target directory</param>
-		/// <param name="bOverwrite">Overwrite existing directory?</param>
-		/// <param name="bSilent">Hide progress bar? Still shows errors</param>
-		public static void MoveDirectory(string sPathToDir, string sTargetDir, bool bOverwrite = true, bool bSilent = false)
-		{
-			if (bOverwrite)
-			{
-				if (Directory.Exists(sTargetDir))
-					Directory.Delete(sTargetDir, true);
-			}
-			
-			FileSystem.MoveDirectory(sPathToDir, sTargetDir,
-			                         bSilent ? UIOption.OnlyErrorDialogs : UIOption.AllDialogs,
-			                         UICancelOption.DoNothing);
-		}
-		
-		/// <summary>
-		/// Moves a file
-		/// </summary>
-		/// <param name="sSourceFile">Full path to the file to be moved</param>
-		/// <param name="sTargetFile">Full path to the destination file</param>
-		/// <param name="bOverwrite">Overwrite exsting file?</param>
-		/// <param name="bSilent">Hide progress bar? Still shows errors</param>
-		public static void MoveFile(string sSourceFile, string sTargetFile, bool bOverwrite = true, bool bSilent = false)
-		{
-			if (bOverwrite)
-			{
-				if (File.Exists(sTargetFile))
-					File.Delete(sTargetFile);
-			}
-			
-			FileSystem.MoveFile(sSourceFile, sTargetFile,
-			                         bSilent ? UIOption.OnlyErrorDialogs : UIOption.AllDialogs,
-			                         UICancelOption.DoNothing);
 		}
 	}
 }

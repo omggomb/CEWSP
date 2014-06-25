@@ -1,6 +1,6 @@
 ﻿/*
  * Created by SharpDevelop.
- * User: Ihatenames
+ * User: omggomb
  * Date: 04/06/2014
  * Time: 15:36
  * 
@@ -10,6 +10,9 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using CEWSP.Utils;
+
+
+using OmgUtils.UserInteraction;
 
 namespace CEWSP.Shortcuts
 {
@@ -36,7 +39,7 @@ namespace CEWSP.Shortcuts
 		{
 			if (!File.Exists(Exec))
 			{
-				CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist + "(" + Exec + ")");
+				UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.CommonPathDoesntExist + "(" + Exec + ")");
 				return;
 			}
 			

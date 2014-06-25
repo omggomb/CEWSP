@@ -16,6 +16,8 @@ using CEWSP.Utils;
 using CEWSP.Logging;
 using CEWSP.Shortcuts;
 
+using OmgUtils.UserInteraction;
+
 namespace CEWSP.ApplicationSettings
 {
 	public enum ESettingsType
@@ -43,7 +45,7 @@ namespace CEWSP.ApplicationSettings
 		
 		public CSetting(string sKey, object val, bool bUserEditable = false) : this(sKey, val,
 		                                                                            GetDescriptionSlow(sKey),
-	                                                                    			bUserEditable)
+		                                                                            bUserEditable)
 		{
 		}
 		
@@ -60,7 +62,7 @@ namespace CEWSP.ApplicationSettings
 		public ESettingsType GetSettingType()
 		{
 			
-			switch (Key[0]) 
+			switch (Key[0])
 			{
 				case 'b':
 					return ESettingsType.eST_Boolean;
@@ -83,11 +85,11 @@ namespace CEWSP.ApplicationSettings
 		
 		public static string GetDescriptionSlow(string sKey)
 		{
-			switch (sKey) 
+			switch (sKey)
 			{
 				case ESettingsStrings.AskExportOnExit:
 					return ESettingsStrings.DESC_AskExportOnExit;
-				
+					
 				case ESettingsStrings.AskImportOnStartup:
 					return ESettingsStrings.DESC_AskImportOnStartup;
 					
@@ -108,7 +110,7 @@ namespace CEWSP.ApplicationSettings
 					
 				case ESettingsStrings.ExportOnExit:
 					return ESettingsStrings.DESC_ExportOnExit;
-				
+					
 				case ESettingsStrings.Game32bitArguments:
 					return ESettingsStrings.DESC_Game32bitArguments;
 					
@@ -120,10 +122,10 @@ namespace CEWSP.ApplicationSettings
 					
 				case ESettingsStrings.Game64bitRelativePath:
 					return ESettingsStrings.DESC_Game64bitRelativePath;
-				
+					
 				case ESettingsStrings.GameFolderPath:
 					return ESettingsStrings.DESC_GameFolderPath;
-				
+					
 				case ESettingsStrings.GFXRelativePath:
 					return ESettingsStrings.DESC_GFXRelativePath;
 					
@@ -202,7 +204,7 @@ namespace CEWSP.ApplicationSettings
 
 		public string SettingsFilePath
 		{
-			get {return m_sSettingsFilePath;} 
+			get {return m_sSettingsFilePath;}
 		}
 
 		/// <summary>
@@ -244,33 +246,34 @@ namespace CEWSP.ApplicationSettings
 		
 		
 		
-		private static readonly CSetting TemlateFolderNameSetting = new CSetting(ESettingsStrings.TemplateFolderName, CApplicationSettings.DefaultTemplateFolderName, ESettingsStrings.DESC_TemplateFolderName, true);
-		private static readonly CSetting RootPathSetting = new CSetting(ESettingsStrings.RootPath, ESettingsStrings.Invalid, ESettingsStrings.DESC_RootPath, false);
-		private static readonly CSetting GameFolderPathSetting = new CSetting(ESettingsStrings.GameFolderPath, "GameSDK", ESettingsStrings.DESC_GameFolderPath, false);
-		private static readonly CSetting SB64bitRelativePathSetting = new CSetting(ESettingsStrings.SB64bitRelativePath, DefaultSB64bitRelativePath, ESettingsStrings.DESC_SB64bitRelativePath, true);
-		private static readonly CSetting SB32bitRelativePathSetting = new CSetting(ESettingsStrings.SB32bitRelativePath, DefaultSB32bitRelativePath, ESettingsStrings.DESC_SB32bitRelativePath, true);
-		private static readonly CSetting Game64bitRelativePathSetting = new CSetting(ESettingsStrings.Game64bitRelativePath, DefaultGame64bitRelativePath, ESettingsStrings.DESC_Game64bitRelativePath, true);
-		private static readonly CSetting Game32bitRelativePathSetting = new CSetting(ESettingsStrings.Game32bitRelativePath, DefaultGame32bitRelativePath, ESettingsStrings.DESC_Game32bitRelativePath, true);
-		private static readonly CSetting CodeSlnRelativePathSetting = new CSetting(ESettingsStrings.CodeSlnFileRelativePath, DefaultCodeSlnFileRelativePath, ESettingsStrings.DESC_CodeSlnFileRelativePath, true);
-		private static readonly CSetting ScriptStartupSetting = new CSetting(ESettingsStrings.ScriptStartupFileAbsolutePath, ESettingsStrings.Invalid, ESettingsStrings.DESC_ScriptStartupFileAbsolutePath, true);
-		private static readonly CSetting RCRelativePathSetting = new CSetting(ESettingsStrings.RCRelativePath, DefaultRCRelativePath, ESettingsStrings.DESC_RCRelativePath, true);
-		private static readonly CSetting VerboseImportExportSetting = new CSetting(ESettingsStrings.VerboseImportExport, false, ESettingsStrings.DESC_VerboseImportExport, true);
-		private static readonly CSetting LastImportFilesSetting = new CSetting(ESettingsStrings.LastImportFiles, "", ESettingsStrings.DESC_LastImportFiles, true);
-		private static readonly CSetting LastExportFilesSetting = new CSetting(ESettingsStrings.LastExportFiles, "", ESettingsStrings.DESC_LastExportFiles, true);
-		private static readonly CSetting ImportOnStartupSetting = new CSetting(ESettingsStrings.ImportOnStartup, false, ESettingsStrings.DESC_ImportOnStartup, true);
-		private static readonly CSetting ExportOnExitSetting = new CSetting(ESettingsStrings.ExportOnExit, false, ESettingsStrings.DESC_ExportOnExit, true);
-		private static readonly CSetting AskExportOnExitSetting = new CSetting(ESettingsStrings.AskExportOnExit, true, ESettingsStrings.DESC_AskExportOnExit, true);
-		private static readonly CSetting AskImportOnStartupSetting = new CSetting(ESettingsStrings.AskImportOnStartup, true, ESettingsStrings.DESC_AskImportOnStartup, true);
-		private static readonly CSetting SourceTrackerWatchDirsSetting = new CSetting(ESettingsStrings.SourceTrackerWatchDirs, "BOTH", ESettingsStrings.DESC_SourceTrackerWatchDirs, true);
-		private static readonly CSetting Game64bitArgumentsSetting = new CSetting(ESettingsStrings.Game64bitArguments, "", ESettingsStrings.DESC_Game64bitArguments, true);
-		private static readonly CSetting Game32bitArgumentsSetting = new CSetting(ESettingsStrings.Game32bitArguments, "", ESettingsStrings.DESC_Game32bitArguments, true);
-		private static readonly CSetting Editor64bitArgumentsSetting = new CSetting(ESettingsStrings.Editor64bitArguments, "", ESettingsStrings.DESC_Editor64bitArguments, true);
-		private static readonly CSetting Editor32bitArgumentsSetting = new CSetting(ESettingsStrings.Editor32bitArguments, "", ESettingsStrings.DESC_Editor32bitArguments, true);
-		private static readonly CSetting CodeArgumentsSetting = new CSetting(ESettingsStrings.CodeArguments, "", ESettingsStrings.DESC_CodeArguments, true);
-		private static readonly CSetting ScriptArgumentsSetting = new CSetting(ESettingsStrings.ScriptArguments, "", ESettingsStrings.DESC_ScriptArguments, true);
-		private static readonly CSetting CheckRegexOnStartupSetting = new CSetting(ESettingsStrings.CheckIgnoredRegexSanityOnStartup, false, ESettingsStrings.DESC_CheckIngoredRegexSanityOnStartup, true);
-		private static readonly CSetting GFXExporterPathSetting = new CSetting(ESettingsStrings.GFXRelativePath, DefaultGFXExporterRelativePath, ESettingsStrings.DESC_GFXRelativePath, true);
-		private static readonly CSetting GFXExporterArgsSetting = new CSetting(ESettingsStrings.GFXExporterArguments, "", ESettingsStrings.DESC_GFXExproterArguments, true);
+		private static  CSetting TemlateFolderNameSetting;
+		private static  CSetting RootPathSetting ;
+		private static  CSetting GameFolderPathSetting;
+		private static  CSetting SB64bitRelativePathSetting;
+		private static  CSetting SB32bitRelativePathSetting ;
+		private static  CSetting Game64bitRelativePathSetting;
+		private static  CSetting Game32bitRelativePathSetting ;
+		private static  CSetting CodeSlnRelativePathSetting ;
+		private static  CSetting ScriptStartupSetting ;
+		private static  CSetting RCRelativePathSetting ;
+		private static  CSetting VerboseImportExportSetting ;
+		private static  CSetting LastImportFilesSetting ;
+		private static  CSetting LastExportFilesSetting ;
+		private static  CSetting ImportOnStartupSetting ;
+		private static  CSetting ExportOnExitSetting;
+		private static  CSetting AskExportOnExitSetting;
+		private static  CSetting AskImportOnStartupSetting;
+		private static  CSetting SourceTrackerWatchDirsSetting ;
+		private static  CSetting Game64bitArgumentsSetting ;
+		private static  CSetting Game32bitArgumentsSetting ;
+		private static  CSetting Editor64bitArgumentsSetting ;
+		private static  CSetting Editor32bitArgumentsSetting ;
+		private static  CSetting CodeArgumentsSetting ;
+		private static  CSetting ScriptArgumentsSetting ;
+		private static  CSetting CheckRegexOnStartupSetting ;
+		private static  CSetting GFXExporterPathSetting ;
+		private static  CSetting GFXExporterArgsSetting ;
+		private static  CSetting RC64bitRelativePathSetting;
 		
 		private static CApplicationSettings _instance;
 		public static CApplicationSettings Instance
@@ -289,6 +292,7 @@ namespace CEWSP.ApplicationSettings
 		
 		public CApplicationSettings()
 		{
+			SetupDefaultSettings();
 			
 			Settings = new Dictionary<string, CSetting>();
 			DCCPrograms = new Dictionary<string, CDCCDefinition>();
@@ -310,7 +314,7 @@ namespace CEWSP.ApplicationSettings
 			
 			Reset(false);
 		}
-	
+		
 		
 		#region IApplicationSettings
 		public bool Init()
@@ -327,7 +331,7 @@ namespace CEWSP.ApplicationSettings
 				SaveShortcutsToFile();
 				
 			}
-		
+			
 			return LoadApplicationSettings();
 		}
 
@@ -362,6 +366,8 @@ namespace CEWSP.ApplicationSettings
 			SetValue(ScriptArgumentsSetting);
 			
 			SetValue(RCRelativePathSetting);
+			SetValue(RC64bitRelativePathSetting);
+			
 			SetValue(GFXExporterPathSetting);
 			SetValue(GFXExporterArgsSetting);
 			SetValue(VerboseImportExportSetting);
@@ -395,7 +401,7 @@ namespace CEWSP.ApplicationSettings
 		}
 		
 		private void LoadShortcutsFromFile()
-		{	
+		{
 			XmlTextReader reader = new XmlTextReader(m_sShortcutsSavePath);
 			
 			if (reader != null)
@@ -438,9 +444,9 @@ namespace CEWSP.ApplicationSettings
 		{
 			XmlTextWriter writer = null;
 			
-			try 
+			try
 			{
-				 writer = new XmlTextWriter(File.Open(m_sShortcutsSavePath, FileMode.Create), System.Text.Encoding.UTF8);
+				writer = new XmlTextWriter(File.Open(m_sShortcutsSavePath, FileMode.Create), System.Text.Encoding.UTF8);
 				writer.Formatting = Formatting.Indented;
 				
 				if (writer != null)
@@ -467,13 +473,13 @@ namespace CEWSP.ApplicationSettings
 					
 					writer.Close();
 				}
-			} 
+			}
 			catch (Exception e)
 			{
 				if (writer != null)
 					writer.Close();
-								
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+				
+				UserInteractionUtils.ShowErrorMessageBox(e.Message);
 			}
 		}
 		
@@ -491,16 +497,20 @@ namespace CEWSP.ApplicationSettings
 			
 			if (!CPathUtils.IsStringCEConform(sRootPath))
 			{
-				MessageBox.Show("Sorry, the directory contains non ASCII characters or whitespaces.\nThis will cause problems inside CE." +
-				                "\nPlease use a path containing only numbers or letters from A-Z (a-z) and don't use spaces in your foldernames!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-								// LOCALIZE
-				return false;
-			}
+				var res = MessageBox.Show("Sorry, the directory contains non ASCII characters or whitespaces.\nThis will cause problems inside CE." +
+				                          "\nPlease use a path containing only numbers or letters from A-Z (a-z) and don't use spaces in your foldernames!", "Error", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
 				
+				
+				if (res != DialogResult.Ignore)				// LOCALIZE
+					return false;
+			}
+			
 			
 			string rcpath = sRootPath + CApplicationSettings.Instance.GetValue(ESettingsStrings.RCRelativePath).GetValueString();//"\\Bin32\\rc\\rc.exe";
+			string rc64bit = sRootPath + CApplicationSettings.Instance.GetValue(ESettingsStrings.RC64bitRelativePath).GetValueString();
 			
-			if (!File.Exists(rcpath))
+			
+			if (!File.Exists(rcpath) && !File.Exists(rc64bit))
 			{
 				MessageBox.Show("Sorry, no rc.exe found!\n Make sure you have selected a CE root dir (contains Bin32, Bin64 e.t.c)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				// LOCALIZE
@@ -523,14 +533,14 @@ namespace CEWSP.ApplicationSettings
 				if (sRootPath.Contains(userPath))
 				{
 					System.Windows.Forms.DialogResult res = MessageBox.Show("It seems that you are trying to run CE from within your user folder (Downloads, Documents e.t.c)" +
-					                "This is not recommended, are you sure you want to continue?", "Warning", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation);
+					                                                        "This is not recommended, are you sure you want to continue?", "Warning", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation);
 					// LOCALIZE
 					if (res != DialogResult.Ignore)
 						return false;
 					
 				}
 				
-		
+				
 				if (IsRootValid(sRootPath))
 				{
 					final = sRootPath;
@@ -539,7 +549,7 @@ namespace CEWSP.ApplicationSettings
 
 			if (Settings.ContainsKey(ESettingsStrings.RootPath))
 			{
-					Settings.Remove(ESettingsStrings.RootPath);
+				Settings.Remove(ESettingsStrings.RootPath);
 			}
 			
 			Settings.Add(ESettingsStrings.RootPath, new CSetting(ESettingsStrings.RootPath, final, ESettingsStrings.DESC_RootPath));
@@ -615,7 +625,7 @@ namespace CEWSP.ApplicationSettings
 				
 				Settings.Add(setting.Key, setting);
 				
-				return isNotOverride;	
+				return isNotOverride;
 			}
 			
 			return false;
@@ -684,12 +694,12 @@ namespace CEWSP.ApplicationSettings
 		}
 		
 		public bool RemoveDCCProgram(string sName)
-		{	
+		{
 			return DCCPrograms.Remove(sName);
 		}
 		
 		
-	
+		
 		#endregion
 		
 		#region Methods
@@ -712,7 +722,7 @@ namespace CEWSP.ApplicationSettings
 			{
 				CLogfile.Instance.LogInfo("Loading application settings from file...");
 				
-				 reader = new XmlTextReader(m_sFileSavePath);
+				reader = new XmlTextReader(m_sFileSavePath);
 				
 				while (reader.Read())
 				{
@@ -731,7 +741,7 @@ namespace CEWSP.ApplicationSettings
 						bool bUserEditable = bool.Parse(reader.Value);
 						
 						SetValue(new CSetting(name, val, bUserEditable));
-					}			
+					}
 				}
 				
 				reader.Close();
@@ -756,7 +766,7 @@ namespace CEWSP.ApplicationSettings
 			
 
 			
-		
+			
 			return true;
 		}
 		
@@ -771,9 +781,10 @@ namespace CEWSP.ApplicationSettings
 			{
 				File.Delete(m_sFileSavePath);
 				File.Delete(m_sSettingsFilePath + m_sCurrentProfileFilePath);
-			} 
-			catch (Exception)
+			}
+			catch (Exception e)
 			{
+				UserInteractionUtils.ShowErrorMessageBox(e.Message, Properties.Resources.CommonError);
 			}
 			
 			XmlTextWriter writer = null;
@@ -787,7 +798,7 @@ namespace CEWSP.ApplicationSettings
 				
 				
 				//SaveProgramDefinitions();
-				 writer = new XmlTextWriter(m_sFileSavePath, System.Text.Encoding.UTF8);
+				writer = new XmlTextWriter(m_sFileSavePath, System.Text.Encoding.UTF8);
 				writer.Formatting = Formatting.Indented;
 				
 				writer.WriteStartDocument();
@@ -799,7 +810,7 @@ namespace CEWSP.ApplicationSettings
 				
 				
 				// single settings
-				foreach (string key in Settings.Keys) 
+				foreach (string key in Settings.Keys)
 				{
 					object val = GetValue(key);
 					CSetting setting = val as CSetting;
@@ -821,18 +832,18 @@ namespace CEWSP.ApplicationSettings
 					
 					writer.WriteEndElement();
 				}
-			
+				
 				writer.WriteEndElement();
 				
 				writer.Flush();
 				writer.Close();
 				
-			} 
+			}
 			catch (Exception)
 			{
 				MessageBox.Show("Failed to save application settings!", "Critical Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Reset(false);
-				if (writer != null) 
+				if (writer != null)
 					writer.Close();
 				
 				if (streamWriter != null)
@@ -884,7 +895,7 @@ namespace CEWSP.ApplicationSettings
 				
 				writer.WriteStartElement("ProgramDefs");
 				
-			
+				
 				
 				foreach (var prog in DCCPrograms.Values)
 				{
@@ -905,7 +916,7 @@ namespace CEWSP.ApplicationSettings
 							writer.WriteAttributeString("name", progele.Name);
 							writer.WriteAttributeString("Exec", progele.ExecutablePath);
 							
-							foreach (string  fileKey in progele.StartupFiles.Keys) 
+							foreach (string  fileKey in progele.StartupFiles.Keys)
 							{
 								SStartupFile file;
 								progele.StartupFiles.TryGetValue(fileKey, out file);
@@ -931,13 +942,13 @@ namespace CEWSP.ApplicationSettings
 				writer.WriteEndDocument();
 				
 				writer.Close();
-			} 
+			}
 			catch (Exception e)
 			{
 				if (writer != null)
 					writer.Close();
 				
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message); // TODO: More info pls
+				UserInteractionUtils.ShowErrorMessageBox(e.Message); // TODO: More info pls
 			}
 		}
 		
@@ -1011,21 +1022,21 @@ namespace CEWSP.ApplicationSettings
 						file.LaunchWithProgram = boolVal;
 						
 						prog.StartupFiles.Add(file.Name, file);
-									
+						
 					}
 					
 					else
 					{
 						
-					}	
+					}
 				}
-			} 
+			}
 			catch (Exception e)
 			{
 				if (reader != null)
 					reader.Close();
 				
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message); // TODO: More ionfo pls
+				UserInteractionUtils.ShowErrorMessageBox(e.Message); // TODO: More ionfo pls
 				
 			}
 		}
@@ -1037,7 +1048,7 @@ namespace CEWSP.ApplicationSettings
 			
 			FileStream fileStream = null;
 			
-			try 
+			try
 			{
 				fileStream =  File.OpenRead(m_sSettingsFilePath + m_sCurrentProfileFilePath);
 				
@@ -1048,13 +1059,13 @@ namespace CEWSP.ApplicationSettings
 				strReader.Close();
 				
 				return sLine;
-			} 
+			}
 			catch (Exception e)
 			{
 				if (fileStream != null)
 					fileStream.Close();
 				
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+				UserInteractionUtils.ShowErrorMessageBox(e.Message);
 				
 				return "";
 			}
@@ -1070,7 +1081,7 @@ namespace CEWSP.ApplicationSettings
 			
 			if (!Directory.Exists(sProfileFolderPath))
 			{
-				CUserInteractionUtils.ShowErrorMessageBox("Could not find specified profile folder path, not loading profile!");  // LOCALIZE
+				UserInteractionUtils.ShowErrorMessageBox("Could not find specified profile folder path, not loading profile!");  // LOCALIZE
 				return;
 			}
 			
@@ -1097,7 +1108,7 @@ namespace CEWSP.ApplicationSettings
 		{
 			if (!Directory.Exists(sPathToFolder))
 			{
-				CUserInteractionUtils.ShowErrorMessageBox("Could not find specified profile folder path, not loading profile!"); // LOCALIZE
+				UserInteractionUtils.ShowErrorMessageBox("Could not find specified profile folder path, not loading profile!"); // LOCALIZE
 				return;
 			}
 			
@@ -1154,13 +1165,13 @@ namespace CEWSP.ApplicationSettings
 				}
 				
 				reader.Close();
-			} 
+			}
 			catch (Exception e)
 			{
 				if (reader != null)
 					reader.Close();
 				
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+				UserInteractionUtils.ShowErrorMessageBox(e.Message);
 			}
 		}
 		
@@ -1181,13 +1192,13 @@ namespace CEWSP.ApplicationSettings
 				
 				writer.Close();
 			}
-			catch (Exception e) 
+			catch (Exception e)
 			{
 				
 				if (writer != null)
 					writer.Close();
 				
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+				UserInteractionUtils.ShowErrorMessageBox(e.Message);
 			}
 		}
 		
@@ -1197,13 +1208,13 @@ namespace CEWSP.ApplicationSettings
 			{
 				if (m_profileHistory[sKey] == m_sCurrentProfileSavePath)
 				{
-					CUserInteractionUtils.ShowErrorMessageBox("Trying to delete currently active profile, please switch to another one first!"); // LOCALIZE
+					UserInteractionUtils.ShowErrorMessageBox("Trying to delete currently active profile, please switch to another one first!"); // LOCALIZE
 					return;
 				}
 				
 				try {
 					Directory.Delete(m_profileHistory[sKey], true);
-				} 
+				}
 				catch (DirectoryNotFoundException)
 				{
 					
@@ -1218,9 +1229,9 @@ namespace CEWSP.ApplicationSettings
 		public Dictionary<string, SDCCProgram> GetAllDCCProgramsDefined()
 		{
 			var returnList = new Dictionary<string, SDCCProgram>();
-			foreach (CDCCDefinition def in DCCPrograms.Values) 
+			foreach (CDCCDefinition def in DCCPrograms.Values)
 			{
-				foreach (SDCCProgram prog in def.Programs.Values) 
+				foreach (SDCCProgram prog in def.Programs.Values)
 				{
 					if (!returnList.ContainsKey(prog.Name))
 						returnList.Add(prog.Name, prog);
@@ -1229,8 +1240,50 @@ namespace CEWSP.ApplicationSettings
 			
 			return returnList;
 		}
+		
+		/// <summary>
+		/// Initalizes the default settings of CEWSP
+		/// </summary>
+		void SetupDefaultSettings()
+		{
+			TemlateFolderNameSetting = new CSetting(ESettingsStrings.TemplateFolderName, CApplicationSettings.DefaultTemplateFolderName, ESettingsStrings.DESC_TemplateFolderName, true);
+			RootPathSetting = new CSetting(ESettingsStrings.RootPath, ESettingsStrings.Invalid, ESettingsStrings.DESC_RootPath, false);
+		
+			GameFolderPathSetting = new CSetting(ESettingsStrings.GameFolderPath, "GameSDK", ESettingsStrings.DESC_GameFolderPath, false);
+			
+			
+			SB64bitRelativePathSetting = new CSetting(ESettingsStrings.SB64bitRelativePath, DefaultSB64bitRelativePath, ESettingsStrings.DESC_SB64bitRelativePath, true);
+			SB32bitRelativePathSetting = new CSetting(ESettingsStrings.SB32bitRelativePath, DefaultSB32bitRelativePath, ESettingsStrings.DESC_SB32bitRelativePath, true);
+			
+			Game64bitRelativePathSetting = new CSetting(ESettingsStrings.Game64bitRelativePath, DefaultGame64bitRelativePath, ESettingsStrings.DESC_Game64bitRelativePath, true);
+			Game32bitRelativePathSetting = new CSetting(ESettingsStrings.Game32bitRelativePath, DefaultGame32bitRelativePath, ESettingsStrings.DESC_Game32bitRelativePath, true);
+			
+			
+			CodeSlnRelativePathSetting = new CSetting(ESettingsStrings.CodeSlnFileRelativePath, DefaultCodeSlnFileRelativePath, ESettingsStrings.DESC_CodeSlnFileRelativePath, true);
+			ScriptStartupSetting = new CSetting(ESettingsStrings.ScriptStartupFileAbsolutePath, ESettingsStrings.Invalid, ESettingsStrings.DESC_ScriptStartupFileAbsolutePath, true);
+			RCRelativePathSetting = new CSetting(ESettingsStrings.RCRelativePath, DefaultRCRelativePath, ESettingsStrings.DESC_RCRelativePath, true);
+			VerboseImportExportSetting = new CSetting(ESettingsStrings.VerboseImportExport, false, ESettingsStrings.DESC_VerboseImportExport, true);
+			LastImportFilesSetting = new CSetting(ESettingsStrings.LastImportFiles, "", ESettingsStrings.DESC_LastImportFiles, true);
+			LastExportFilesSetting = new CSetting(ESettingsStrings.LastExportFiles, "", ESettingsStrings.DESC_LastExportFiles, true);
+			ImportOnStartupSetting = new CSetting(ESettingsStrings.ImportOnStartup, false, ESettingsStrings.DESC_ImportOnStartup, true);
+			ExportOnExitSetting = new CSetting(ESettingsStrings.ExportOnExit, false, ESettingsStrings.DESC_ExportOnExit, true);
+			AskExportOnExitSetting = new CSetting(ESettingsStrings.AskExportOnExit, true, ESettingsStrings.DESC_AskExportOnExit, true);
+			AskImportOnStartupSetting = new CSetting(ESettingsStrings.AskImportOnStartup, true, ESettingsStrings.DESC_AskImportOnStartup, true);
+			SourceTrackerWatchDirsSetting = new CSetting(ESettingsStrings.SourceTrackerWatchDirs, "NONE", ESettingsStrings.DESC_SourceTrackerWatchDirs, true);
+			Game64bitArgumentsSetting = new CSetting(ESettingsStrings.Game64bitArguments, "", ESettingsStrings.DESC_Game64bitArguments, true);
+			Game32bitArgumentsSetting = new CSetting(ESettingsStrings.Game32bitArguments, "", ESettingsStrings.DESC_Game32bitArguments, true);
+			Editor64bitArgumentsSetting = new CSetting(ESettingsStrings.Editor64bitArguments, "", ESettingsStrings.DESC_Editor64bitArguments, true);
+			Editor32bitArgumentsSetting = new CSetting(ESettingsStrings.Editor32bitArguments, "", ESettingsStrings.DESC_Editor32bitArguments, true);
+			CodeArgumentsSetting = new CSetting(ESettingsStrings.CodeArguments, "", ESettingsStrings.DESC_CodeArguments, true);
+			ScriptArgumentsSetting = new CSetting(ESettingsStrings.ScriptArguments, "", ESettingsStrings.DESC_ScriptArguments, true);
+			CheckRegexOnStartupSetting = new CSetting(ESettingsStrings.CheckIgnoredRegexSanityOnStartup, false, ESettingsStrings.DESC_CheckIngoredRegexSanityOnStartup, true);
+			GFXExporterPathSetting = new CSetting(ESettingsStrings.GFXRelativePath, DefaultGFXExporterRelativePath, ESettingsStrings.DESC_GFXRelativePath, true);
+			GFXExporterArgsSetting = new CSetting(ESettingsStrings.GFXExporterArguments, "", ESettingsStrings.DESC_GFXExproterArguments, true);
+			RC64bitRelativePathSetting = new CSetting(ESettingsStrings.RC64bitRelativePath, "\\Bin64\\rc\\rc.exe", ESettingsStrings.DESC_RC64bitRelativePath, true);
+			
+		}
 		#endregion
 		
-	
+		
 	}
 }

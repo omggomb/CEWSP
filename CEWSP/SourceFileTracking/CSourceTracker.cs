@@ -16,6 +16,10 @@ using CEWSP.Utils;
 using CEWSP.ApplicationSettings;
 using CEWSP.Logging;
 
+using OmgUtils.Path;
+using OmgUtils.ProcessUt;
+using OmgUtils.UserInteraction;
+
 namespace CEWSP.SourceFileTracking
 {
 	public class ETrackedDirs
@@ -97,7 +101,7 @@ namespace CEWSP.SourceFileTracking
 			m_ignoredRegexList = new List<Regex>();
 			m_ignoredNegatedRegexList = new List<Regex>();
 		
-			m_ignoredFilesWacher.Path = CPathUtils.GetFilePath(m_sIgnoredFilesListPath);
+			m_ignoredFilesWacher.Path = PathUtils.GetFilePath(m_sIgnoredFilesListPath);
 			m_ignoredFilesWacher.Filter = "Ignorefiles.txt";
 			m_ignoredFilesWacher.NotifyFilter = NotifyFilters.LastWrite;
 			//m_ignoredFilesWacher.Changed += delegate { LoadIgnoredFilesList(); };
@@ -287,7 +291,7 @@ namespace CEWSP.SourceFileTracking
 					} 
 					catch (Exception e)
 					{
-						CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+						UserInteractionUtils.ShowErrorMessageBox(e.Message);
 						
 					}
 				}
@@ -311,7 +315,7 @@ namespace CEWSP.SourceFileTracking
 						}
 						else
 						{
-							CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+							UserInteractionUtils.ShowErrorMessageBox(e.Message);
 							return;
 						}
 					}
@@ -463,7 +467,7 @@ namespace CEWSP.SourceFileTracking
 						// Using CopyFile here too in case of large files
 						// DONE_TODO: see if this gets troublesome if file already exists
 						// Using custom function instead
-						CProcessUtils.CopyFile(sSourcePath, sDestinationPath, true);
+						ProcessUtils.CopyFile(sSourcePath, sDestinationPath, true);
 					}
 					catch (Exception)
 					{
@@ -477,7 +481,7 @@ namespace CEWSP.SourceFileTracking
 												"from destination file {0}, skipping import for it", sDestinationPath,
 												sSourcePath);// LOCALIZE
 					if (bVerboseImport)
-						CUserInteractionUtils.ShowInfoMessageBox(message);	
+						UserInteractionUtils.ShowInfoMessageBox(message);	
 					
 					 message = String.Format("Source file {1} is not different " +
 												"from destination file {0}, skipping import for it", sDestinationPath,
@@ -493,7 +497,7 @@ namespace CEWSP.SourceFileTracking
 												"source file {1}, skipping import for it", sDestinationPath,
 												sSourcePath);// LOCALIZE
 					if (bVerboseImport)
-						CUserInteractionUtils.ShowInfoMessageBox(message);	
+						UserInteractionUtils.ShowInfoMessageBox(message);	
 					message = String.Format("Destination file {0} is more recent than " +
 												"source file {1}, skipping import for it", sDestinationPath,
 												sSourcePath); // DONOTLOCALIZE
@@ -581,7 +585,7 @@ namespace CEWSP.SourceFileTracking
 											"source file {1}, skipping export for it", sTargetFilePath,
 											sSourceFilePath);	// LOCALIZE
 						if (bVerboseExport)
-							CUserInteractionUtils.ShowInfoMessageBox(message);
+							UserInteractionUtils.ShowInfoMessageBox(message);
 						
 						message = String.Format("Destination file {0} is more recent than " +
 											"source file {1}, skipping export for it", sTargetFilePath,
@@ -597,7 +601,7 @@ namespace CEWSP.SourceFileTracking
 												"from destination file {0}, skipping export for it", sTargetFilePath,
 												sSourceFilePath);// LOCALIZE
 					if (bVerboseExport)
-						CUserInteractionUtils.ShowInfoMessageBox(message);	
+						UserInteractionUtils.ShowInfoMessageBox(message);	
 					
 					message = String.Format("Source file {1} is not different " +
 												"from destination file {0}, skipping export for it", sTargetFilePath,
@@ -614,13 +618,13 @@ namespace CEWSP.SourceFileTracking
 					
 					if (!Directory.Exists(info.DirectoryName))
 						Directory.CreateDirectory(info.DirectoryName);
-					CProcessUtils.CopyFile(sSourceFilePath, sTargetFilePath);
+					ProcessUtils.CopyFile(sSourceFilePath, sTargetFilePath);
 				} 
 				catch (Exception e)
 				{
 					string message = "Failed to export file! Error: " + e.Message; // LOCALIZE
 					
-					CUserInteractionUtils.ShowErrorMessageBox(message);
+					UserInteractionUtils.ShowErrorMessageBox(message);
 					
 					message = "Failed to export file! Error: " + e.Message; // DONOTLOCALIZE
 					CLogfile.Instance.LogError(message);
@@ -849,7 +853,7 @@ namespace CEWSP.SourceFileTracking
             	} 
             	catch (ArgumentException e)
             	{
-            		CUserInteractionUtils.ShowErrorMessageBox(Properties.Resources.IgnoredRegexWrong + '\n'
+            		UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.IgnoredRegexWrong + '\n'
             		                                          + e.Message);
             		continue;
             		
@@ -861,7 +865,7 @@ namespace CEWSP.SourceFileTracking
             {
             	if (!CheckIgnoredFilesSanity())
 	            {
-	            	CUserInteractionUtils.ShowInfoMessageBox(Properties.Resources.IngoredRegexDoesntExist);
+	            	UserInteractionUtils.ShowInfoMessageBox(Properties.Resources.IngoredRegexDoesntExist);
 	            }
             }
             else
@@ -870,6 +874,23 @@ namespace CEWSP.SourceFileTracking
             }
 			
 			m_ignoredFilesWacher.EnableRaisingEvents = true;
+		}
+		
+		public bool DoesDirectoryContainTrackedFile(string sPathToDirectory)
+		{
+			foreach (var element in m_trackedCERootFiles) 
+			{
+				if (element.Contains(sPathToDirectory))
+					return true;
+			}
+			
+			foreach (var element in m_trackedGameFolderFiles) 
+			{
+				if (element.Contains(sPathToDirectory))
+					return true;
+			}
+			
+			return false;
 		}
 
 		private bool CheckIgnoredFilesSanity()

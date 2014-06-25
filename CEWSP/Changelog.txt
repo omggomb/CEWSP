@@ -1,4 +1,26 @@
 ﻿==============
+Alpha build 4:
+==============
+
+Add:
+ - Shortcuts to the left of the main window
+ - Support for profiles
+	- Different working directories can now be switched to with 2 mouse clicks
+
+
+Change:
+ - Swapped old file explorer for new, better one (now it doesn't collapse on file changes anymore, yay)
+	- Now shows file and folder icons
+	- Items are now selectable by rightclicking
+	- Pressing a letter will cycle through all entries of the selected item's parent
+	- Directories are no longer traveled at startup but rather as needed
+	  Note that this induces a slight lag when opening directories with lots of files (e.g. code)
+ - Program definitions and user settings are stored inside the CEWSP directory, essentially making it portable
+   on an usb stick (you can use different profiles for different working machines) 
+ - Removed the need for paths to be CE conform in order to simplify usage with EaaS. The user will still be (annoyed) reminded very
+ 	often , since using a non CE conform path will eventually lead to issues.
+
+==============
 Alpha build 3:
 ==============
 

@@ -21,6 +21,8 @@ using Microsoft.VisualBasic.FileIO;
 
 
 using CEWSP.ApplicationSettings;
+using OmgUtils.ProcessUt;
+using OmgUtils.UserInteraction;
 using CEWSP.Utils;
 
 namespace CEWSP
@@ -91,7 +93,7 @@ namespace CEWSP
 			{
 				if (CPathUtils.IsStringCEConform(saveFileTextBox.Text))
 				{
-					CProcessUtils.CopyFile(info.FullName, sNewFile, false);
+					ProcessUtils.CopyFile(info.FullName, sNewFile, false);
 				}
 				else
 					return false;
@@ -99,14 +101,14 @@ namespace CEWSP
 				if (rcCheckbox.IsChecked == true)
 				{
 					FileInfo newFile = new FileInfo(sNewFile);
-					CProcessUtils.RunRC(newFile);
+					CryEngineProcessUtils.RunRC(newFile);
 				}
 			}
 			else
 			{
 				if (rcCheckbox.IsChecked == true)
 				{
-					CProcessUtils.RunRC(info);
+					CryEngineProcessUtils.RunRC(info);
 				}
 			}
 
@@ -123,7 +125,7 @@ namespace CEWSP
 			}
 			catch (UnauthorizedAccessException e)
 			{
-				CUserInteractionUtils.ShowErrorMessageBox(e.Message);
+				UserInteractionUtils.ShowErrorMessageBox(e.Message);
 				return false;
 			}
 			
@@ -132,7 +134,7 @@ namespace CEWSP
 		
 		private void CopyDirectory(DirectoryInfo info, string sTargetPath)
 		{
-			CProcessUtils.CopyDirectory(info.FullName, sTargetPath, false);
+			ProcessUtils.CopyDirectory(info.FullName, sTargetPath, false);
 		}
 		
 		private bool ProcessRequest(List<FileInfo> fileInfoList)
@@ -182,7 +184,7 @@ namespace CEWSP
 		{
 			if (saveFileTextBox.Text.Contains("."))
 			{
-				CUserInteractionUtils.ShowErrorMessageBox(Properties.DragZoneResources.TextIsNoDirectory);
+				UserInteractionUtils.ShowErrorMessageBox(Properties.DragZoneResources.TextIsNoDirectory);
 			}
 			else
 			{

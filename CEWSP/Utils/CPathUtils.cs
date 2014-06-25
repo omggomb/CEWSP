@@ -18,11 +18,8 @@ namespace CEWSP.Utils
 	/// <summary>
 	/// Path utilities.
 	/// </summary>
-	public class CPathUtils
+	public static class CPathUtils
 	{
-		public CPathUtils()
-		{
-		}
 		
 		/// <summary>
 		/// Checks whether a given string will cause problems inside CE (e.g is neither a letter nor digit
@@ -69,8 +66,10 @@ namespace CEWSP.Utils
 								errorMessage = "Your path contains an invalid character (" + currentChar + "). Please only use ASCII characters!";
 							}
 							
-							MessageBox.Show("Sorry, but the path you specified (" + sString + ") is not CE conform, it will cause problems." + "\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-							return false;
+							var res = MessageBox.Show("Sorry, but the path you specified (" + sString + ") is not CE conform, it will cause problems." + "\n" + errorMessage + "\n" +
+							                "Do you still want to use this path?", "Error", MessageBoxButton.YesNo, MessageBoxImage.Error);
+							if (res == MessageBoxResult.No)
+								return false;
 						}
 					}
 				}
@@ -100,6 +99,11 @@ namespace CEWSP.Utils
 			return sPath;
 		}
 		
+		/// <summary>
+		/// Tries to make the given path relative to the currently set game folder
+		/// </summary>
+		/// <param name="sPath">Path that should be made relative</param>
+		/// <returns>If succede the relative path, else the unchanged given path (sPath)</returns>
 		public static string ExtractRelativeToGameFolder(string sPath)
 		{
 			string gameFolder = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
@@ -113,21 +117,11 @@ namespace CEWSP.Utils
 			return sPath;
 		}
 		
-		public static string GetFilename(string path)
-		{
-			int dirPos = path.LastIndexOf('\\');
-			
-			dirPos = (dirPos == -1) ? 0 : dirPos;
-			
-			int dotPos = path.LastIndexOf('.');
-			
-			dotPos = (dotPos == -1) ? (path.Length) : dotPos;
-			
-			int dirAdjust = (dirPos == 0) ? 0 : (dirPos + 1);
-			
-			return path.Substring(dirPos + dirAdjust, dotPos - dirPos - dirAdjust);
-		}
 		
+		/// <summary>
+		/// Looks up the version number of the CE Editor executable
+		/// </summary>
+		/// <returns>Null if failed</returns>
 		public static FileVersionInfo GetCEVersion()
 		{
 			CSetting root = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath);
@@ -143,6 +137,10 @@ namespace CEWSP.Utils
 			return null;
 		}
 		
+		/// <summary>
+		/// Creates a string from the CE Editor executable version number
+		/// </summary>
+		/// <returns>Empty string if failed</returns>
 		public static string GetCEVersionAsString()
 		{
 			FileVersionInfo info = GetCEVersion();
@@ -152,63 +150,52 @@ namespace CEWSP.Utils
 			                            
 		}
 		
-		public static string ChangeExtension(string sTargetPath, string sNewExtensionWithDot)
+		/// <summary>
+		/// Tries to make the given path relative to either the game or the root folder.
+		/// </summary>
+		/// <param name="sPath"></param>
+		/// <returns></returns>
+		public static string MakeRelative(string sPath)
 		{
-			string noExtension = RemoveExtension(sTargetPath);
+			string sRelPath = CPathUtils.ExtractRelativeToGameFolder(sPath);
 			
-			if (sTargetPath != noExtension)
-			{
-				sTargetPath = noExtension + sNewExtensionWithDot;
-			}
+			if (sRelPath == sPath)
+				sRelPath = CPathUtils.ExtractRelativeToRoot(sPath);
 			
-			return sTargetPath;
-		}
-		
-		public static string GetFilePath(string fullFilePath)
-		{
-			int lastDirPos = fullFilePath.LastIndexOf('\\');
-			
-			if (lastDirPos != -1)
-			{
-				fullFilePath = fullFilePath.Substring(0, lastDirPos);
-			}
-			
-			return fullFilePath;
-		}
-		
-		public static string RemoveExtension(string sFilePath)
-		{
-			int dotPos = sFilePath.LastIndexOf('.');
-			
-			if (dotPos > 0) // meaning != -1 and != 0 (0 would mean it's a relative path)
-			{
-				sFilePath =  sFilePath.Substring(0, dotPos);
-			}
-			
-			return sFilePath;
+			return sRelPath;
 		}
 		
 		/// <summary>
-		/// Returns a file's extension (if any) WITHOUT the dot.
+		/// Makes path relative
 		/// </summary>
-		/// <param name="sFilePath"></param>
+		/// <param name="sPath">Path to be made relative</param>
+		/// <param name="detectedRoot">The file root that was detected for this path</param>
 		/// <returns></returns>
-		public static string GetExtension(string sFilePath)
+		public static string MakeRelative(string sPath, out SourceFileTracking.EFileRoot detectedRoot)
 		{
-			int lastDir = sFilePath.LastIndexOf('\\');
-			int lastDot = sFilePath.LastIndexOf('.');
+			detectedRoot = GetRoot(sPath);
 			
-			if (lastDot > lastDir && lastDot != -1)
+			return MakeRelative(sPath);
+		}
+		
+		/// <summary>
+		/// Detects whether the given path is inside or outside the game folder
+		/// </summary>
+		/// <param name="sPath"></param>
+		/// <returns></returns>
+		public static SourceFileTracking.EFileRoot GetRoot(string sPath)
+		{
+			string sRelPath = CPathUtils.ExtractRelativeToGameFolder(sPath);
+			
+			if (sRelPath == sPath)
 			{
-				string sExtension = sFilePath.Substring(lastDot);
-				
-				sExtension = sExtension.TrimStart('.');
-				
-				if (sExtension != "")
-					return sExtension;
+				sRelPath = CPathUtils.ExtractRelativeToRoot(sPath);
+				return SourceFileTracking.EFileRoot.eFR_CERoot;
 			}
-			
-			return sFilePath;
+			else
+			{
+				return SourceFileTracking.EFileRoot.eFR_GameFolder;
+			}
 		}
 	}
 }
