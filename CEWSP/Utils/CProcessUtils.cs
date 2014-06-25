@@ -34,16 +34,17 @@ namespace CEWSP.Utils
 		{
 			if (CApplicationSettings.Instance.IsRootValid(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString()))
 			{
-				string rcPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString() + 
-					CApplicationSettings.Instance.GetValue(ESettingsStrings.RCRelativePath).GetValueString();
+				string rcPath = GetValidRCPath();
 				
-			
+				
 				Process rcProcess = new Process();
 				
 				ProcessStartInfo startInfo = new ProcessStartInfo(rcPath);
 				
-				startInfo.Arguments = info.FullName + " /userdialog=1";
+				startInfo.Arguments = "\"" + info.FullName + "\"" + " /userdialog";
 				rcProcess.StartInfo = startInfo;
+				
+				
 				
 				ProcessUtils.RunProcessWithRedirectedStdErrorStdOut(rcProcess, Properties.Resources.CommonNotice);
 			}
@@ -64,20 +65,14 @@ namespace CEWSP.Utils
 			{
 				if (CApplicationSettings.Instance.IsRootValid(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString()))
 				{
-					string rcPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
-					
-					// Prefer 64bit rc over 32bit
-					if (Environment.Is64BitOperatingSystem)
-						rcPath += CApplicationSettings.Instance.GetValue(ESettingsStrings.RC64bitRelativePath).GetValueString();
-					else
-						rcPath += CApplicationSettings.Instance.GetValue(ESettingsStrings.RCRelativePath).GetValueString();
+					string rcPath = GetValidRCPath();
 					
 					
 					Process rcProcess = new Process();
 					
 					ProcessStartInfo startInfo = new ProcessStartInfo(rcPath);
 					
-					startInfo.Arguments = info.FullName;
+					startInfo.Arguments = "\"" + info.FullName + "\"";
 					rcProcess.StartInfo = startInfo;
 					
 					ProcessUtils.RunProcessWithRedirectedStdErrorStdOut(rcProcess, Properties.Resources.CommonNotice);
@@ -99,11 +94,27 @@ namespace CEWSP.Utils
 			Process proc = new Process();
 			
 			ProcessStartInfo info = new ProcessStartInfo(gfxPath);
-		
-			info.Arguments = fileInfo.FullName + " " + CApplicationSettings.Instance.GetValue(ESettingsStrings.GFXExporterArguments).Value; 
+			
+			info.Arguments = fileInfo.FullName + " " + CApplicationSettings.Instance.GetValue(ESettingsStrings.GFXExporterArguments).Value;
 			proc.StartInfo = info;
 			
 			ProcessUtils.RunProcessWithRedirectedStdErrorStdOut(proc, Properties.Resources.CommonNotice);
+		}
+		
+		/// <summary>
+		/// Decides whether to use 32bit or 64bit rc and returns its path.
+		/// There are issues with the 64bit rc, so it will always return 32bit, if present
+		/// </summary>
+		/// <returns></returns>
+		public static string GetValidRCPath()
+		{
+			string rcPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
+					
+			string 	rc64Path  = rcPath + CApplicationSettings.Instance.GetValue(ESettingsStrings.RC64bitRelativePath).GetValueString();
+			string 	rc32Path = rcPath + CApplicationSettings.Instance.GetValue(ESettingsStrings.RCRelativePath).GetValueString();
+			
+			return File.Exists(rc32Path) ? rc32Path : rc64Path;
+			
 		}
 	}
 }

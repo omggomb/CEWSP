@@ -22,7 +22,7 @@ using OmgUtils.UserInteraction;
 namespace CEWSP
 {
 	/// <summary>
-	/// Class that sets up the explorer context menu and takes care of 
+	/// Class that sets up the explorer context menu and takes care of
 	/// the resulting events
 	/// </summary>
 	public static class ExplorerSetup
@@ -177,7 +177,9 @@ namespace CEWSP
 			if (!selectedItem.IsDirectory)
 			{
 				FileInfo info = new FileInfo(selectedItem.FullPathToReference);
-				CryEngineProcessUtils.RunRC(info);
+				
+				
+					CryEngineProcessUtils.RunRC(info);
 			}
 		}
 		
@@ -371,7 +373,7 @@ namespace CEWSP
 		/// Potentially very slow!
 		/// </summary>
 		/// <param name="directory"></param>
-		 static void TrackDirectory(DirectoryInfo directory)
+		static void TrackDirectory(DirectoryInfo directory)
 		{
 			foreach (var element in directory.GetDirectories())
 			{
@@ -389,7 +391,7 @@ namespace CEWSP
 		/// Potentially very slow!
 		/// </summary>
 		/// <param name="directory"></param>
-		 static void UntrackDirectory(DirectoryInfo directory)
+		static void UntrackDirectory(DirectoryInfo directory)
 		{
 			foreach (var element in directory.GetDirectories())
 			{
@@ -402,16 +404,16 @@ namespace CEWSP
 			}
 		}
 		
-		 /// <summary>
-		 /// Travels through all the parent of the specified tree item and checks whether they 
-		 /// need to be marked as tracked or not
-		 /// </summary>
-		 /// <param name="item"></param>
+		/// <summary>
+		/// Travels through all the parent of the specified tree item and checks whether they
+		/// need to be marked as tracked or not
+		/// </summary>
+		/// <param name="item"></param>
 		static void RefreshParentTrackingMark(CewspTreeViewItem item)
 		{
 			var parent = item;
 			
-			while ((parent = parent.Parent as CewspTreeViewItem) != null)  
+			while ((parent = parent.Parent as CewspTreeViewItem) != null)
 			{
 				string sRelPath = CPathUtils.MakeRelative(parent.FullPathToReference);
 				
