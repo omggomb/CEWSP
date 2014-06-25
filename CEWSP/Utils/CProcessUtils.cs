@@ -64,8 +64,15 @@ namespace CEWSP.Utils
 			{
 				if (CApplicationSettings.Instance.IsRootValid(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString()))
 				{
-					string rcPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString() + 
-						CApplicationSettings.Instance.GetValue(ESettingsStrings.RCRelativePath).GetValueString();
+					string rcPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
+					
+					// Prefer 64bit rc over 32bit
+					if (Environment.Is64BitOperatingSystem)
+						rcPath += CApplicationSettings.Instance.GetValue(ESettingsStrings.RC64bitRelativePath).GetValueString();
+					else
+						rcPath += CApplicationSettings.Instance.GetValue(ESettingsStrings.RCRelativePath).GetValueString();
+					
+					
 					Process rcProcess = new Process();
 					
 					ProcessStartInfo startInfo = new ProcessStartInfo(rcPath);

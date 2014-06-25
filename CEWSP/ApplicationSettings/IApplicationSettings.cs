@@ -58,6 +58,9 @@ namespace CEWSP.ApplicationSettings
 		public const string DESC_RCRelativePath = "Relative path to the resource compiler";
 		public const string RCRelativePath = "strRCRelativePath";
 		
+		public const string DESC_RC64bitRelativePath = "Relative path to the 64bit resource compiler";
+		public const string RC64bitRelativePath = "strRC64bitRelativePath";
+		
 		public const string DESC_GFXRelativePath = "Relative path to the gfxexporter.exe";
 		public const string GFXRelativePath = "strGFXRelativePath";
 		

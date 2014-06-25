@@ -66,8 +66,10 @@ namespace CEWSP.Utils
 								errorMessage = "Your path contains an invalid character (" + currentChar + "). Please only use ASCII characters!";
 							}
 							
-							MessageBox.Show("Sorry, but the path you specified (" + sString + ") is not CE conform, it will cause problems." + "\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-							return false;
+							var res = MessageBox.Show("Sorry, but the path you specified (" + sString + ") is not CE conform, it will cause problems." + "\n" + errorMessage + "\n" +
+							                "Do you still want to use this path?", "Error", MessageBoxButton.YesNo, MessageBoxImage.Error);
+							if (res == MessageBoxResult.No)
+								return false;
 						}
 					}
 				}
