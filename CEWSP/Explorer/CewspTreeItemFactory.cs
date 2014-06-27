@@ -25,7 +25,7 @@ namespace CEWSP
 		}
 		
 		/// <summary>
-		/// We use a custom made, yellowing folder icon here.
+		/// We use a custom made, yellow folder icon here.
 		/// </summary>
 		/// <param name="itemThatIsUsed"></param>
 		/// <returns></returns>

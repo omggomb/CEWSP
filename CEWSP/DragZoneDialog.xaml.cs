@@ -80,7 +80,13 @@ namespace CEWSP
 				else if (Directory.Exists(entry))
 					m_dirInfoList.Add(new DirectoryInfo(entry));
 			}
-			saveFileTextBox.Text = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
+			
+			string sLastPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.DragZoneLastPath).GetValueString();
+			
+			if (String.IsNullOrWhiteSpace(sLastPath))
+				sLastPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
+			
+			saveFileTextBox.Text = sLastPath;
 			Show();
 			
 		}
@@ -103,6 +109,8 @@ namespace CEWSP
 					FileInfo newFile = new FileInfo(sNewFile);
 					CryEngineProcessUtils.RunRC(newFile);
 				}
+				
+				CApplicationSettings.Instance.SetValue(new CSetting(ESettingsStrings.DragZoneLastPath, saveFileTextBox.Text));
 			}
 			else
 			{

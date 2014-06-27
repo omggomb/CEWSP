@@ -27,8 +27,12 @@ namespace CEWSP.Utils
 		/// </summary>
 		/// <param name="sString">The string to be checked.</param>
 		/// <returns>True if the string won't cause any problems.</returns>
-		public static bool IsStringCEConform(string sString)
+		/// <param name = "bForce">If true, user will definately be warned about the path being non CE conform</param>
+		public static bool IsStringCEConform(string sString, bool bForce = false)
 		{
+			if (!CApplicationSettings.Instance.GetValue(ESettingsStrings.WarnNonCEConformPath).GetValueBool() && !bForce)
+				return true;
+			
 			char currentChar = '?';	
 			int charValue = 0;
 		
@@ -196,6 +200,32 @@ namespace CEWSP.Utils
 			{
 				return SourceFileTracking.EFileRoot.eFR_GameFolder;
 			}
+		}
+		
+		/// <summary>
+		/// Checks whether the given name can be used as a game folder name, meaning it is not one of the engine folders.
+		/// </summary>
+		/// <param name="sNameToCheck"></param>
+		/// <returns></returns>
+		public static bool CanNameBeGameFolder(string sNameToCheck)
+		{
+			if (sNameToCheck != "Bin32" &&
+			    sNameToCheck != "Bin64" &&
+			    sNameToCheck != "Code" &&
+			    sNameToCheck != "Bin32_Dedicated" &&
+			    sNameToCheck != "Bin64_Dedicated" &&
+			    sNameToCheck != "Editor" &&
+			    sNameToCheck != "Engine" &&
+			    sNameToCheck != "Localization" &&
+			    sNameToCheck != "LogBackups" &&
+			    sNameToCheck != "statoscope" &&
+			    sNameToCheck != "TestResults" &&
+			    sNameToCheck != "Tools" &&
+			    !sNameToCheck.Contains("USER"))
+				return true;
+			
+			return false;
+			    
 		}
 	}
 }

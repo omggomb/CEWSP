@@ -43,7 +43,7 @@ namespace CEWSP
 	{
 		#region Attributes
 		// Attributes
-	
+		
 		private ContextMenu m_ToolsContextMenu;
 		MenuItem m_profileHistoryContextMenu;
 		public const string m_sGameTempDirName = "TempGame";
@@ -67,7 +67,7 @@ namespace CEWSP
 			}
 			
 			
-		
+			
 			setRootDirButton.ToolTip = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
 			setGamefolderButton.ToolTip = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
 			
@@ -87,7 +87,7 @@ namespace CEWSP
 			//string rc = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.RCRelativePath).ToString();
 			
 			
-			CSourceTracker.Instance.StartWatching(CApplicationSettings.Instance.SourceTrackerShouldWatchRoot(), 
+			CSourceTracker.Instance.StartWatching(CApplicationSettings.Instance.SourceTrackerShouldWatchRoot(),
 			                                      CApplicationSettings.Instance.SourceTrackerShouldWatchGame());
 			//CSourceTracker.Instance.ExportTrackingFile("G:\\Dropbox\\CEWorkspace\\CEWSP\\CEWSP\\bin\\Debug\\SourceTrackerTest\\tracker.txt");
 			
@@ -103,7 +103,7 @@ namespace CEWSP
 				{
 					MessageBoxResult res = MessageBox.Show(Properties.Resources.ImportOnStartup,
 					                                       Properties.Resources.CommonNotice,
-					                                       MessageBoxButton.YesNo, 
+					                                       MessageBoxButton.YesNo,
 					                                       MessageBoxImage.Question);
 					
 					if (res == MessageBoxResult.Yes)
@@ -135,7 +135,7 @@ namespace CEWSP
 			m_profileHistoryContextMenu = new MenuItem();
 			m_profileHistoryContextMenu.Header = Properties.Resources.ToolsProfileHistory;
 			
-			MenuItem item = new MenuItem();			
+			MenuItem item = new MenuItem();
 			item.Header = "Settings"; // LOCALIZE
 			item.Click += ToolContextSettingsClicked;
 			m_ToolsContextMenu.Items.Add(item);
@@ -143,7 +143,7 @@ namespace CEWSP
 			item = new MenuItem();
 			item.Header = "Restore Sandbox Layout"; // LOCALIZE
 			item.Click += ToolContextRestoreSBLayoutClicked;
-			m_ToolsContextMenu.Items.Add(item);	
+			m_ToolsContextMenu.Items.Add(item);
 			
 			item = new MenuItem();
 			item.Header = "Run..."; // LOCALIZE
@@ -210,7 +210,7 @@ namespace CEWSP
 			}
 			
 			m_ToolsContextMenu.Items.Add(m_profileHistoryContextMenu);
-				
+			
 			
 			
 		}
@@ -224,7 +224,7 @@ namespace CEWSP
 			
 			if (nres != MessageBoxResult.Cancel)
 			{
-			
+				
 				System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
 				fbd.Description = "Choose a valid CE root directory (contains Bin32 and others)"; // LOCALIZE
 				
@@ -277,7 +277,7 @@ namespace CEWSP
 		
 		void DragZoneDrop(object sender, DragEventArgs e)
 		{
-			string[] filenames = (string[])e.Data.GetData(DataFormats.FileDrop);	
+			string[] filenames = (string[])e.Data.GetData(DataFormats.FileDrop);
 			
 			if (filenames.Length > 0)
 			{
@@ -340,7 +340,7 @@ namespace CEWSP
 			{
 				if (CApplicationSettings.Instance.GetValue(ESettingsStrings.AskExportOnExit).GetValueBool())
 				{
-					MessageBoxResult res = MessageBox.Show(Properties.Resources.ExportOnClose, 
+					MessageBoxResult res = MessageBox.Show(Properties.Resources.ExportOnClose,
 					                                       Properties.Resources.CommonNotice,
 					                                       MessageBoxButton.YesNo,
 					                                       MessageBoxImage.Question);
@@ -369,11 +369,11 @@ namespace CEWSP
 			window.ShowDialog();
 			
 			// Update the file explorer context menu
-		
+			
 			SetUpToolsContextMenu();
 			
 			// DONE_FIXME: Do this inside the Management window and check whether the changes are to be changed
-			// FIXED: Application management dialog either doesn't touch or completely 
+			// FIXED: Application management dialog either doesn't touch or completely
 			// overrides CApplicationSettings.Instance.
 			CApplicationSettings.Instance.SaveApplicationSettings();
 			
@@ -399,7 +399,7 @@ namespace CEWSP
 				res = dialog.ShowDialog();
 				
 			}while (!CPathUtils.IsStringCEConform(dialog.SelectedPath) && res != System.Windows.Forms.DialogResult.Cancel);
-		
+			
 			
 			if (res != System.Windows.Forms.DialogResult.Cancel)
 			{
@@ -432,24 +432,24 @@ namespace CEWSP
 			ValidateRootPath();
 			string sRootPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
 			explorerTreeView.WatchDir = sRootPath;
-		    explorerTreeView.InitializeTree(m_treeItemFactory);
+			explorerTreeView.InitializeTree(m_treeItemFactory);
 		}
 		
 		void OnShowGameFolderClicked(object sender, RoutedEventArgs e)
 		{
 			ValidateGameFolder();
-		    string sRootPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
+			string sRootPath = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
 			//folderTreeView.Items.Clear();
-		    
-		  
-		   
-		    
-		    explorerTreeView.WatchDir = sRootPath;
-		    explorerTreeView.InitializeTree(m_treeItemFactory);
+			
+			
+			
+			
+			explorerTreeView.WatchDir = sRootPath;
+			explorerTreeView.InitializeTree(m_treeItemFactory);
 		}
 		
 		
-	
+		
 		
 		void OnLaunchSB64bitClicked(object sender, RoutedEventArgs e)
 		{
@@ -459,11 +459,11 @@ namespace CEWSP
 			{
 				string path = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.SB64bitRelativePath).GetValueString();
 				string args = CApplicationSettings.Instance.GetValue(ESettingsStrings.Editor64bitArguments).GetValueString();
-				StartProcess(path, args);
+				StartProcess(path, args, sandbox64bitbutton);
 			}
 		}
 		
-		private void StartProcess(string path, string args = "")
+		private void StartProcess(string path, string args = "", Button startingButton = null)
 		{
 			
 			if (!File.Exists(path))
@@ -476,11 +476,36 @@ namespace CEWSP
 			programProcess.Exited += OnProcessTerminated;
 			programProcess.ErrorDataReceived += OnProcessTerminated;
 			programProcess.EnableRaisingEvents = true;
-				
+			
 			ProcessStartInfo startInfo = new ProcessStartInfo(path, args);
-		
+			
 			programProcess.StartInfo = startInfo;
-					
+			
+			if (startingButton != null)
+			{
+				var menu = new ContextMenu();
+				
+				var entry = new MenuItem();
+				
+				entry.Click += delegate 
+				{
+					try
+					{
+						programProcess.Kill();
+					}  
+					catch (Exception e) 
+					{
+						UserInteractionUtils.ShowErrorMessageBox(e.Message, Properties.Resources.CommonError);
+					}
+				};
+				entry.Header = Properties.Resources.EndTask;
+				
+				menu.Items.Clear();
+				menu.Items.Add(entry);
+				
+				startingButton.ContextMenu = menu;
+			}
+			
 			programProcess.Start();
 		}
 		
@@ -509,7 +534,7 @@ namespace CEWSP
 			}
 		}
 		
-	
+		
 		public void ValidateRootPath()
 		{
 			CSetting setting = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath) as CSetting;
@@ -530,7 +555,7 @@ namespace CEWSP
 			string  gameFolder = (string)(CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).Value);
 			
 			bool ok = CPathUtils.IsStringCEConform(gameFolder);
-			bool exists = Directory.Exists(gameFolder);			
+			bool exists = Directory.Exists(gameFolder);
 			
 			while (CPathUtils.IsStringCEConform(gameFolder) == false || Directory.Exists(gameFolder) == false)
 			{
@@ -540,18 +565,18 @@ namespace CEWSP
 				{
 					OnSetGameFolderClicked(null, null);
 					gameFolder = (string)(CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).Value);
-				
+					
 					if (gameFolder.Contains(ESettingsStrings.Invalid))
 					{
 						HintGameFolderValid(true);
 						return;
 					}
-						
+					
 					
 				}
 				else
 				{
-					MessageBox.Show("Setting game folder to the default (the current root's GameSDK) folder!", // LOCALIZE 
+					MessageBox.Show("Setting game folder to the default (the current root's GameSDK) folder!", // LOCALIZE
 					                "Aborted!", MessageBoxButton.OK, MessageBoxImage.Exclamation );
 					string root = (string)CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).Value;
 					
@@ -561,7 +586,7 @@ namespace CEWSP
 					CApplicationSettings.Instance.SetValue(new CSetting(ESettingsStrings.GameFolderPath, path));
 					return;
 				}
-					
+				
 			}
 			
 			HintGameFolderValid(true);
@@ -572,6 +597,7 @@ namespace CEWSP
 			if (bIsValid)
 			{
 				setGamefolderButton.Background = new SolidColorBrush(Color.FromRgb(38, 127,0));
+				setGamefolderButton.ToolTip = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
 			}
 			else
 			{
@@ -618,22 +644,22 @@ namespace CEWSP
 			{
 				MenuItem item = new MenuItem();
 				item.Header = Properties.Resources.ToolsImportTrackingList;
-				item.Click += OnImportTrackingListClicked;				
+				item.Click += OnImportTrackingListClicked;
 				rootItem.Items.Add(item);
 				
 				item = new MenuItem();
 				item.Header = Properties.Resources.ToolsExportTrackedFiles;
-				item.Click += OnExportTrackedFilesClicked;				
+				item.Click += OnExportTrackedFilesClicked;
 				rootItem.Items.Add(item);
 				
 				item = new MenuItem();
 				item.Header = Properties.Resources.ToolsMoveSources;
-				item.Click += OnMoveSourceFilesClicked;				
+				item.Click += OnMoveSourceFilesClicked;
 				rootItem.Items.Add(item);
 				
 				item = new MenuItem();
 				item.Header = Properties.Resources.ToolsClearProcedFromSources;
-				item.Click += OnClearProjectFromSourcesClicked;				
+				item.Click += OnClearProjectFromSourcesClicked;
 				rootItem.Items.Add(item);
 				
 				item = new MenuItem();
@@ -673,59 +699,59 @@ namespace CEWSP
 			}
 		}
 
-        private bool PrepareGameLaunch()
-        {
-            string sRootFolder = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
-            string sGameFolder = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
+		private bool PrepareGameLaunch()
+		{
+			string sRootFolder = CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString();
+			string sGameFolder = CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
 
-            // Check if game folder is not inside root folder 
-            if (CPathUtils.ExtractRelativeToRoot(sGameFolder) == sGameFolder)
-            {
-                MessageBoxResult res =  MessageBox.Show(Properties.Resources.GameLauchCopyToRoot,
-            	                                        Properties.Resources.CommonNotice,
-            	                                        MessageBoxButton.OKCancel,
-            	                                        MessageBoxImage.Exclamation);
-            	
-            	if (res == MessageBoxResult.OK)
-            	{
-            		string sFullTempDirPath = sRootFolder + "\\" + m_sGameTempDirName;
-            		if (Directory.Exists(sFullTempDirPath))
-            			Directory.Delete(sFullTempDirPath, true);
-            		
-            		Directory.CreateDirectory(sFullTempDirPath);
-            		
-            		ProcessUtils.CopyDirectory(sGameFolder, sFullTempDirPath);
-            		SetGameFolderInSysCFG(sFullTempDirPath);
-            		return true;
-            	}
-            	else
-            		return false;
-                                                    
-            }
-            
-            return true;
-        }
-        
-        private void SetGameFolderInSysCFG(string sGameFolderPath)
-        {
-        	FileStream file = File.Open(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString() + "\\system.cfg", FileMode.Open);
-						
-        	var streamReader = new StreamReader(file);
-        	string fileString = streamReader.ReadToEnd();
-        	streamReader.Close();
+			// Check if game folder is not inside root folder
+			if (CPathUtils.ExtractRelativeToRoot(sGameFolder) == sGameFolder)
+			{
+				MessageBoxResult res =  MessageBox.Show(Properties.Resources.GameLauchCopyToRoot,
+				                                        Properties.Resources.CommonNotice,
+				                                        MessageBoxButton.OKCancel,
+				                                        MessageBoxImage.Exclamation);
+				
+				if (res == MessageBoxResult.OK)
+				{
+					string sFullTempDirPath = sRootFolder + "\\" + m_sGameTempDirName;
+					if (Directory.Exists(sFullTempDirPath))
+						Directory.Delete(sFullTempDirPath, true);
+					
+					Directory.CreateDirectory(sFullTempDirPath);
+					
+					ProcessUtils.CopyDirectory(sGameFolder, sFullTempDirPath);
+					SetGameFolderInSysCFG(sFullTempDirPath);
+					return true;
+				}
+				else
+					return false;
+				
+			}
 			
-        	var stringWriter = new StringWriter();
-        	var stringReader = new StringReader(fileString);
-        	
-        	string currentLine;
-        	while ((currentLine = stringReader.ReadLine()) != null)
-        	{
-        		if (currentLine.Contains("sys_game_folder = "))
-        			continue;
-        		else
-        			stringWriter.WriteLine(currentLine);
-        	}
-        
+			return true;
+		}
+		
+		private void SetGameFolderInSysCFG(string sGameFolderPath)
+		{
+			FileStream file = File.Open(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString() + "\\system.cfg", FileMode.Open);
+			
+			var streamReader = new StreamReader(file);
+			string fileString = streamReader.ReadToEnd();
+			streamReader.Close();
+			
+			var stringWriter = new StringWriter();
+			var stringReader = new StringReader(fileString);
+			
+			string currentLine;
+			while ((currentLine = stringReader.ReadLine()) != null)
+			{
+				if (currentLine.Contains("sys_game_folder = "))
+					continue;
+				else
+					stringWriter.WriteLine(currentLine);
+			}
+			
 			
 			string gameFolderPath = "";
 			
@@ -746,67 +772,139 @@ namespace CEWSP
 			string sFinalString = stringWriter.GetStringBuilder().ToString();
 			
 			File.WriteAllText(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString() + "\\system.cfg", sFinalString);
-        }
+		}
 		
-        private void PostApplicationSettingsDialog()
-        {
-        	ValidateQuickAccessButtons();
-        	CSourceTracker.Instance.StartWatching(CApplicationSettings.Instance.SourceTrackerShouldWatchRoot(),
-        	                                      CApplicationSettings.Instance.SourceTrackerShouldWatchGame());
-        	
-        }
-        
-        /// <summary>
-        /// Must only be triggered if the game folder path is actually valid!
-        /// </summary>
-        /// <param name="sNewPath"></param>
-        private void OnGameFolderChanged(string sNewPath, string sOldPath)
-        {
-        	TryAlterSystemCFG(sNewPath);
-        	CSourceTracker.Instance.Reset(EFileRoot.eFR_GameFolder, false);
-        	CSourceTracker.Instance.ClearCurrentTrackingList(EFileRoot.eFR_GameFolder);
-        	if (explorerTreeView.WatchDir == sOldPath)
-        		OnShowGameFolderClicked(null, null);
-        	setGamefolderButton.ToolTip = sNewPath;
-        }
-        
-        /// <summary>
-        /// Must only be triggered if the root folder path is actually valid!
-        /// </summary>
-        /// <param name="sNewPath"></param>
-        private void OnRootFolderChanged(string sNewPath, string sOldPath)
-        {
-        	// Since the location of root has changed, the game folder may not be inside it anymore
-        	TryAlterSystemCFG(CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString());
-        	CSourceTracker.Instance.Reset(EFileRoot.eFR_CERoot, false);
-        	CSourceTracker.Instance.ClearCurrentTrackingList(EFileRoot.eFR_CERoot);
-        	if (explorerTreeView.WatchDir == sOldPath)
-        		OnShowRootFolderClicked(null, null);
-        	setRootDirButton.ToolTip = sNewPath;
-        	ValidateQuickAccessButtons();
-        }
-        
-        private void TryAlterSystemCFG(string sNewGameFolderPath)
-        {
-        	MessageBoxResult res = MessageBox.Show(Properties.Resources.AskGameFolderUpdateCFG, 
-        	                                       Properties.Resources.CommonNotice,
-        	                                       MessageBoxButton.YesNo,
-        	                                       MessageBoxImage.Question);
-        	
-        	
-				if (res == MessageBoxResult.Yes)
+		private void PostApplicationSettingsDialog()
+		{
+			ValidateQuickAccessButtons();
+			CSourceTracker.Instance.StartWatching(CApplicationSettings.Instance.SourceTrackerShouldWatchRoot(),
+			                                      CApplicationSettings.Instance.SourceTrackerShouldWatchGame());
+			
+		}
+		
+		/// <summary>
+		/// Must only be triggered if the game folder path is actually valid!
+		/// </summary>
+		/// <param name="sNewPath"></param>
+		private void OnGameFolderChanged(string sNewPath, string sOldPath)
+		{
+			TryAlterSystemCFG(sNewPath);
+			CSourceTracker.Instance.Reset(EFileRoot.eFR_GameFolder, false);
+			CSourceTracker.Instance.ClearCurrentTrackingList(EFileRoot.eFR_GameFolder);
+			if (explorerTreeView.WatchDir == sOldPath)
+				OnShowGameFolderClicked(null, null);
+			setGamefolderButton.ToolTip = sNewPath;
+		}
+		
+		/// <summary>
+		/// Must only be triggered if the root folder path is actually valid!
+		/// </summary>
+		/// <param name="sNewPath"></param>
+		private void OnRootFolderChanged(string sNewPath, string sOldPath)
+		{
+			// Since the location of root has changed, the game folder may not be inside it anymore
+			TryAlterSystemCFG(CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString());
+			CSourceTracker.Instance.Reset(EFileRoot.eFR_CERoot, false);
+			CSourceTracker.Instance.ClearCurrentTrackingList(EFileRoot.eFR_CERoot);
+			AskChangeGameFolderToCurrentRoot();
+			
+			if (explorerTreeView.WatchDir == sOldPath)
+				OnShowRootFolderClicked(null, null);
+			else
+				OnShowGameFolderClicked(null, null);
+			
+			setRootDirButton.ToolTip = sNewPath;
+			ValidateQuickAccessButtons();
+			
+		}
+		
+		/// <summary>
+		/// Searches the current root folder for the first folder that contains a game.cfg file and 
+		/// asks the user whether the game folder should be set to the detected one.
+		/// </summary>
+		void AskChangeGameFolderToCurrentRoot()
+		{
+			var appSettings = CApplicationSettings.Instance;
+			string sCurrentRoot = appSettings.GetValue(ESettingsStrings.RootPath).GetValueString();
+			
+			// No valid root, no use
+			if (!appSettings.IsRootValid(sCurrentRoot))
+				return;
+			
+			
+			string sCurrentGameFolder = appSettings.GetValue(ESettingsStrings.GameFolderPath).GetValueString();
+			
+			// Game folder is already inside root folder
+			if (sCurrentRoot.Contains(sCurrentGameFolder))
+				return;
+			
+			// Travel through root and see if there is a folder containing game.cfg
+			var rootInfo = new DirectoryInfo(sCurrentRoot);
+			DirectoryInfo possibleGameFolder = null;
+			
+			foreach (var dir in rootInfo.GetDirectories())
+			{
+				if (CPathUtils.CanNameBeGameFolder(dir.Name))
 				{
-					if (CApplicationSettings.Instance.IsRootValid(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString()))
+					foreach (var file in dir.GetFiles())
 					{
-						SetGameFolderInSysCFG(CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString());
-					}
-					else
-					{
-						UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.RootNotValidNoSaveChanges);
+						if (file.Name.ToLower() == "game.cfg")
+						{
+							possibleGameFolder = dir;
+							break;
+						}
+							
 					}
 				}
-        }
-        
+			}
+			
+			// If we've found one ask the user if he wants to change the game folder to the found one
+			if (possibleGameFolder != null)
+			{
+				var res = MessageBox.Show(Properties.Resources.AskChangeGameToCurRoot, Properties.Resources.CommonNotice, MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+				
+				// Change game folder to detected one
+				if (res == MessageBoxResult.Yes)
+				{
+					if (CPathUtils.IsStringCEConform(possibleGameFolder.FullName))
+						appSettings.SetValue(new CSetting(ESettingsStrings.GameFolderPath, possibleGameFolder.FullName, ESettingsStrings.DESC_GameFolderPath));
+					
+					ValidateGameFolder();
+				}
+				
+				// Let the user select a new game folder
+				if (res == MessageBoxResult.No)
+				{
+					OnSetGameFolderClicked(null, null);
+				}
+			}
+			
+			
+			
+			
+		}
+		
+		private void TryAlterSystemCFG(string sNewGameFolderPath)
+		{
+			MessageBoxResult res = MessageBox.Show(Properties.Resources.AskGameFolderUpdateCFG,
+			                                       Properties.Resources.CommonNotice,
+			                                       MessageBoxButton.YesNo,
+			                                       MessageBoxImage.Question);
+			
+			
+			if (res == MessageBoxResult.Yes)
+			{
+				if (CApplicationSettings.Instance.IsRootValid(CApplicationSettings.Instance.GetValue(ESettingsStrings.RootPath).GetValueString()))
+				{
+					SetGameFolderInSysCFG(CApplicationSettings.Instance.GetValue(ESettingsStrings.GameFolderPath).GetValueString());
+				}
+				else
+				{
+					UserInteractionUtils.ShowErrorMessageBox(Properties.Resources.RootNotValidNoSaveChanges);
+				}
+			}
+		}
+		
 		void OnLaunchSB32bitClicked(object sender, RoutedEventArgs e)
 		{
 			ValidateRootPath();
@@ -815,7 +913,7 @@ namespace CEWSP
 			{
 				string path = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.SB32bitRelativePath).GetValueString();
 				string args = CApplicationSettings.Instance.GetValue(ESettingsStrings.Editor32bitArguments).GetValueString();
-				StartProcess(path, args);
+				StartProcess(path, args, sandbox32bitbutton);
 			}
 		}
 		
@@ -829,7 +927,7 @@ namespace CEWSP
 				{
 					string path = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.Game64bitRelativePath).GetValueString();
 					string arguments = CApplicationSettings.Instance.GetValue(ESettingsStrings.Game64bitArguments).GetValueString();
-					StartProcess(path, arguments);
+					StartProcess(path, arguments, game64bitbutton);
 				}
 			}
 		}
@@ -844,7 +942,7 @@ namespace CEWSP
 				{
 					string path = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.Game32bitRelativePath).GetValueString();
 					string args = CApplicationSettings.Instance.GetValue(ESettingsStrings.Game32bitArguments).GetValueString();
-					StartProcess(path, args);
+					StartProcess(path, args, game32bitbutton);
 				}
 			}
 		}
@@ -856,7 +954,7 @@ namespace CEWSP
 			if (CApplicationSettings.Instance.IsRootValid(root))
 			{
 				string path = root + CApplicationSettings.Instance.GetValue(ESettingsStrings.CodeSlnFileRelativePath).GetValueString();
-				StartProcess(path);
+				StartProcess(path, CApplicationSettings.Instance.GetValue(ESettingsStrings.CodeArguments).GetValueString(), codeSLNButton);
 			}
 		}
 		
@@ -867,7 +965,7 @@ namespace CEWSP
 			if (startupFile != ESettingsStrings.Invalid)
 			{
 				
-				StartProcess(startupFile);
+				StartProcess(startupFile, CApplicationSettings.Instance.GetValue(ESettingsStrings.ScriptArguments).GetValueString(), openScriptButton);
 			}
 		}
 		
@@ -933,10 +1031,10 @@ namespace CEWSP
 			
 			FileInfo fileInf = null;
 			
-			while (bOK != true) 
+			while (bOK != true)
 			{
 				System.Windows.Forms.DialogResult res = dialog.ShowDialog();
-			
+				
 				if (res == System.Windows.Forms.DialogResult.OK)
 				{
 					fileInf = new FileInfo(dialog.FileName);
@@ -944,22 +1042,22 @@ namespace CEWSP
 					if (fileInf.Directory.Parent.Name != "Profiles")
 					{
 						UserInteractionUtils.ShowErrorMessageBox("Please specify a folder inside the " +  // LOCALIZE
-																CApplicationSettings.Instance.SettingsFilePath + 
-																"subdirectory of CEWSP!");
+						                                         CApplicationSettings.Instance.SettingsFilePath +
+						                                         "subdirectory of CEWSP!");
 					}
 					else
 					{
 						bOK = true;
 					}
-				
-				
+					
+					
 				}
 				else
 				{
 					return;
 				}
 			}
-		
+			
 			
 			string sRelPath	= CApplicationSettings.Instance.SettingsFilePath + "\\" + fileInf.Directory.Name;
 			CApplicationSettings.Instance.LoadNewProfile(sRelPath);
@@ -968,12 +1066,12 @@ namespace CEWSP
 		
 		void OnSaveProfileClicked(object sender, RoutedEventArgs e)
 		{
-			UserInteractionUtils.AskUserToEnterString(Properties.Resources.CommonUserEntry, 
+			UserInteractionUtils.AskUserToEnterString(Properties.Resources.CommonUserEntry,
 			                                          Properties.Resources.AskEntryProfileName,
 			                                          new UserInteractionUtils.UserFinishedEnteringStringDelegate(OnFinishedEnteringProfileName),
-			                                         Properties.Resources.CommonOK, Properties.Resources.CommonCancel); 
+			                                          Properties.Resources.CommonOK, Properties.Resources.CommonCancel);
 		}
-				
+		
 		void OnFinishedEnteringProfileName(TextBox box, MessageBoxResult res)
 		{
 			if (res == MessageBoxResult.Cancel)
@@ -990,9 +1088,9 @@ namespace CEWSP
 		{
 			var dict = CApplicationSettings.Instance.GetProfileHistory();
 			
-			m_profileHistoryContextMenu.Items.Clear();	
+			m_profileHistoryContextMenu.Items.Clear();
 			
-			foreach (var entry in dict) 
+			foreach (var entry in dict)
 			{
 				MenuItem item = new MenuItem();
 				item.Header = entry.Key;
@@ -1005,10 +1103,10 @@ namespace CEWSP
 				{
 					if (e.Key == Key.Delete)
 					{
-						var res = System.Windows.Forms.MessageBox.Show(Properties.Resources.ToolsDeleteProfileFromHistoryOnly, 
-															Properties.Resources.CommonNotice,
-															System.Windows.Forms.MessageBoxButtons.YesNoCancel,
-															System.Windows.Forms.MessageBoxIcon.Question);
+						var res = System.Windows.Forms.MessageBox.Show(Properties.Resources.ToolsDeleteProfileFromHistoryOnly,
+						                                               Properties.Resources.CommonNotice,
+						                                               System.Windows.Forms.MessageBoxButtons.YesNoCancel,
+						                                               System.Windows.Forms.MessageBoxIcon.Question);
 						
 						if (res == System.Windows.Forms.DialogResult.Yes)
 							CApplicationSettings.Instance.DeleteProfile(entry.Key, true);
@@ -1049,6 +1147,6 @@ namespace CEWSP
 		
 		
 		
-	
+		
 	}
 }

@@ -114,6 +114,12 @@ namespace CEWSP.ApplicationSettings
 		
 		public const string DESC_GFXExproterArguments = "Argument list for gfx exproter invocation";
 		public const string GFXExporterArguments = "strGFXExproterArgs";
+		
+		public const string DESC_WarnNonCEConformPath= "Display a warning everytime a non CE conform path is detected somewhere?";
+		public const string WarnNonCEConformPath = "bWarnNonCEConformPath";
+		
+		public const string DESC_DragZoneLastPath = "Last path used inside drag zone dialog when copying";
+		public const string DragZoneLastPath  = "strDragZoneLastPath ";
 	}
 	
 	/// <summary>

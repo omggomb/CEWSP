@@ -272,7 +272,7 @@
     <value>Profile History</value>
   </data>
   <data name="CommonDelete" xml:space="preserve">
-    <value />
+    <value>Delete</value>
   </data>
   <data name="ToolsDeleteProfileFromHistoryOnly" xml:space="preserve">
     <value>Remove profile from history only? (Yes: Only history, No: Remove from disk)</value>
@@ -285,5 +285,11 @@
   </data>
   <data name="AskEntryProfileName" xml:space="preserve">
     <value>Please enter a name for the new profile.</value>
+  </data>
+  <data name="AskChangeGameToCurRoot" xml:space="preserve">
+    <value>Detected a game folder inside the current root folder! Do you want to change the current game folder to the detected one? No to choose one yourself, Cancel to keep current one.</value>
+  </data>
+  <data name="EndTask" xml:space="preserve">
+    <value>Kill process</value>
   </data>
 </root>

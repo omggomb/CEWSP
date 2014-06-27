@@ -6,6 +6,9 @@ Add:
  - Shortcuts to the left of the main window
  - Support for profiles
 	- Different working directories can now be switched to with 2 mouse clicks
+ - Drag zone dialog now remembers last path used
+ - If root directory is changed, gamefolders are searched and the first one found will be suggested to be used (looks for game.cfg, ignoring "USER" folders)
+ - Once a quick access button has started a process, the process can be killed by right clicking the button and choosing Kill process
 
 
 Change:
@@ -19,6 +22,9 @@ Change:
    on an usb stick (you can use different profiles for different working machines) 
  - Removed the need for paths to be CE conform in order to simplify usage with EaaS. The user will still be (annoyed) reminded very
  	often , since using a non CE conform path will eventually lead to issues.
+ - Made warning about non CE conform path optional, user editable setting (becomes annoying really fast, talk about consistency...)
+    Will still be displayed on startup but not at runtime anymore
+ 
 
 ==============
 Alpha build 3:

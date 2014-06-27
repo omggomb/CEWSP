@@ -6,7 +6,8 @@
 	Width="300"
 	SizeToContent="WidthAndHeight"
 	ResizeMode="CanMinimize"
-	Loaded="OnLoaded">
+	Loaded="OnLoaded"
+	WindowStartupLocation="CenterScreen">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition

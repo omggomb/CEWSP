@@ -168,6 +168,15 @@ namespace CEWSP.ApplicationSettings
 				case ESettingsStrings.GFXExporterArguments:
 					return ESettingsStrings.DESC_GFXExproterArguments;
 					
+				case ESettingsStrings.RC64bitRelativePath:
+					return ESettingsStrings.DESC_RC64bitRelativePath;
+					
+				case ESettingsStrings.DragZoneLastPath:
+					return ESettingsStrings.DESC_DragZoneLastPath;
+					
+				case ESettingsStrings.WarnNonCEConformPath:
+					return ESettingsStrings.DESC_WarnNonCEConformPath;
+					
 				default:
 					return "No description available";
 					
@@ -274,6 +283,8 @@ namespace CEWSP.ApplicationSettings
 		private static  CSetting GFXExporterPathSetting ;
 		private static  CSetting GFXExporterArgsSetting ;
 		private static  CSetting RC64bitRelativePathSetting;
+		private static CSetting WarnIfPathNotCEConfirmSetting;
+		private static CSetting DragZoneLastPathSetting;
 		
 		private static CApplicationSettings _instance;
 		public static CApplicationSettings Instance
@@ -379,6 +390,9 @@ namespace CEWSP.ApplicationSettings
 			SetValue(AskImportOnStartupSetting);
 			SetValue(SourceTrackerWatchDirsSetting);
 			SetValue(CheckRegexOnStartupSetting);
+			
+			SetValue(WarnIfPathNotCEConfirmSetting);
+			SetValue(DragZoneLastPathSetting);
 			
 			
 			ResetShortcuts();
@@ -1280,6 +1294,9 @@ namespace CEWSP.ApplicationSettings
 			GFXExporterPathSetting = new CSetting(ESettingsStrings.GFXRelativePath, DefaultGFXExporterRelativePath, ESettingsStrings.DESC_GFXRelativePath, true);
 			GFXExporterArgsSetting = new CSetting(ESettingsStrings.GFXExporterArguments, "", ESettingsStrings.DESC_GFXExproterArguments, true);
 			RC64bitRelativePathSetting = new CSetting(ESettingsStrings.RC64bitRelativePath, "\\Bin64\\rc\\rc.exe", ESettingsStrings.DESC_RC64bitRelativePath, true);
+			
+			WarnIfPathNotCEConfirmSetting = new CSetting(ESettingsStrings.WarnNonCEConformPath, true, ESettingsStrings.DESC_WarnNonCEConformPath, true);
+			DragZoneLastPathSetting = new CSetting(ESettingsStrings.DragZoneLastPath, "", ESettingsStrings.DESC_DragZoneLastPath);
 			
 		}
 		#endregion
