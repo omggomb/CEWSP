@@ -1,0 +1,6 @@
+[submodule "OmgUtils"]
+	path = OmgUtils
+	url = https://github.com/omggomb/OmgUtils
+[submodule "ExplorerTreeViewControl"]
+	path = ExplorerTreeViewControl
+	url = https://github.com/omggomb/ExplorerTreeViewControl
